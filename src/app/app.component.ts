@@ -18,7 +18,7 @@ export class AppComponent {
 
   constructor(http: Http) {
     this.observable$ = http
-      .get(environment.server + "/public/simple")
+      .get(environment.server + "/api/hotels")
       .map((response: Response) => response.json());
   }
 }
