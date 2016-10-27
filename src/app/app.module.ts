@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import {HotelService} from "./services/hotels.service";
 import {routedComponents, AppRoutingModule} from "./routes/app-routing.module";
 
-import {InputTextModule} from 'primeng/primeng';
+import {InputTextModule, AccordionModule} from 'primeng/primeng';
 
 @NgModule({
   declarations: [
@@ -19,7 +19,8 @@ import {InputTextModule} from 'primeng/primeng';
     FormsModule,
     AppRoutingModule,
     HttpModule,
-    InputTextModule
+    InputTextModule,
+    AccordionModule
   ],
   providers: [HotelService],
   bootstrap: [AppComponent]

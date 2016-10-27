@@ -20,6 +20,19 @@ export class HotelService {
       .map((response: Response) => response.json());
   }
 
+  //Add new Hero
+  // private post(hero: Hero): Promise<Hero> {
+  //   let headers = new Headers({
+  //     'Content-Type': 'application/json'
+  //   });
+  //
+  //   return this.http
+  //     .post(this.heroesUrl, JSON.stringify(hero), { headers: headers })
+  //     .toPromise()
+  //     .then(res => res.json().data)
+  //     .catch(this.handleError);
+  // }
+
   // getHotels(): Promise<Hotel[]> {
   //   return this.http
   //     .get(this.hotelsUrl)
@@ -52,18 +65,7 @@ export class HotelService {
   //     .catch(this.handleError);
   // }
 
-  // Add new Hero
-  // private post(hero: Hero): Promise<Hero> {
-  //   let headers = new Headers({
-  //     'Content-Type': 'application/json'
-  //   });
-  //
-  //   return this.http
-  //     .post(this.heroesUrl, JSON.stringify(hero), { headers: headers })
-  //     .toPromise()
-  //     .then(res => res.json().data)
-  //     .catch(this.handleError);
-  // }
+
 
   // Update existing Hero
   // private put(hero: Hero): Promise<Hero> {

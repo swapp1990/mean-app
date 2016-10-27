@@ -1,0 +1,23 @@
+[{
+	"name" : "Cleanliness",
+	"months" : [{
+		"name" : "October",
+		"year" : 2016,
+		"grade" : "0.8",
+		"tasks" : [{
+			"taskid" : "1",
+			"timesTotal" : "4",
+			"timesDone" : [{
+				"date" : 9
+			}],
+			"weight" : 20
+		},{
+			"taskid" : "2",
+			"timesTotal" : "4",
+			"timesDone" : [{
+				"date" : 9
+			}],
+			"weight" : 10
+		}],
+	}]
+}]

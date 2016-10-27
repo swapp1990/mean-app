@@ -8,10 +8,15 @@
   <h1> Hotel </h1>
   <ul>
     <li *ngFor="let hotel of hotels">
-    <span>
-      {{hotel.name}}
-    </span>
-      <input type="text" pInputText/>
+      <span>
+        {{hotel.name}}
+      </span>
+      <ul>
+        <li *ngFor="let room of hotel.rooms">
+          <span>
+            {{room.type}}
+          </span>
+      </ul>
     </li>
   </ul>
 </body>

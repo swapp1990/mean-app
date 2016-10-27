@@ -19,6 +19,7 @@ import { Component } from '@angular/core';
     <div class="header-bar"></div>
     <nav>
       <a routerLink="/hotels" routerLinkActive="active">Heroes</a>
+      <a routerLink="/monthly" routerLinkActive="active">Monthly</a>
     </nav>
     <router-outlet></router-outlet>
   `,
