@@ -8,11 +8,13 @@ import {HotelService} from "./services/hotels.service";
 import {routedComponents, AppRoutingModule} from "./routes/app-routing.module";
 
 import {InputTextModule, AccordionModule, TabViewModule, TreeTableModule,TreeNode,SharedModule} from 'primeng/primeng';
+import {TreeTable} from "./components/utils/tree-table/tree-table.component";
 
 @NgModule({
   declarations: [
     AppComponent,
-    routedComponents
+    routedComponents,
+    TreeTable
   ],
   imports: [
     BrowserModule,

@@ -9,19 +9,14 @@ import {TreeNode} from "primeng/primeng";
 @Component({
   selector: 'monthly-view',
   template: `<p-tabView orientation="left">
-    <p-tabPanel header="Header 1">
-        <p-treeTable [value]="files">
-          <p-column field="date" header="Date"></p-column>
-          <p-column field="name" header="Name"></p-column>
-          <p-column field="price" header="Price"></p-column>
-          <p-column field="payment" header="Payment Type"></p-column>
-        </p-treeTable>
+    <p-tabPanel header="Grocery">
+        <my-tree-table [files]="dataGrocery"></my-tree-table>
     </p-tabPanel>
-    <p-tabPanel header="Header 2">
-        Content 2
+    <p-tabPanel header="Food">
+        <my-tree-table [files]="dataFood"></my-tree-table>
     </p-tabPanel>
-    <p-tabPanel header="Header 3">
-        Content 3    
+    <p-tabPanel header="Entertainment">
+        <my-tree-table [files]="dataEntertainment"></my-tree-table>    
     </p-tabPanel>
 </p-tabView>`
 })
@@ -29,6 +24,9 @@ export class MonthlyComponent implements OnInit {
   error: any;
   response: any;
   files: TreeNode[];
+  dataGrocery: TreeNode[];
+  dataFood: TreeNode[];
+  dataEntertainment: TreeNode[];
   observable$: Observable<{}>;
 
   constructor(
@@ -39,7 +37,12 @@ export class MonthlyComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getFileSystem().then(files => this.files = files);
+    this.getFileSystem().then(files => {
+      this.files = files;
+      this.dataGrocery = this.files.filter((row) => row.data.category === "Grocery");
+      this.dataFood = this.files.filter((row) => row.data.category === "Food");
+      this.dataEntertainment = this.files.filter((row) => row.data.category === "Entertainment");
+    });
   }
 
   private getFileSystem() {
