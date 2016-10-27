@@ -21,17 +21,15 @@ export class HotelService {
   }
 
   //Add new Hero
-  // private post(hero: Hero): Promise<Hero> {
-  //   let headers = new Headers({
-  //     'Content-Type': 'application/json'
-  //   });
-  //
-  //   return this.http
-  //     .post(this.heroesUrl, JSON.stringify(hero), { headers: headers })
-  //     .toPromise()
-  //     .then(res => res.json().data)
-  //     .catch(this.handleError);
-  // }
+  private post(hotel: Hotel): Observable<Hotel> {
+    let headers = new Headers({
+      'Content-Type': 'application/json'
+    });
+
+    return this.http
+      .post(this.hotelsUrl, JSON.stringify(hotel), { headers: headers })
+      .map((response: Response) => response.json());
+  }
 
   // getHotels(): Promise<Hotel[]> {
   //   return this.http
