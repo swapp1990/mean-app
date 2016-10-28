@@ -13,6 +13,7 @@ import {MonthData} from "../../models/month";
   template: `<p-tabView orientation="left">
     <p-tabPanel header="Grocery">
         <my-data-table [files]="monthlyData" (changeToggle)="onChangeToggle($event)"></my-data-table>
+        <button pButton type="text" (click)="onCreateToggle($event)" icon="fa-plus"></button>
     </p-tabPanel>
     <p-tabPanel header="Food">
         <my-data-table [files]="monthlyData"></my-data-table>
@@ -20,7 +21,6 @@ import {MonthData} from "../../models/month";
     <p-tabPanel header="Entertainment">
         <my-data-table [files]="monthlyData"></my-data-table>    
     </p-tabPanel>
-   
 </p-tabView>`
 })
 export class MonthlyComponent implements OnInit {
@@ -47,7 +47,10 @@ export class MonthlyComponent implements OnInit {
     //   this.dataFood = this.files.filter((row) => row.data.category === "Food");
     //   this.dataEntertainment = this.files.filter((row) => row.data.category === "Entertainment");
     // });
+    this.getAllMonthlyData();
+  }
 
+  getAllMonthlyData() {
     this.monthlyService.getMonthlyData()
       .subscribe (
         monthlyData => {
@@ -57,6 +60,19 @@ export class MonthlyComponent implements OnInit {
           console.log(err);
         }
       );
+  }
+
+  onCreateToggle($event) {
+    console.log("create");
+    let emptyData: MonthData = new MonthData();
+    this.monthlyService.createMonthData(emptyData)
+      .subscribe(
+            data => {
+              console.log("Create" + data);
+              this.getAllMonthlyData();
+            },
+            err => {console.log(err);}
+          );
   }
 
   onChangeToggle($event) {

@@ -21,6 +21,28 @@ module.exports.monthGetAll = function(req, res) {
         });
 };
 
+module.exports.monthCreateOne = function(req,res) {
+  Month
+    .create({
+      name : req.body.name,
+      date : req.body.date,
+      price : req.body.price,
+      payment : req.body.payment
+    }, function(err, body) {
+      if(err) {
+        console.log("Error creating new data");
+        res
+          .status(400)
+          .json(err);
+      } else {
+        console.log("Data Created");
+        res
+          .status(201)
+          .json(body);
+      }
+    });
+};
+
 module.exports.monthUpdateOne = function(req,res) {
   var monthId = req.params.monthId;
   Month
@@ -46,11 +68,12 @@ module.exports.monthUpdateOne = function(req,res) {
           .status(response.status)
           .json(response.message);
       } else {
-        console.log("req " + req.body.name + " res " + doc.name);
+        //console.log("req " + req.body.name + " res " + doc.name);
         if(req.body.name) {
           doc.name = req.body.name;
           doc.date = req.body.date;
           doc.price = req.body.price;
+          doc.payment = req.body.payment;
           //services = _splitArray(req.body.services),
           doc.save(function(err, monthUpdated) {
             if(err) {
@@ -62,6 +85,16 @@ module.exports.monthUpdateOne = function(req,res) {
         }
       }
     });
+};
+
+var _splitArray = function(input) {
+  var output;
+  if(input && input.length > 0) {
+    output = input.split(";");
+  } else {
+    output = [];
+  }
+  return output;
 };
 
 // module.exports.hotelsGetById = function(req, res) {

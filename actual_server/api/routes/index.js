@@ -7,6 +7,8 @@ var ctrlMonths = require('../controllers/months.controller.js');
 
 router.route('/months').get(ctrlMonths.monthGetAll);
 
+router.route('/months').post(ctrlMonths.monthCreateOne);
+
 router.route('/months/:monthId')
   .put(ctrlMonths.monthUpdateOne);
 // router.route('/hotels').get(ctrlHotels.hotelsGetAll);

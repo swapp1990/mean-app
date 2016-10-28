@@ -24,6 +24,7 @@ import {MonthData} from "../../../models/month";
 export class DataTable implements OnInit {
   @Input() files: any[];
   @Output() changeToggle = new EventEmitter();
+  @Output() createEmpty = new EventEmitter();
   checked: boolean = false;
 
   constructor(
@@ -36,6 +37,8 @@ export class DataTable implements OnInit {
     this.checked = !this.checked;
     if(!this.checked) {
       this.changeToggle.emit(this.checked);
+    } else {
+      this.createEmpty.emit(this.checked);
     }
   }
 

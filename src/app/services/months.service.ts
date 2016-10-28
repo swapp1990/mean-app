@@ -15,9 +15,20 @@ export class MonthlyService {
 
   constructor(private http: Http) { }
 
+  //Get all monthly data
   getMonthlyData(): Observable<MonthData[]> {
     return this.http
       .get(this.monthsUrl)
+      .map((response: Response) => response.json());
+  }
+
+  //Create Monthly Data.
+  createMonthData(monthBody: MonthData) {
+    let headers = new Headers({
+      'Content-Type': 'application/json'
+    });
+    return this.http
+      .post(this.monthsUrl, JSON.stringify(monthBody), { headers: headers })
       .map((response: Response) => response.json());
   }
 
