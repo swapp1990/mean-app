@@ -1,5 +1,5 @@
 export class MonthData {
-  _id: number;
+  _id: string;
   name: string;
   price: number;
   category: string;

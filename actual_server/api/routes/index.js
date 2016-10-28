@@ -6,6 +6,9 @@ var ctrlReviews = require('../controllers/reviews.controllers.js');
 var ctrlMonths = require('../controllers/months.controller.js');
 
 router.route('/months').get(ctrlMonths.monthGetAll);
+
+router.route('/months/:monthId')
+  .put(ctrlMonths.monthUpdateOne);
 // router.route('/hotels').get(ctrlHotels.hotelsGetAll);
 //
 // router.route('/hotels/:hotelId').get(ctrlHotels.hotelsGetById);

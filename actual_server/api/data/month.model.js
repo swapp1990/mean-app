@@ -2,8 +2,7 @@ var mongoose = require('mongoose');
 
 var monthSchema = new mongoose.Schema({
     name : {
-        type : String,
-        required : true
+        type : String
     },
     date : {
         type : Number,

@@ -21,6 +21,49 @@ module.exports.monthGetAll = function(req, res) {
         });
 };
 
+module.exports.monthUpdateOne = function(req,res) {
+  var monthId = req.params.monthId;
+  Month
+    .findById(monthId)
+    //.select("-reviews -rooms") exclude nested models.
+    .exec(function(err, doc) {
+      var response = {
+        status : 200,
+        message : doc
+      };
+      if(err) {
+        console.log("Error finding month data");
+        response.status = 500;
+        response.message = err;
+      } else if(!doc) {
+        response.status = 404;
+        response.message = {
+          "message": "Month Id not found"
+        };
+      }
+      if(response.status !== 200) {
+        res
+          .status(response.status)
+          .json(response.message);
+      } else {
+        console.log("req " + req.body.name + " res " + doc.name);
+        if(req.body.name) {
+          doc.name = req.body.name;
+          doc.date = req.body.date;
+          doc.price = req.body.price;
+          //services = _splitArray(req.body.services),
+          doc.save(function(err, monthUpdated) {
+            if(err) {
+              res.status(500).json(err);
+            } else {
+              res.status(204).json();
+            }
+          });
+        }
+      }
+    });
+};
+
 // module.exports.hotelsGetById = function(req, res) {
 //     var hotelId = req.params.hotelId;
 //     Hotel
@@ -29,15 +72,14 @@ module.exports.monthGetAll = function(req, res) {
 //             res.status(200).json(doc);
 //         });
 // };
-//
-// module.exports.hotelsAddOne = function(req, res) {
+
+// module.exports.dataAddOne = function(req, res) {
 //     var db = dbconn.get();
-//     var collection = db.collection('hotel');
+//     var collection = db.collection('october');
 //     var newHotel;
 //
-//     if(req.body && req.body.name && req.body.stars) {
+//     if(req.body) {
 //         newHotel = req.body;
-//         newHotel.stars = parseInt(req.body.stars, 10);
 //         collection.insertOne(newHotel, function(err, response) {
 //             res.status(201).json(response.ops);
 //         });
@@ -45,7 +87,6 @@ module.exports.monthGetAll = function(req, res) {
 //     } else {
 //        console.log("Data Missing from body");
 //         res.status(200).json('Missing');
-//     }
-//
+//     }xw
 // };
 

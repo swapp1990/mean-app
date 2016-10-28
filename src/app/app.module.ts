@@ -7,7 +7,10 @@ import { AppComponent } from './app.component';
 import {HotelService} from "./services/hotels.service";
 import {routedComponents, AppRoutingModule} from "./routes/app-routing.module";
 
-import {InputTextModule, AccordionModule, TabViewModule, TreeTableModule,TreeNode,SharedModule, DataTableModule} from 'primeng/primeng';
+import {
+  InputTextModule, AccordionModule, TabViewModule, TreeTableModule, TreeNode, SharedModule, DataTableModule,
+  ToggleButtonModule
+} from 'primeng/primeng';
 import {TreeTable} from "./components/utils/tree-table/tree-table.component";
 import {MonthlyService} from "./services/months.service";
 import {DataTable} from "./components/utils/data-table/data-table.component";
@@ -29,6 +32,7 @@ import {DataTable} from "./components/utils/data-table/data-table.component";
     TabViewModule,
     DataTableModule,
     TreeTableModule,
+    ToggleButtonModule,
     SharedModule
   ],
   providers: [HotelService, MonthlyService],

@@ -21,6 +21,18 @@ export class MonthlyService {
       .map((response: Response) => response.json());
   }
 
+  //Update Monthly Data.
+  updateMonthlyData(monthDataId: string, monthBody: MonthData) {
+    let headers = new Headers({
+      'Content-Type': 'application/json'
+    });
+
+    let newUrl = this.monthsUrl + '/'+monthDataId;
+    return this.http
+      .put(newUrl, JSON.stringify(monthBody), { headers: headers })
+      .map((response: Response) => response.json());
+  }
+
   //Add new Hero
   private post(hotel: Hotel): Observable<Hotel> {
     let headers = new Headers({

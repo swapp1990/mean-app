@@ -12,7 +12,7 @@ import {MonthData} from "../../models/month";
   selector: 'monthly-view',
   template: `<p-tabView orientation="left">
     <p-tabPanel header="Grocery">
-        <my-data-table [files]="monthlyData"></my-data-table>
+        <my-data-table [files]="monthlyData" (changeToggle)="onChangeToggle($event)"></my-data-table>
     </p-tabPanel>
     <p-tabPanel header="Food">
         <my-data-table [files]="monthlyData"></my-data-table>
@@ -20,6 +20,7 @@ import {MonthData} from "../../models/month";
     <p-tabPanel header="Entertainment">
         <my-data-table [files]="monthlyData"></my-data-table>    
     </p-tabPanel>
+   
 </p-tabView>`
 })
 export class MonthlyComponent implements OnInit {
@@ -56,6 +57,21 @@ export class MonthlyComponent implements OnInit {
           console.log(err);
         }
       );
+  }
+
+  onChangeToggle($event) {
+    console.log("edit");
+    this.monthlyData.map((body: MonthData) => {
+      if(body._id) {
+        this.monthlyService.updateMonthlyData(body._id, body)
+          .subscribe(
+            data => {
+              console.log("OK" + data);
+              },
+            err => {console.log(err);}
+          );
+      }
+    });
   }
 
   private getFileSystem() {
