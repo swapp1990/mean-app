@@ -12,7 +12,7 @@ import {MonthData} from "../../models/month";
   selector: 'monthly-view',
   template: `<p-tabView orientation="left">
     <p-tabPanel header="Grocery">
-        <my-data-table [files]="monthlyData" (changeToggle)="onChangeToggle($event)"></my-data-table>
+        <my-data-table [files]="monthlyData" (changeToggle)="onChangeToggle($event)" (deleteEvent)="onDeleteRow($event)"></my-data-table>
         <button pButton type="text" (click)="onCreateToggle($event)" icon="fa-plus"></button>
     </p-tabPanel>
     <p-tabPanel header="Food">
@@ -90,10 +90,23 @@ export class MonthlyComponent implements OnInit {
     });
   }
 
-  private getFileSystem() {
-    return this.http.get('../assets/october2.json')
-      .toPromise()
-      .then(res => <TreeNode[]> res.json().data)
-      .then(data => { return data; });
+  onDeleteRow(event: MonthData) {
+    this.monthlyService.deleteMonthlyData(event._id)
+      .subscribe (
+        data => {
+          console.log("Delete " + data);
+          this.getAllMonthlyData();
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
+  //
+  // private getFileSystem() {
+  //   return this.http.get('../assets/october2.json')
+  //     .toPromise()
+  //     .then(res => <TreeNode[]> res.json().data)
+  //     .then(data => { return data; });
+  // }
 }

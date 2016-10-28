@@ -43,6 +43,21 @@ module.exports.monthCreateOne = function(req,res) {
     });
 };
 
+module.exports.monthDeleteOne = function(req,res) {
+  var monthId = req.params.monthId;
+  Month
+    .findByIdAndRemove(monthId)
+    .exec(function(err, doc) {
+      if(err) {
+        console.log("Error deleting month data");
+        res.status(500).json(err);
+      } else {
+        console.log("Deleting month data successfull");
+        res.status(204).json(doc);
+      }
+    });
+};
+
 module.exports.monthUpdateOne = function(req,res) {
   var monthId = req.params.monthId;
   Month

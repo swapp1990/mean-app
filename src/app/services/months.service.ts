@@ -44,6 +44,14 @@ export class MonthlyService {
       .map((response: Response) => response.json());
   }
 
+  //Delete Monthly Data by Id.
+  deleteMonthlyData(monthDataId: string) {
+    let newUrl = this.monthsUrl + '/'+monthDataId;
+    return this.http
+      .delete(newUrl)
+      .map((response: Response) => response.json());
+  }
+
   //Add new Hero
   private post(hotel: Hotel): Observable<Hotel> {
     let headers = new Headers({

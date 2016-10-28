@@ -5,12 +5,13 @@ var ctrlHotels = require('../controllers/hotels.controller.js');
 var ctrlReviews = require('../controllers/reviews.controllers.js');
 var ctrlMonths = require('../controllers/months.controller.js');
 
-router.route('/months').get(ctrlMonths.monthGetAll);
-
-router.route('/months').post(ctrlMonths.monthCreateOne);
+router.route('/months')
+  .get(ctrlMonths.monthGetAll)
+  .post(ctrlMonths.monthCreateOne);
 
 router.route('/months/:monthId')
-  .put(ctrlMonths.monthUpdateOne);
+  .put(ctrlMonths.monthUpdateOne)
+  .delete(ctrlMonths.monthDeleteOne);
 // router.route('/hotels').get(ctrlHotels.hotelsGetAll);
 //
 // router.route('/hotels/:hotelId').get(ctrlHotels.hotelsGetById);
