@@ -12,20 +12,35 @@ import {MonthData} from "../../models/month";
   selector: 'monthly-view',
   template: `<p-tabView orientation="left" (onChange)="onTabChange($event)">
                 <p-tabPanel header="Grocery">
-                    <my-data-table [files]="monthlyData" (changeToggle)="onChangeToggle($event)" (deleteEvent)="onDeleteRow($event)"></my-data-table>
+                    <my-data-table [files]="monthlyData" 
+                      [totalCategory]="totalCategory"
+                      (changeToggle)="onChangeToggle($event)" 
+                      (deleteEvent)="onDeleteRow($event)">
+                    </my-data-table>
                     <button pButton type="text" (click)="onCreateToggle($event)" icon="fa-plus"></button>
                 </p-tabPanel>
                 <p-tabPanel header="Food">
-                    <my-data-table [files]="monthlyData"></my-data-table>
+                   <my-data-table [files]="monthlyData" 
+                      [totalCategory]="totalCategory"
+                      (changeToggle)="onChangeToggle($event)" 
+                      (deleteEvent)="onDeleteRow($event)">
+                    </my-data-table>
+                    <button pButton type="text" (click)="onCreateToggle($event)" icon="fa-plus"></button>
                 </p-tabPanel>
                 <p-tabPanel header="Entertainment">
-                    <my-data-table [files]="monthlyData"></my-data-table>    
+                    <my-data-table [files]="monthlyData"
+                      [totalCategory]="totalCategory"
+                      (changeToggle)="onChangeToggle($event)" 
+                      (deleteEvent)="onDeleteRow($event)">
+                    </my-data-table>
+                    <button pButton type="text" (click)="onCreateToggle($event)" icon="fa-plus"></button>
                 </p-tabPanel>
              </p-tabView>`
 })
 export class MonthlyComponent implements OnInit {
   monthlyData: MonthData[];
   category: string = "Grocery";
+  totalCategory: number = 0;
   error: any;
   response: any;
   files: TreeNode[];
@@ -57,8 +72,7 @@ export class MonthlyComponent implements OnInit {
       this.category = "Grocery";
     } else if(event.index == 1) {
       this.category = "Food";
-    } else
-    {
+    } else {
       this.category = "Entertainment";
     }
     this.getMonthlyDataByCategory();
@@ -77,10 +91,14 @@ export class MonthlyComponent implements OnInit {
   }
 
   getMonthlyDataByCategory() {
+    this.totalCategory = 0;
     this.monthlyService.getMonthlyDataByCategory(this.category)
       .subscribe (
         monthlyData => {
           this.monthlyData = monthlyData;
+          this.monthlyData.map((body: MonthData) => {
+            this.totalCategory += body.price;
+          });
         },
         err => {
           console.log(err);
@@ -89,26 +107,25 @@ export class MonthlyComponent implements OnInit {
   }
 
   onCreateToggle($event) {
-    console.log("create");
-    let emptyData: MonthData = new MonthData();
+    let emptyData: MonthData = new MonthData(this.category);
+    console.log(emptyData);
     this.monthlyService.createMonthData(emptyData)
       .subscribe(
             data => {
               console.log("Create" + data);
-              this.getAllMonthlyData();
+              this.getMonthlyDataByCategory();
             },
             err => {console.log(err);}
           );
   }
 
   onChangeToggle($event) {
-    console.log("edit");
     this.monthlyData.map((body: MonthData) => {
       if(body._id) {
         this.monthlyService.updateMonthlyData(body._id, body)
           .subscribe(
             data => {
-              console.log("OK" + data);
+              //console.log("OK" + data);
               },
             err => {console.log(err);}
           );

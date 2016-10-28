@@ -46,7 +46,8 @@ module.exports.monthCreateOne = function(req,res) {
       name : req.body.name,
       date : req.body.date,
       price : req.body.price,
-      payment : req.body.payment
+      payment : req.body.payment,
+      category: req.body.category
     }, function(err, body) {
       if(err) {
         console.log("Error creating new data");

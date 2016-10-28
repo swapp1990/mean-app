@@ -12,9 +12,15 @@ import {MonthData} from "../../../models/month";
                 <p-column field="name" header="Name"></p-column>
                 <p-column field="price" header="Price"></p-column>
                 <p-column field="payment" header="Payment Type"></p-column>
+                <p-footerColumnGroup>
+                  <p-row>
+                      <p-column footer="Total:" colspan="2"></p-column>
+                      <p-column footer="{{totalCategory}}"></p-column>
+                  </p-row>
+                </p-footerColumnGroup>
               </p-dataTable>
               <p-dataTable *ngIf='checked' [value]="files" [editable]="true">
-                <p-column styleClass="col-button">
+                <p-column styleClass="col-button" [style]="{'max-height':'10px','overflow':'scroll'}">
                   <template pTemplate type="header">
                       <button type="button" pButton icon="fa-refresh"></button>
                   </template>
@@ -27,6 +33,7 @@ import {MonthData} from "../../../models/month";
                 <p-column field="price" header="Price" [editable]="true"></p-column>
                 <p-column field="payment" header="Payment Type" [editable]="true"></p-column>
               </p-dataTable>
+             
               <p-toggleButton (onChange)="handleChange($event)" [(ngModel)]="val"></p-toggleButton>`
 })
 export class DataTable implements OnInit {
@@ -34,6 +41,7 @@ export class DataTable implements OnInit {
   @Output() changeToggle = new EventEmitter();
   @Output() deleteEvent = new EventEmitter();
   checked: boolean = false;
+  @Input() totalCategory: number;
 
   constructor(
     private http: Http) {

@@ -7,10 +7,10 @@ export class MonthData {
   type: string;
   date: number;
 
-  constructor() {
+  constructor(category: string) {
     this.name = "";
     this.price = 0;
-    this.category = "Grocery";
+    this.category = category;
     this.payment = "D";
     this.type = "";
     this.date = 1;
