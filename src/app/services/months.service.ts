@@ -22,6 +22,14 @@ export class MonthlyService {
       .map((response: Response) => response.json());
   }
 
+  //Get monthly data for category types
+  getMonthlyDataByCategory(category: string): Observable<MonthData[]> {
+    let newUrl = this.monthsUrl + '?category='+ category;
+    return this.http
+      .get(newUrl)
+      .map((response: Response) => response.json());
+  }
+
   //Create Monthly Data.
   createMonthData(monthBody: MonthData) {
     let headers = new Headers({

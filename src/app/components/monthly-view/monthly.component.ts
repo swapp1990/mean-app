@@ -10,21 +10,22 @@ import {MonthData} from "../../models/month";
 
 @Component({
   selector: 'monthly-view',
-  template: `<p-tabView orientation="left">
-    <p-tabPanel header="Grocery">
-        <my-data-table [files]="monthlyData" (changeToggle)="onChangeToggle($event)" (deleteEvent)="onDeleteRow($event)"></my-data-table>
-        <button pButton type="text" (click)="onCreateToggle($event)" icon="fa-plus"></button>
-    </p-tabPanel>
-    <p-tabPanel header="Food">
-        <my-data-table [files]="monthlyData"></my-data-table>
-    </p-tabPanel>
-    <p-tabPanel header="Entertainment">
-        <my-data-table [files]="monthlyData"></my-data-table>    
-    </p-tabPanel>
-</p-tabView>`
+  template: `<p-tabView orientation="left" (onChange)="onTabChange($event)">
+                <p-tabPanel header="Grocery">
+                    <my-data-table [files]="monthlyData" (changeToggle)="onChangeToggle($event)" (deleteEvent)="onDeleteRow($event)"></my-data-table>
+                    <button pButton type="text" (click)="onCreateToggle($event)" icon="fa-plus"></button>
+                </p-tabPanel>
+                <p-tabPanel header="Food">
+                    <my-data-table [files]="monthlyData"></my-data-table>
+                </p-tabPanel>
+                <p-tabPanel header="Entertainment">
+                    <my-data-table [files]="monthlyData"></my-data-table>    
+                </p-tabPanel>
+             </p-tabView>`
 })
 export class MonthlyComponent implements OnInit {
   monthlyData: MonthData[];
+  category: string = "Grocery";
   error: any;
   response: any;
   files: TreeNode[];
@@ -47,11 +48,36 @@ export class MonthlyComponent implements OnInit {
     //   this.dataFood = this.files.filter((row) => row.data.category === "Food");
     //   this.dataEntertainment = this.files.filter((row) => row.data.category === "Entertainment");
     // });
-    this.getAllMonthlyData();
+    this.getMonthlyDataByCategory();
+  }
+
+  onTabChange(event) {
+    //console.log(event);
+    if(event.index == 0) {
+      this.category = "Grocery";
+    } else if(event.index == 1) {
+      this.category = "Food";
+    } else
+    {
+      this.category = "Entertainment";
+    }
+    this.getMonthlyDataByCategory();
   }
 
   getAllMonthlyData() {
     this.monthlyService.getMonthlyData()
+      .subscribe (
+        monthlyData => {
+          this.monthlyData = monthlyData;
+        },
+        err => {
+          console.log(err);
+        }
+      );
+  }
+
+  getMonthlyDataByCategory() {
+    this.monthlyService.getMonthlyDataByCategory(this.category)
       .subscribe (
         monthlyData => {
           this.monthlyData = monthlyData;

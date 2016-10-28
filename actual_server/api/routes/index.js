@@ -6,7 +6,7 @@ var ctrlReviews = require('../controllers/reviews.controllers.js');
 var ctrlMonths = require('../controllers/months.controller.js');
 
 router.route('/months')
-  .get(ctrlMonths.monthGetAll)
+  .get(ctrlMonths.monthGetCategory)
   .post(ctrlMonths.monthCreateOne);
 
 router.route('/months/:monthId')

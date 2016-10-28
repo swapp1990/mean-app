@@ -1,6 +1,10 @@
 var mongoose = require('mongoose');
 var Month = mongoose.model('Month');
 
+var runCategoryQuery = function(req, res) {
+
+};
+
 module.exports.monthGetAll = function(req, res) {
     var offset = 0;
     var count = 5;
@@ -19,6 +23,21 @@ module.exports.monthGetAll = function(req, res) {
             console.log("Found Hotels", months.length);
             res.json(months);
         });
+};
+
+module.exports.monthGetCategory = function(req, res) {
+  var category = "";
+  if(req.query && req.query.category) {
+    console.log(req.query.category);
+    category = req.query.category;
+  }
+  Month
+    .find()
+    .where('category').equals(category)
+    .exec(function(err, months) {
+      console.log("Found Rows", months.length);
+      res.json(months);
+    });
 };
 
 module.exports.monthCreateOne = function(req,res) {
