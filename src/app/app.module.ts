@@ -7,14 +7,17 @@ import { AppComponent } from './app.component';
 import {HotelService} from "./services/hotels.service";
 import {routedComponents, AppRoutingModule} from "./routes/app-routing.module";
 
-import {InputTextModule, AccordionModule, TabViewModule, TreeTableModule,TreeNode,SharedModule} from 'primeng/primeng';
+import {InputTextModule, AccordionModule, TabViewModule, TreeTableModule,TreeNode,SharedModule, DataTableModule} from 'primeng/primeng';
 import {TreeTable} from "./components/utils/tree-table/tree-table.component";
+import {MonthlyService} from "./services/months.service";
+import {DataTable} from "./components/utils/data-table/data-table.component";
 
 @NgModule({
   declarations: [
     AppComponent,
     routedComponents,
-    TreeTable
+    TreeTable,
+    DataTable
   ],
   imports: [
     BrowserModule,
@@ -24,10 +27,11 @@ import {TreeTable} from "./components/utils/tree-table/tree-table.component";
     InputTextModule,
     AccordionModule,
     TabViewModule,
+    DataTableModule,
     TreeTableModule,
     SharedModule
   ],
-  providers: [HotelService],
+  providers: [HotelService, MonthlyService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

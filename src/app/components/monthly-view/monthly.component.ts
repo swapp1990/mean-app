@@ -5,22 +5,25 @@ import {Response, Http} from "@angular/http";
 import {HotelService} from "../../services/hotels.service";
 import {Hotel} from "../../models/hotel";
 import {TreeNode} from "primeng/primeng";
+import {MonthlyService} from "../../services/months.service";
+import {MonthData} from "../../models/month";
 
 @Component({
   selector: 'monthly-view',
   template: `<p-tabView orientation="left">
     <p-tabPanel header="Grocery">
-        <my-tree-table [files]="dataGrocery"></my-tree-table>
+        <my-data-table [files]="monthlyData"></my-data-table>
     </p-tabPanel>
     <p-tabPanel header="Food">
-        <my-tree-table [files]="dataFood"></my-tree-table>
+        <my-data-table [files]="monthlyData"></my-data-table>
     </p-tabPanel>
     <p-tabPanel header="Entertainment">
-        <my-tree-table [files]="dataEntertainment"></my-tree-table>    
+        <my-data-table [files]="monthlyData"></my-data-table>    
     </p-tabPanel>
 </p-tabView>`
 })
 export class MonthlyComponent implements OnInit {
+  monthlyData: MonthData[];
   error: any;
   response: any;
   files: TreeNode[];
@@ -32,21 +35,31 @@ export class MonthlyComponent implements OnInit {
   constructor(
     private http: Http,
     private router: Router,
-    private hotelService: HotelService) {
+    private monthlyService: MonthlyService) {
 
   }
 
   ngOnInit(): void {
-    this.getFileSystem().then(files => {
-      this.files = files;
-      this.dataGrocery = this.files.filter((row) => row.data.category === "Grocery");
-      this.dataFood = this.files.filter((row) => row.data.category === "Food");
-      this.dataEntertainment = this.files.filter((row) => row.data.category === "Entertainment");
-    });
+    // this.getFileSystem().then(files => {
+    //   this.files = files;
+    //   this.dataGrocery = this.files.filter((row) => row.data.category === "Grocery");
+    //   this.dataFood = this.files.filter((row) => row.data.category === "Food");
+    //   this.dataEntertainment = this.files.filter((row) => row.data.category === "Entertainment");
+    // });
+
+    this.monthlyService.getMonthlyData()
+      .subscribe (
+        monthlyData => {
+          this.monthlyData = monthlyData;
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
 
   private getFileSystem() {
-    return this.http.get('../assets/october.json')
+    return this.http.get('../assets/october2.json')
       .toPromise()
       .then(res => <TreeNode[]> res.json().data)
       .then(data => { return data; });
