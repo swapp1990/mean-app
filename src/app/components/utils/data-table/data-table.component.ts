@@ -8,12 +8,13 @@ import {MonthData} from "../../../models/month";
 @Component({
   selector: 'my-data-table',
   template: `
-              <p-dataTable *ngIf='!checked' [value]="files" [editable]="true">
+              <p-dataTable *ngIf='!checked' [value]="files" [editable]="true" selectionMode="single"  (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" [(selection)]="selectedRow">
                 <p-column field="date" header="Date" [editable]="true"></p-column>
                 <p-column field="name" header="Name" [style]="{'overflow':'visible'}">
                   <template let-row="rowData" pTemplate type="body">
-                     <p-autoComplete [(ngModel)]="row.name" [suggestions]="filteredBrands" (completeMethod)="filterBrands($event)">
+                     <p-autoComplete *ngIf='row.selected' [(ngModel)]="row.name" [suggestions]="filteredBrands" (completeMethod)="filterBrands($event)">
                      </p-autoComplete>
+                     <span  *ngIf='!row.selected'>{{row.name}}</span>
                   </template>
                 </p-column>
                 <p-column field="price" header="Price" [editable]="true"></p-column>
@@ -46,9 +47,11 @@ import {MonthData} from "../../../models/month";
 })
 export class DataTable implements OnInit {
   @Input() files: any[];
+  @Input() namesCache: any[];
   @Output() changeToggle = new EventEmitter();
   @Output() deleteEvent = new EventEmitter();
   checked: boolean = false;
+  selectedRow: any;
   @Input() totalCategory: number;
   text: string;
   brands: string[] = ['Audi','BMW','Fiat','Ford','Honda','Jaguar','Mercedes','Renault','Volvo','VW'];
@@ -63,14 +66,40 @@ export class DataTable implements OnInit {
       this.results.push("March");
   }
 
+  onRowSelect(event) {
+    console.log(event);
+    event.data.selected = true;
+  }
+
+  onRowUnselect(event) {
+    event.data.selected = false;
+  }
+
   filterBrands(event) {
     this.filteredBrands = [];
-    for(let i = 0; i < this.brands.length; i++) {
-      let brand = this.brands[i];
-      if(brand.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-        this.filteredBrands.push(brand);
+    //console.log(this.namesCache);
+    for(let i = 0; i < this.namesCache.length; i++) {
+      let name = this.namesCache[i];
+      if(name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        this.filteredBrands.push(name);
+        console.log(name);
       }
     }
+  }
+
+  handleDropdownClick() {
+    this.filteredBrands = [];
+
+    //mimic remote call
+    setTimeout(() => {
+      for(let i = 0; i < this.namesCache.length; i++) {
+        let name = this.namesCache[i].name;
+        //if(name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+          this.filteredBrands.push(name);
+          //console.log(name);
+        //}
+      }
+    }, 100)
   }
 
   handleChange(e) {

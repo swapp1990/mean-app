@@ -16,6 +16,7 @@ import {Category} from "../../models/catagory";
               <p-tabView orientation="left" (onChange)="onTabChange($event)">
                 <p-tabPanel *ngFor="let categoryB of categories" header="{{getCategoryHeader(categoryB)}}">
                     <my-data-table [files]="monthlyData" 
+                      [namesCache] = "namesCache"
                       [totalCategory]="totalCategory"
                       (changeToggle)="onChangeToggle($event)" 
                       (deleteEvent)="onDeleteRow($event)">
@@ -45,6 +46,7 @@ import {Category} from "../../models/catagory";
 export class MonthlyComponent implements OnInit {
   months: SelectItem[];
   categories: Category[];
+  namesCache: any[];
   selectedMonth: string;
   monthlyData: MonthData[];
   category: string;
@@ -63,6 +65,7 @@ export class MonthlyComponent implements OnInit {
 
   initializeCategories() {
     this.categories = [];
+    this.namesCache = [];
     this.categories.push({name: 'Rent', monthlySpent: 0});
     this.categories.push({name: 'Utilities', monthlySpent: 0});
     this.categories.push({name: 'Loan', monthlySpent: 0});
@@ -144,6 +147,7 @@ export class MonthlyComponent implements OnInit {
     //   this.dataEntertainment = this.files.filter((row) => row.data.category === "Entertainment");
     // });
     this.getMonthlyDataByCategory();
+    this.getAllCategoryNames();
   }
 
   onSelectedMonth(event) {
@@ -151,10 +155,23 @@ export class MonthlyComponent implements OnInit {
     this.calculateTotalSpent();
   }
 
+  getAllCategoryNames() {
+    this.monthlyService.getAllNamesByCategory(this.category, this.selectedMonth)
+      .subscribe (
+        body => {
+          this.namesCache = body;
+        },
+        err => {
+          console.log(err);
+        }
+      );
+  }
+
   onTabChange(event) {
     //console.log(event);
     this.category = this.categories[event.index].name;
     this.getMonthlyDataByCategory();
+    this.getAllCategoryNames();
   }
 
   getAllMonthlyData() {

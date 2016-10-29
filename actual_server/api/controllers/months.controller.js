@@ -67,7 +67,6 @@ module.exports.getTotalCost = function(req, res) {
   });
 }
 
-
 module.exports.monthGetAllCost = function(req, res) {
   var query = {
     month: req.query.month
@@ -83,6 +82,24 @@ module.exports.monthGetAllCost = function(req, res) {
     .select('price')
     .exec(function(err, months) {
       //console.log("Found Rows", months.length);
+      res.json(months);
+    });
+};
+
+module.exports.monthGetAllNames = function(req, res) {
+  var query = {
+    month: req.query.month
+  };
+
+  if(req.query && req.query.category) {
+    query.category = req.query.category;
+  }
+
+  Month
+    .find()
+    .where(query)
+    .distinct('name')
+    .exec(function(err, months) {
       res.json(months);
     });
 };

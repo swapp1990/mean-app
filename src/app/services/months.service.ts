@@ -60,6 +60,14 @@ export class MonthlyService {
       .map((response: Response) => response.json());
   }
 
+  //Get all names for month and category.
+  getAllNamesByCategory(category: string, month: string): Observable<any[]> {
+    let newUrl = this.monthsUrl +'/name'+ '?category='+ category+'&month='+ month;
+    return this.http
+      .get(newUrl)
+      .map((response: Response) => response.json());
+  }
+
   //Delete Monthly Data by Id.
   deleteMonthlyData(monthDataId: string) {
     let newUrl = this.monthsUrl + '/'+monthDataId;

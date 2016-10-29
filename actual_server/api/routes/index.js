@@ -12,6 +12,9 @@ router.route('/months')
 router.route('/months/price')
   .get(ctrlMonths.getTotalCost);
 
+router.route('/months/name')
+  .get(ctrlMonths.monthGetAllNames);
+
 router.route('/months/:monthId')
   .put(ctrlMonths.monthUpdateOne)
   .delete(ctrlMonths.monthDeleteOne);
