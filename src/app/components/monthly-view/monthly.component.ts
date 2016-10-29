@@ -12,6 +12,7 @@ import {Category} from "../../models/catagory";
 @Component({
   selector: 'monthly-view',
   template: `<p-dropdown [options]="months" [(ngModel)]="selectedMonth" (onChange)="onSelectedMonth($event)"></p-dropdown>
+              <h2>Total Spent: {{totalSpentMonthly}}</h2>
               <p-tabView orientation="left" (onChange)="onTabChange($event)">
                 <p-tabPanel *ngFor="let categoryB of categories" header="{{getCategoryHeader(categoryB)}}">
                     <my-data-table [files]="monthlyData" 
@@ -47,6 +48,7 @@ export class MonthlyComponent implements OnInit {
   monthlyData: MonthData[];
   category: string;
   totalCategory: number = 0;
+  totalSpentMonthly: number = 0;
   error: any;
   response: any;
 
@@ -91,8 +93,7 @@ export class MonthlyComponent implements OnInit {
 
   //Total Spent for Monthly Data.
   calculateTotalSpent() {
-    let totalCost: number = 0;
-    console.log(this.selectedMonth);
+    //console.log(this.selectedMonth);
     this.resetCategoryTotalSpent();
     this.monthlyService.monthGetAllCost(this.selectedMonth)
       .subscribe (
@@ -100,7 +101,7 @@ export class MonthlyComponent implements OnInit {
           monthlyData.map(body => {
             console.log(body);
             this.changeCategoryTotalSpent(body._id, body.balance);
-            //calculateTotalSpent += body.price;
+            this.totalSpentMonthly += body.balance;
           });
         },
         err => {
@@ -110,6 +111,7 @@ export class MonthlyComponent implements OnInit {
   }
 
   resetCategoryTotalSpent() {
+    this.totalSpentMonthly = 0;
     this.categories.map((category: Category) => {
         category.monthlySpent = 0;
     });
