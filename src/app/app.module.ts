@@ -9,18 +9,20 @@ import {routedComponents, AppRoutingModule} from "./routes/app-routing.module";
 
 import {
   InputTextModule, AccordionModule, TabViewModule, TreeTableModule, TreeNode, SharedModule, DataTableModule,
-  ToggleButtonModule, ButtonModule, DropdownModule
+  ToggleButtonModule, ButtonModule, DropdownModule, AutoCompleteModule
 } from 'primeng/primeng';
 import {TreeTable} from "./components/utils/tree-table/tree-table.component";
 import {MonthlyService} from "./services/months.service";
 import {DataTable} from "./components/utils/data-table/data-table.component";
+import {AutoCompleteColumn} from "./components/utils/data-table/autocomplete-column.component";
 
 @NgModule({
   declarations: [
     AppComponent,
     routedComponents,
     TreeTable,
-    DataTable
+    DataTable,
+    AutoCompleteColumn
   ],
   imports: [
     BrowserModule,
@@ -35,6 +37,7 @@ import {DataTable} from "./components/utils/data-table/data-table.component";
     ToggleButtonModule,
     DropdownModule,
     ButtonModule,
+    AutoCompleteModule,
     SharedModule
   ],
   providers: [HotelService, MonthlyService],

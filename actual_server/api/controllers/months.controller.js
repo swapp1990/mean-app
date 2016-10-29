@@ -20,7 +20,7 @@ module.exports.monthGetAll = function(req, res) {
         .find()
         .skip(offset)
         .exec(function(err, months) {
-            console.log("Found Hotels", months.length);
+            //console.log("Found Hotels", months.length);
             res.json(months);
         });
 };
@@ -38,7 +38,7 @@ module.exports.monthGetCategory = function(req, res) {
     .find()
     .where(query)
     .exec(function(err, months) {
-      console.log("Found Rows", months.length);
+      //console.log("Found Rows", months.length);
       res.json(months);
     });
 };
@@ -62,7 +62,7 @@ module.exports.getTotalCost = function(req, res) {
       console.log(err);
       return;
     }
-    console.log(result);
+    //console.log(result);
     res.json(result);
   });
 }
