@@ -7,11 +7,11 @@ import {MonthData} from "../../../models/month";
 
 @Component({
   selector: 'my-data-table',
-  template: `<p-dataTable *ngIf='!checked' [value]="files">
-                <p-column field="date" header="Date"></p-column>
-                <p-column field="name" header="Name"></p-column>
-                <p-column field="price" header="Price"></p-column>
-                <p-column field="payment" header="Payment Type"></p-column>
+  template: `<p-dataTable *ngIf='!checked' [value]="files" [editable]="true">
+                <p-column field="date" header="Date" [editable]="true"></p-column>
+                <p-column field="name" header="Name" [editable]="true"></p-column>
+                <p-column field="price" header="Price" [editable]="true"></p-column>
+                <p-column field="payment" header="Payment Type" [editable]="true"></p-column>
                 <p-footerColumnGroup>
                   <p-row>
                       <p-column footer="Total:" colspan="2"></p-column>

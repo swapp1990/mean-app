@@ -17,4 +17,4 @@ var monthSchema = new mongoose.Schema({
     month: String
 });
 
-mongoose.model('Month', monthSchema, 'october');
+mongoose.model('Month', monthSchema, 'monthlySpent');

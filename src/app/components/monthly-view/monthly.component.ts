@@ -20,7 +20,8 @@ import {Category} from "../../models/catagory";
                       (changeToggle)="onChangeToggle($event)" 
                       (deleteEvent)="onDeleteRow($event)">
                     </my-data-table>
-                    <button pButton type="text" (click)="onCreateToggle($event)" icon="fa-plus"></button>
+                    <button pButton type="text" (click)="onCreate($event)" icon="fa-plus"></button>
+                    <button pButton type="text" (click)="onSave($event)" icon="fa-check"></button>
                 </p-tabPanel>
                 <!--<p-tabPanel header="Food">-->
                    <!--<my-data-table [files]="monthlyData" -->
@@ -63,9 +64,17 @@ export class MonthlyComponent implements OnInit {
   initializeCategories() {
     this.categories = [];
     this.categories.push({name: 'Rent', monthlySpent: 0});
+    this.categories.push({name: 'Utilities', monthlySpent: 0});
+    this.categories.push({name: 'Loan', monthlySpent: 0});
     this.categories.push({name: 'Grocery', monthlySpent: 0});
     this.categories.push({name: 'Food', monthlySpent: 0});
+    this.categories.push({name: 'Coffee', monthlySpent: 0});
+    this.categories.push({name: 'Transport', monthlySpent: 0});
     this.categories.push({name: 'Entertainment', monthlySpent: 0});
+    this.categories.push({name: 'Fitness', monthlySpent: 0});
+    this.categories.push({name: 'Education', monthlySpent: 0});
+    this.categories.push({name: 'Furniture', monthlySpent: 0});
+    this.categories.push({name: 'Clothes', monthlySpent: 0});
     this.category = this.categories[0].name;
     this.calculateTotalSpent();
   }
@@ -102,6 +111,7 @@ export class MonthlyComponent implements OnInit {
             console.log(body);
             this.changeCategoryTotalSpent(body._id, body.balance);
             this.totalSpentMonthly += body.balance;
+            this.totalSpentMonthly = +Number(this.totalSpentMonthly).toFixed(2);
           });
         },
         err => {
@@ -121,6 +131,7 @@ export class MonthlyComponent implements OnInit {
     this.categories.map((category: Category) => {
       if(category.name === categoryName) {
         category.monthlySpent = totalSpent;
+        category.monthlySpent = +Number(category.monthlySpent).toFixed(2);
       }
     });
   }
@@ -167,6 +178,7 @@ export class MonthlyComponent implements OnInit {
           this.monthlyData = monthlyData;
           this.monthlyData.map((body: MonthData) => {
             this.totalCategory += body.price;
+            this.totalCategory = +Number(this.totalCategory).toFixed(2);
           });
         },
         err => {
@@ -175,17 +187,37 @@ export class MonthlyComponent implements OnInit {
       );
   }
 
-  onCreateToggle($event) {
+  onCreate($event) {
     let emptyData: MonthData = new MonthData(this.category, this.selectedMonth);
     console.log(emptyData);
     this.monthlyService.createMonthData(emptyData)
       .subscribe(
             data => {
-              console.log("Create" + data);
+              //console.log("Create" + data);
               this.getMonthlyDataByCategory();
+              this.calculateTotalSpent();
             },
             err => {console.log(err);}
           );
+  }
+
+  onSave($event) {
+    setTimeout(() => {
+      this.getMonthlyDataByCategory();
+      this.calculateTotalSpent();
+      this.totalCategory = 0;
+    }, 100);
+    this.monthlyData.map((body: MonthData) => {
+      if(body._id) {
+        this.monthlyService.updateMonthlyData(body._id, body)
+          .subscribe(
+            data => {
+              //console.log("OK" + data);
+            },
+            err => {console.log(err);}
+          );
+      }
+    });
   }
 
   onChangeToggle($event) {

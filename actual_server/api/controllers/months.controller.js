@@ -163,7 +163,7 @@ module.exports.monthUpdateOne = function(req,res) {
             if(err) {
               res.status(500).json(err);
             } else {
-              res.status(204).json();
+              res.status(200).json(monthUpdated);
             }
           });
         }
