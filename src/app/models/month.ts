@@ -6,6 +6,7 @@ export class MonthData {
   payment: string;
   type: string;
   date: number;
+  month: string;
 
   constructor(category: string) {
     this.name = "";
@@ -14,5 +15,6 @@ export class MonthData {
     this.payment = "D";
     this.type = "";
     this.date = 1;
+    this.month = "October";
   }
 }

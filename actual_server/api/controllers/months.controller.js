@@ -26,14 +26,17 @@ module.exports.monthGetAll = function(req, res) {
 };
 
 module.exports.monthGetCategory = function(req, res) {
-  var category = "";
+  var query = {
+    month: req.query.month
+  };
+
   if(req.query && req.query.category) {
-    console.log(req.query.category);
-    category = req.query.category;
+    //console.log(req.query.category);
+    query.category = req.query.category;
   }
   Month
     .find()
-    .where('category').equals(category)
+    .where(query)
     .exec(function(err, months) {
       console.log("Found Rows", months.length);
       res.json(months);
@@ -47,7 +50,8 @@ module.exports.monthCreateOne = function(req,res) {
       date : req.body.date,
       price : req.body.price,
       payment : req.body.payment,
-      category: req.body.category
+      category: req.body.category,
+      month: req.body.month
     }, function(err, body) {
       if(err) {
         console.log("Error creating new data");
@@ -109,6 +113,7 @@ module.exports.monthUpdateOne = function(req,res) {
           doc.date = req.body.date;
           doc.price = req.body.price;
           doc.payment = req.body.payment;
+          doc.month = req.body.month;
           //services = _splitArray(req.body.services),
           doc.save(function(err, monthUpdated) {
             if(err) {

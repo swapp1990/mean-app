@@ -13,7 +13,8 @@ var monthSchema = new mongoose.Schema({
     price : Number,
     category : String,
     payment : String,
-    type : String
+    type : String,
+    month: String
 });
 
 mongoose.model('Month', monthSchema, 'october');

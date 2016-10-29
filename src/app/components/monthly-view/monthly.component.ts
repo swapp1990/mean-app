@@ -4,13 +4,14 @@ import {Observable} from "rxjs/Rx";
 import {Response, Http} from "@angular/http";
 import {HotelService} from "../../services/hotels.service";
 import {Hotel} from "../../models/hotel";
-import {TreeNode} from "primeng/primeng";
+import {TreeNode, SelectItem} from "primeng/primeng";
 import {MonthlyService} from "../../services/months.service";
 import {MonthData} from "../../models/month";
 
 @Component({
   selector: 'monthly-view',
-  template: `<p-tabView orientation="left" (onChange)="onTabChange($event)">
+  template: `<p-dropdown [options]="months" [(ngModel)]="selectedMonth" (onChange)="onSelectedMonth($event)"></p-dropdown>
+              <p-tabView orientation="left" (onChange)="onTabChange($event)">
                 <p-tabPanel header="Grocery">
                     <my-data-table [files]="monthlyData" 
                       [totalCategory]="totalCategory"
@@ -37,7 +38,10 @@ import {MonthData} from "../../models/month";
                 </p-tabPanel>
              </p-tabView>`
 })
+
 export class MonthlyComponent implements OnInit {
+  months: SelectItem[];
+  selectedMonth: string;
   monthlyData: MonthData[];
   category: string = "Grocery";
   totalCategory: number = 0;
@@ -53,7 +57,24 @@ export class MonthlyComponent implements OnInit {
     private http: Http,
     private router: Router,
     private monthlyService: MonthlyService) {
+      this.initializeMonths();
+  }
 
+  initializeMonths() {
+    this.selectedMonth = 'October';
+    this.months = [];
+    this.months.push({label: 'January', value: 'January'});
+    this.months.push({label: 'February', value: 'February'});
+    this.months.push({label: 'March', value: 'March'});
+    this.months.push({label: 'April', value: 'April'});
+    this.months.push({label: 'May', value: 'May'});
+    this.months.push({label: 'June', value: 'June'});
+    this.months.push({label: 'July', value: 'July'});
+    this.months.push({label: 'August', value: 'August'});
+    this.months.push({label: 'September', value: 'September'});
+    this.months.push({label: 'October', value: 'October'});
+    this.months.push({label: 'November', value: 'November'});
+    this.months.push({label: 'December', value: 'December'});
   }
 
   ngOnInit(): void {
@@ -63,6 +84,10 @@ export class MonthlyComponent implements OnInit {
     //   this.dataFood = this.files.filter((row) => row.data.category === "Food");
     //   this.dataEntertainment = this.files.filter((row) => row.data.category === "Entertainment");
     // });
+    this.getMonthlyDataByCategory();
+  }
+
+  onSelectedMonth(event) {
     this.getMonthlyDataByCategory();
   }
 
@@ -92,7 +117,8 @@ export class MonthlyComponent implements OnInit {
 
   getMonthlyDataByCategory() {
     this.totalCategory = 0;
-    this.monthlyService.getMonthlyDataByCategory(this.category)
+    console.log(this.selectedMonth);
+    this.monthlyService.getMonthlyDataByCategory(this.category, this.selectedMonth)
       .subscribe (
         monthlyData => {
           this.monthlyData = monthlyData;

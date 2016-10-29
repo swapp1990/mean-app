@@ -9,7 +9,7 @@ import {routedComponents, AppRoutingModule} from "./routes/app-routing.module";
 
 import {
   InputTextModule, AccordionModule, TabViewModule, TreeTableModule, TreeNode, SharedModule, DataTableModule,
-  ToggleButtonModule, ButtonModule
+  ToggleButtonModule, ButtonModule, DropdownModule
 } from 'primeng/primeng';
 import {TreeTable} from "./components/utils/tree-table/tree-table.component";
 import {MonthlyService} from "./services/months.service";
@@ -33,6 +33,7 @@ import {DataTable} from "./components/utils/data-table/data-table.component";
     DataTableModule,
     TreeTableModule,
     ToggleButtonModule,
+    DropdownModule,
     ButtonModule,
     SharedModule
   ],
