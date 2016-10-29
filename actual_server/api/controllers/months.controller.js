@@ -43,6 +43,50 @@ module.exports.monthGetCategory = function(req, res) {
     });
 };
 
+//Aggregation function
+module.exports.getTotalCost = function(req, res) {
+  Month.aggregate([
+    {
+      $match: {
+        "month": req.query.month
+      }
+    },
+    {
+      $group: {
+        _id: "$category",
+        balance: { $sum: "$price"  }
+      }
+    }
+  ], function (err, result) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    console.log(result);
+    res.json(result);
+  });
+}
+
+
+module.exports.monthGetAllCost = function(req, res) {
+  var query = {
+    month: req.query.month
+  };
+
+  if(req.query && req.query.category) {
+    query.category = req.query.category;
+  }
+
+  Month
+    .find()
+    .where(query)
+    .select('price')
+    .exec(function(err, months) {
+      //console.log("Found Rows", months.length);
+      res.json(months);
+    });
+};
+
 module.exports.monthCreateOne = function(req,res) {
   Month
     .create({

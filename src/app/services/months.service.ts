@@ -52,6 +52,14 @@ export class MonthlyService {
       .map((response: Response) => response.json());
   }
 
+  //Get all Prices for Monthly Data.
+  monthGetAllCost(month: string): Observable<any[]> {
+    let newUrl = this.monthsUrl +'/price'+ '?month='+ month;
+    return this.http
+      .get(newUrl)
+      .map((response: Response) => response.json());
+  }
+
   //Delete Monthly Data by Id.
   deleteMonthlyData(monthDataId: string) {
     let newUrl = this.monthsUrl + '/'+monthDataId;

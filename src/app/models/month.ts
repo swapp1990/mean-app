@@ -8,13 +8,13 @@ export class MonthData {
   date: number;
   month: string;
 
-  constructor(category: string) {
+  constructor(category: string, month: string) {
     this.name = "";
     this.price = 0;
     this.category = category;
     this.payment = "D";
     this.type = "";
     this.date = 1;
-    this.month = "October";
+    this.month = month;
   }
 }

@@ -7,12 +7,13 @@ import {Hotel} from "../../models/hotel";
 import {TreeNode, SelectItem} from "primeng/primeng";
 import {MonthlyService} from "../../services/months.service";
 import {MonthData} from "../../models/month";
+import {Category} from "../../models/catagory";
 
 @Component({
   selector: 'monthly-view',
   template: `<p-dropdown [options]="months" [(ngModel)]="selectedMonth" (onChange)="onSelectedMonth($event)"></p-dropdown>
               <p-tabView orientation="left" (onChange)="onTabChange($event)">
-                <p-tabPanel header="Grocery">
+                <p-tabPanel *ngFor="let categoryB of categories" header="{{getCategoryHeader(categoryB)}}">
                     <my-data-table [files]="monthlyData" 
                       [totalCategory]="totalCategory"
                       (changeToggle)="onChangeToggle($event)" 
@@ -20,44 +21,51 @@ import {MonthData} from "../../models/month";
                     </my-data-table>
                     <button pButton type="text" (click)="onCreateToggle($event)" icon="fa-plus"></button>
                 </p-tabPanel>
-                <p-tabPanel header="Food">
-                   <my-data-table [files]="monthlyData" 
-                      [totalCategory]="totalCategory"
-                      (changeToggle)="onChangeToggle($event)" 
-                      (deleteEvent)="onDeleteRow($event)">
-                    </my-data-table>
-                    <button pButton type="text" (click)="onCreateToggle($event)" icon="fa-plus"></button>
-                </p-tabPanel>
-                <p-tabPanel header="Entertainment">
-                    <my-data-table [files]="monthlyData"
-                      [totalCategory]="totalCategory"
-                      (changeToggle)="onChangeToggle($event)" 
-                      (deleteEvent)="onDeleteRow($event)">
-                    </my-data-table>
-                    <button pButton type="text" (click)="onCreateToggle($event)" icon="fa-plus"></button>
-                </p-tabPanel>
+                <!--<p-tabPanel header="Food">-->
+                   <!--<my-data-table [files]="monthlyData" -->
+                      <!--[totalCategory]="totalCategory"-->
+                      <!--(changeToggle)="onChangeToggle($event)" -->
+                      <!--(deleteEvent)="onDeleteRow($event)">-->
+                    <!--</my-data-table>-->
+                    <!--<button pButton type="text" (click)="onCreateToggle($event)" icon="fa-plus"></button>-->
+                <!--</p-tabPanel>-->
+                <!--<p-tabPanel header="Entertainment">-->
+                    <!--<my-data-table [files]="monthlyData"-->
+                      <!--[totalCategory]="totalCategory"-->
+                      <!--(changeToggle)="onChangeToggle($event)" -->
+                      <!--(deleteEvent)="onDeleteRow($event)">-->
+                    <!--</my-data-table>-->
+                    <!--<button pButton type="text" (click)="onCreateToggle($event)" icon="fa-plus"></button>-->
+                <!--</p-tabPanel>-->
              </p-tabView>`
 })
 
 export class MonthlyComponent implements OnInit {
   months: SelectItem[];
+  categories: Category[];
   selectedMonth: string;
   monthlyData: MonthData[];
-  category: string = "Grocery";
+  category: string;
   totalCategory: number = 0;
   error: any;
   response: any;
-  files: TreeNode[];
-  dataGrocery: TreeNode[];
-  dataFood: TreeNode[];
-  dataEntertainment: TreeNode[];
-  observable$: Observable<{}>;
 
   constructor(
     private http: Http,
     private router: Router,
     private monthlyService: MonthlyService) {
       this.initializeMonths();
+      this.initializeCategories();
+  }
+
+  initializeCategories() {
+    this.categories = [];
+    this.categories.push({name: 'Rent', monthlySpent: 0});
+    this.categories.push({name: 'Grocery', monthlySpent: 0});
+    this.categories.push({name: 'Food', monthlySpent: 0});
+    this.categories.push({name: 'Entertainment', monthlySpent: 0});
+    this.category = this.categories[0].name;
+    this.calculateTotalSpent();
   }
 
   initializeMonths() {
@@ -77,6 +85,44 @@ export class MonthlyComponent implements OnInit {
     this.months.push({label: 'December', value: 'December'});
   }
 
+  getCategoryHeader(categoryBody: Category) {
+    return categoryBody.name + " - " + categoryBody.monthlySpent;
+  }
+
+  //Total Spent for Monthly Data.
+  calculateTotalSpent() {
+    let totalCost: number = 0;
+    console.log(this.selectedMonth);
+    this.resetCategoryTotalSpent();
+    this.monthlyService.monthGetAllCost(this.selectedMonth)
+      .subscribe (
+        monthlyData => {
+          monthlyData.map(body => {
+            console.log(body);
+            this.changeCategoryTotalSpent(body._id, body.balance);
+            //calculateTotalSpent += body.price;
+          });
+        },
+        err => {
+          console.log(err);
+        }
+      );
+  }
+
+  resetCategoryTotalSpent() {
+    this.categories.map((category: Category) => {
+        category.monthlySpent = 0;
+    });
+  }
+
+  changeCategoryTotalSpent(categoryName: string, totalSpent: number) {
+    this.categories.map((category: Category) => {
+      if(category.name === categoryName) {
+        category.monthlySpent = totalSpent;
+      }
+    });
+  }
+
   ngOnInit(): void {
     // this.getFileSystem().then(files => {
     //   this.files = files;
@@ -89,17 +135,12 @@ export class MonthlyComponent implements OnInit {
 
   onSelectedMonth(event) {
     this.getMonthlyDataByCategory();
+    this.calculateTotalSpent();
   }
 
   onTabChange(event) {
     //console.log(event);
-    if(event.index == 0) {
-      this.category = "Grocery";
-    } else if(event.index == 1) {
-      this.category = "Food";
-    } else {
-      this.category = "Entertainment";
-    }
+    this.category = this.categories[event.index].name;
     this.getMonthlyDataByCategory();
   }
 
@@ -117,7 +158,7 @@ export class MonthlyComponent implements OnInit {
 
   getMonthlyDataByCategory() {
     this.totalCategory = 0;
-    console.log(this.selectedMonth);
+    //console.log(this.selectedMonth);
     this.monthlyService.getMonthlyDataByCategory(this.category, this.selectedMonth)
       .subscribe (
         monthlyData => {
@@ -133,7 +174,7 @@ export class MonthlyComponent implements OnInit {
   }
 
   onCreateToggle($event) {
-    let emptyData: MonthData = new MonthData(this.category);
+    let emptyData: MonthData = new MonthData(this.category, this.selectedMonth);
     console.log(emptyData);
     this.monthlyService.createMonthData(emptyData)
       .subscribe(

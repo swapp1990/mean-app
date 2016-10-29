@@ -9,6 +9,9 @@ router.route('/months')
   .get(ctrlMonths.monthGetCategory)
   .post(ctrlMonths.monthCreateOne);
 
+router.route('/months/price')
+  .get(ctrlMonths.getTotalCost);
+
 router.route('/months/:monthId')
   .put(ctrlMonths.monthUpdateOne)
   .delete(ctrlMonths.monthDeleteOne);
