@@ -52,6 +52,13 @@ export class MonthlyService {
       .map((response: Response) => response.json());
   }
 
+  monthGetAllCostByCategory(): Observable<any[]> {
+    let newUrl = this.monthsUrl +'/price';
+    return this.http
+      .get(newUrl)
+      .map((response: Response) => response.json());
+  }
+
   //Get all Prices for Monthly Data.
   monthGetAllCost(month: string): Observable<any[]> {
     let newUrl = this.monthsUrl +'/price'+ '?month='+ month;

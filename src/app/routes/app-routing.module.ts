@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import {HotelComponent} from "../components/hotel/hotel.component";
 import {MonthlyComponent} from "../components/monthly-view/monthly.component";
+import {MonthlyGraphView} from "../components/monthly-view/monthly-graph.component";
 
 const routes: Routes = [
   {
@@ -19,6 +20,10 @@ const routes: Routes = [
     component: MonthlyComponent
   },
   {
+    path: 'graph',
+    component: MonthlyGraphView
+  },
+  {
     path: 'hotels',
     component: HotelComponent
   }
@@ -30,4 +35,4 @@ const routes: Routes = [
 })
 export class AppRoutingModule { }
 
-export const routedComponents = [HotelComponent, MonthlyComponent];
+export const routedComponents = [HotelComponent, MonthlyComponent, MonthlyGraphView];

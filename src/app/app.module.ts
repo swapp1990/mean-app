@@ -9,7 +9,7 @@ import {routedComponents, AppRoutingModule} from "./routes/app-routing.module";
 
 import {
   InputTextModule, AccordionModule, TabViewModule, TreeTableModule, TreeNode, SharedModule, DataTableModule,
-  ToggleButtonModule, ButtonModule, DropdownModule, AutoCompleteModule
+  ToggleButtonModule, ButtonModule, DropdownModule, AutoCompleteModule, ChartModule
 } from 'primeng/primeng';
 import {TreeTable} from "./components/utils/tree-table/tree-table.component";
 import {MonthlyService} from "./services/months.service";
@@ -38,6 +38,7 @@ import {AutoCompleteColumn} from "./components/utils/data-table/autocomplete-col
     DropdownModule,
     ButtonModule,
     AutoCompleteModule,
+    ChartModule,
     SharedModule
   ],
   providers: [HotelService, MonthlyService],

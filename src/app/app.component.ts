@@ -19,6 +19,7 @@ import { Component } from '@angular/core';
     <nav>
       <a routerLink="/hotels" routerLinkActive="active">Heroes</a>
       <a routerLink="/monthly" routerLinkActive="active">Monthly</a>
+      <a routerLink="/graph" routerLinkActive="active">Graph</a>
     </nav>
     <router-outlet></router-outlet>
   `,

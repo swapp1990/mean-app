@@ -112,7 +112,7 @@ export class MonthlyComponent implements OnInit {
         monthlyData => {
           monthlyData.map(body => {
             console.log(body);
-            this.changeCategoryTotalSpent(body._id, body.balance);
+            this.changeCategoryTotalSpent(body._id.category, body.balance);
             this.totalSpentMonthly += body.balance;
             this.totalSpentMonthly = +Number(this.totalSpentMonthly).toFixed(2);
           });

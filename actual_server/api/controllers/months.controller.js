@@ -45,15 +45,25 @@ module.exports.monthGetCategory = function(req, res) {
 
 //Aggregation function
 module.exports.getTotalCost = function(req, res) {
+  var query = {};
+  if(req.query) {
+    if(req.query.month) {
+      query.month = req.query.month;
+    }
+    if(req.query.category) {
+      query.category = req.query.category;
+    }
+  }
   Month.aggregate([
     {
-      $match: {
-        "month": req.query.month
-      }
+      $match: query
     },
     {
       $group: {
-        _id: "$category",
+        _id: {
+          "category": "$category",
+          "month": "$month"
+        },
         balance: { $sum: "$price"  }
       }
     }

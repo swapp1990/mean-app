@@ -8,14 +8,14 @@ import {MonthData} from "../../../models/month";
 @Component({
   selector: 'my-data-table',
   template: `
-              <p-dataTable *ngIf='!checked' [value]="files" [editable]="true" selectionMode="single"  (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" [(selection)]="selectedRow">
+              <p-dataTable *ngIf='!checked' [value]="files" [editable]="true" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" [(selection)]="selectedRow">
                 <p-column field="date" header="Date" [editable]="true"></p-column>
-                <p-column field="name" header="Name" [style]="{'overflow':'visible'}">
-                  <template let-row="rowData" pTemplate type="body">
-                     <p-autoComplete *ngIf='row.selected' [(ngModel)]="row.name" [suggestions]="filteredBrands" (completeMethod)="filterBrands($event)">
-                     </p-autoComplete>
-                     <span  *ngIf='!row.selected'>{{row.name}}</span>
-                  </template>
+                <p-column field="name" header="Name" [editable]="true" [style]="{'overflow':'visible'}">
+                  <!--<template let-row="rowData" pTemplate type="body">-->
+                     <!--<p-autoComplete *ngIf='row.selected' [(ngModel)]="row.name" [suggestions]="filteredBrands" (completeMethod)="filterBrands($event)">-->
+                     <!--</p-autoComplete>-->
+                     <!--<span  *ngIf='!row.selected'>{{row.name}}</span>-->
+                  <!--</template>-->
                 </p-column>
                 <p-column field="price" header="Price" [editable]="true"></p-column>
                 <p-column field="payment" header="Payment Type" [editable]="true"></p-column>
@@ -79,7 +79,7 @@ export class DataTable implements OnInit {
     this.filteredBrands = [];
     //console.log(this.namesCache);
     for(let i = 0; i < this.namesCache.length; i++) {
-      let name = this.namesCache[i];
+      let name = this.namesCache[i].name;
       if(name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
         this.filteredBrands.push(name);
         console.log(name);
