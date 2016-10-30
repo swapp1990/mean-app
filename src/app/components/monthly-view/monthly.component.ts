@@ -121,6 +121,11 @@ export class MonthlyComponent implements OnInit {
         monthlyData => {
           monthlyData.map(body => {
             //console.log(body);
+            if(body._id.category === this.category) {
+                this.totalCategory = body.balance;
+                this.totalCategory = +Number(this.totalCategory).toFixed(2);
+                console.log("Total: " + this.totalCategory);
+            }
             this.changeCategoryTotalSpent(body._id.category, body.balance);
             this.totalSpentMonthly += body.balance;
             this.totalSpentMonthly = +Number(this.totalSpentMonthly).toFixed(2);
@@ -179,6 +184,7 @@ export class MonthlyComponent implements OnInit {
     this.category = this.categories[event.index].name;
     this.getMonthlyDataByCategory();
     this.getAllCategoryNames();
+    this.calculateTotalSpent();
   }
 
   getAllMonthlyData() {
@@ -201,8 +207,8 @@ export class MonthlyComponent implements OnInit {
         monthlyData => {
           this.monthlyData = monthlyData;
           this.monthlyData.map((body: MonthData) => {
-            this.totalCategory += body.price;
-            this.totalCategory = +Number(this.totalCategory).toFixed(2);
+            //this.totalCategory += body.price;
+            //this.totalCategory = +Number(this.totalCategory).toFixed(2);
           });
         },
         err => {
@@ -250,6 +256,7 @@ export class MonthlyComponent implements OnInit {
       .subscribe(
         data => {
           //console.log("OK" + data);
+          this.calculateTotalSpent();
         },
         err => {console.log(err);}
       );
