@@ -7,18 +7,14 @@ import {MonthData} from "../../../models/month";
 
 @Component({
   selector: 'my-data-table',
-  template: `
-              <p-dataTable *ngIf='!checked' [value]="files" [editable]="true" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" [(selection)]="selectedRow">
-                <p-column field="date" header="Date" [editable]="true"></p-column>
-                <p-column field="name" header="Name" [editable]="true" [style]="{'overflow':'visible'}">
-                  <!--<template let-row="rowData" pTemplate type="body">-->
-                     <!--<p-autoComplete *ngIf='row.selected' [(ngModel)]="row.name" [suggestions]="filteredBrands" (completeMethod)="filterBrands($event)">-->
-                     <!--</p-autoComplete>-->
-                     <!--<span  *ngIf='!row.selected'>{{row.name}}</span>-->
-                  <!--</template>-->
+  template: `<p-dataTable *ngIf='!checked' [value]="files" [editable]="true" selectionMode="single" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" [(selection)]="selectedRow">
+                <p-column *ngFor="let col of dataColumns" field="{{col.field}}" header="{{col.name}}">
+                  <template let-row="rowData" pTemplate type="body">
+                    <p-autoComplete *ngIf='row.selected' [(ngModel)]="row[col.field]">
+                    </p-autoComplete>
+                    <span *ngIf='!row.selected'>{{row[col.field]}}</span>
+                  </template>
                 </p-column>
-                <p-column field="price" header="Price" [editable]="true"></p-column>
-                <p-column field="payment" header="Payment Type" [editable]="true"></p-column>
                 <p-footerColumnGroup>
                    <p-row>
                       <p-column footer="Total:" colspan="2"></p-column>
@@ -47,7 +43,7 @@ import {MonthData} from "../../../models/month";
 })
 export class DataTable implements OnInit {
   @Input() files: any[];
-  @Input() namesCache: any[];
+  @Input() dataColumns: any[];
   @Output() changeToggle = new EventEmitter();
   @Output() deleteEvent = new EventEmitter();
   checked: boolean = false;
@@ -78,29 +74,29 @@ export class DataTable implements OnInit {
   filterBrands(event) {
     this.filteredBrands = [];
     //console.log(this.namesCache);
-    for(let i = 0; i < this.namesCache.length; i++) {
-      let name = this.namesCache[i].name;
-      if(name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-        this.filteredBrands.push(name);
-        console.log(name);
-      }
-    }
+    // for(let i = 0; i < this.namesCache.length; i++) {
+    //   let name = this.namesCache[i].name;
+    //   if(name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+    //     this.filteredBrands.push(name);
+    //     console.log(name);
+    //   }
+    // }
   }
 
-  handleDropdownClick() {
-    this.filteredBrands = [];
-
-    //mimic remote call
-    setTimeout(() => {
-      for(let i = 0; i < this.namesCache.length; i++) {
-        let name = this.namesCache[i].name;
-        //if(name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-          this.filteredBrands.push(name);
-          //console.log(name);
-        //}
-      }
-    }, 100)
-  }
+  // handleDropdownClick() {
+  //   this.filteredBrands = [];
+  //
+  //   //mimic remote call
+  //   setTimeout(() => {
+  //     for(let i = 0; i < this.namesCache.length; i++) {
+  //       let name = this.namesCache[i].name;
+  //       //if(name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+  //         this.filteredBrands.push(name);
+  //         //console.log(name);
+  //       //}
+  //     }
+  //   }, 100)
+  // }
 
   handleChange(e) {
     var isChecked = e.checked;

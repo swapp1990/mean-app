@@ -16,7 +16,7 @@ import {Category} from "../../models/catagory";
               <p-tabView orientation="left" (onChange)="onTabChange($event)">
                 <p-tabPanel *ngFor="let categoryB of categories" header="{{getCategoryHeader(categoryB)}}">
                     <my-data-table [files]="monthlyData" 
-                      [namesCache] = "namesCache"
+                      [dataColumns] = "dataColumns"
                       [totalCategory]="totalCategory"
                       (changeToggle)="onChangeToggle($event)" 
                       (deleteEvent)="onDeleteRow($event)">
@@ -46,6 +46,7 @@ import {Category} from "../../models/catagory";
 export class MonthlyComponent implements OnInit {
   months: SelectItem[];
   categories: Category[];
+  dataColumns: any[];
   namesCache: any[];
   selectedMonth: string;
   monthlyData: MonthData[];
@@ -59,8 +60,15 @@ export class MonthlyComponent implements OnInit {
     private http: Http,
     private router: Router,
     private monthlyService: MonthlyService) {
-      this.initializeMonths();
-      this.initializeCategories();
+
+  }
+
+  initializeColumns() {
+    this.dataColumns = [];
+    this.dataColumns.push({name: 'Date', field: 'date', cache: null});
+    this.dataColumns.push({name: 'Name', field: 'name', cache: this.namesCache});
+    this.dataColumns.push({name: 'Cost', field: 'price', cache: null});
+    this.dataColumns.push({name: 'Payment', field: 'payment', cache: null});
   }
 
   initializeCategories() {
@@ -140,14 +148,11 @@ export class MonthlyComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.getFileSystem().then(files => {
-    //   this.files = files;
-    //   this.dataGrocery = this.files.filter((row) => row.data.category === "Grocery");
-    //   this.dataFood = this.files.filter((row) => row.data.category === "Food");
-    //   this.dataEntertainment = this.files.filter((row) => row.data.category === "Entertainment");
-    // });
+    this.initializeMonths();
+    this.initializeCategories();
     this.getMonthlyDataByCategory();
     this.getAllCategoryNames();
+    this.initializeColumns();
   }
 
   onSelectedMonth(event) {
