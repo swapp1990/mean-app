@@ -7,7 +7,12 @@ import {MonthData} from "../../../models/month";
 
 @Component({
   selector: 'my-data-table',
-  template: `<p-dataTable *ngIf='!checked' [value]="files" [editable]="true" selectionMode="single" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" [(selection)]="selectedRow">
+  template: `<p-dataTable *ngIf='!checked' [value]="files" [editable]="true" 
+                        selectionMode="single" 
+                        (onRowSelect)="onRowSelect($event)" 
+                        (onRowUnselect)="onRowUnselect($event)" 
+                        [rows]="5" [paginator]="true" 
+                        [(selection)]="selectedRow">
                 <p-column *ngFor="let col of dataColumns" field="{{col.field}}" header="{{col.name}}" [style]="{'overflow':'visible'}">
                   <template let-row="rowData" pTemplate type="body">
                     <span *ngIf='row.selected'>

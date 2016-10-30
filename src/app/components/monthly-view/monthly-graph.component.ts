@@ -15,22 +15,33 @@ export class MonthlyGraphView implements OnInit {
   constructor(
     private http: Http,
     private monthlyService: MonthlyService) {
+
+  }
+
+  ngOnInit(): void {
     this.data = {
       labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
       datasets: [
         {
           label: 'Food',
+          backgroundColor: '#42A5F5',
+          borderColor: '#1E88E5',
           data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         },
         {
           label: 'Grocery',
+          backgroundColor: '#42f456',
+          borderColor: '#46f25a',
+          data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+          label: 'Entertainment',
+          backgroundColor: '#e52424',
+          borderColor: '#ed2a2a',
           data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         }
       ]
     }
-  }
-
-  ngOnInit(): void {
     this.monthlyService.monthGetAllCostByCategory()
       .subscribe (
         monthlyData => {

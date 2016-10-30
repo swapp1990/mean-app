@@ -15,6 +15,12 @@ import {Category} from "../../models/catagory";
               <h2>Total Spent: {{totalSpentMonthly}}</h2>
               <p-tabView orientation="left" (onChange)="onTabChange($event)">
                 <p-tabPanel *ngFor="let categoryB of categories" header="{{getCategoryHeader(categoryB)}}">
+                <span style="{'display':'inline-block'}">
+                  <button pButton type="button" (click)="onClickLeft()" icon="fa-angle-double-left" iconPos="left"></button>
+                  <button pButton type="button" (click)="onClickRight()" icon="fa-angle-double-right" iconPos="right"></button>
+                  <h3>{{selectedMonth}}</h3>
+                </span>
+                    
                     <my-data-table [files]="monthlyData" 
                       [dataColumns] = "dataColumns"
                       [totalCategory]="totalCategory"
@@ -160,11 +166,6 @@ export class MonthlyComponent implements OnInit {
     this.getAllCategoryNames();
   }
 
-  onSelectedMonth(event) {
-    this.getMonthlyDataByCategory();
-    this.calculateTotalSpent();
-  }
-
   getAllCategoryNames() {
     this.monthlyService.getAllNamesByCategory(this.category, this.selectedMonth)
       .subscribe (
@@ -177,14 +178,6 @@ export class MonthlyComponent implements OnInit {
           console.log(err);
         }
       );
-  }
-
-  onTabChange(event) {
-    //console.log(event);
-    this.category = this.categories[event.index].name;
-    this.getMonthlyDataByCategory();
-    this.getAllCategoryNames();
-    this.calculateTotalSpent();
   }
 
   getAllMonthlyData() {
@@ -215,6 +208,35 @@ export class MonthlyComponent implements OnInit {
           console.log(err);
         }
       );
+  }
+
+  onSelectedMonth(event) {
+    this.getMonthlyDataByCategory();
+    this.calculateTotalSpent();
+  }
+
+  onTabChange(event) {
+    //console.log(event);
+    this.category = this.categories[event.index].name;
+    this.getMonthlyDataByCategory();
+    this.getAllCategoryNames();
+    this.calculateTotalSpent();
+  }
+
+  onClickRight() {
+    if(this.selectedMonth === 'September') {
+      this.selectedMonth = 'October';
+    }
+    this.getMonthlyDataByCategory();
+    this.calculateTotalSpent();
+  }
+
+  onClickLeft() {
+    if(this.selectedMonth === 'October') {
+      this.selectedMonth = 'September';
+    }
+    this.getMonthlyDataByCategory();
+    this.calculateTotalSpent();
   }
 
   onCreate($event) {
