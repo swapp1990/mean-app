@@ -19,6 +19,7 @@ import {Category} from "../../models/catagory";
                       [dataColumns] = "dataColumns"
                       [totalCategory]="totalCategory"
                       (changeToggle)="onChangeToggle($event)" 
+                      (updateRow)="onUpdateRow($event)"
                       (deleteEvent)="onDeleteRow($event)">
                     </my-data-table>
                     <button pButton type="text" (click)="onCreate($event)" icon="fa-plus"></button>
@@ -119,7 +120,7 @@ export class MonthlyComponent implements OnInit {
       .subscribe (
         monthlyData => {
           monthlyData.map(body => {
-            console.log(body);
+            //console.log(body);
             this.changeCategoryTotalSpent(body._id.category, body.balance);
             this.totalSpentMonthly += body.balance;
             this.totalSpentMonthly = +Number(this.totalSpentMonthly).toFixed(2);
@@ -241,6 +242,17 @@ export class MonthlyComponent implements OnInit {
           );
       }
     });
+  }
+
+  onUpdateRow(event) {
+    //console.log(event);
+    this.monthlyService.updateMonthlyData(event._id, event)
+      .subscribe(
+        data => {
+          //console.log("OK" + data);
+        },
+        err => {console.log(err);}
+      );
   }
 
   onChangeToggle($event) {

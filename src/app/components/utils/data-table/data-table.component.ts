@@ -11,7 +11,10 @@ import {MonthData} from "../../../models/month";
                 <p-column *ngFor="let col of dataColumns" field="{{col.field}}" header="{{col.name}}" [style]="{'overflow':'visible'}">
                   <template let-row="rowData" pTemplate type="body">
                     <span *ngIf='row.selected'>
-                      <p-autoComplete [suggestions]="filteredResults" (completeMethod)="search($event, col)" [(ngModel)]="row[col.field]"></p-autoComplete>
+                      <p-autoComplete [suggestions]="col.filteredResults" 
+                                      (completeMethod)="search($event, col)" 
+                                      [minLength]="2"
+                                      [(ngModel)]="row[col.field]"></p-autoComplete>
                     </span>
                     <span *ngIf='!row.selected'>{{row[col.field]}}</span>
                   </template>
@@ -46,13 +49,13 @@ export class DataTable implements OnInit {
   @Input() files: any[];
   @Input() dataColumns: any[];
   @Output() changeToggle = new EventEmitter();
+  @Output() updateRow = new EventEmitter();
   @Output() deleteEvent = new EventEmitter();
   checked: boolean = false;
   selectedRow: any;
   @Input() totalCategory: number;
   text: string;
   brands: string[] = ['Audi','BMW','Fiat','Ford','Honda','Jaguar','Mercedes','Renault','Volvo','VW'];
-  filteredResults: any[];
   test: any[];
 
   constructor(
@@ -65,11 +68,13 @@ export class DataTable implements OnInit {
 
   onRowSelect(event) {
     event.data.selected = true;
-    console.log(event);
+    //console.log(event);
   }
 
   onRowUnselect(event) {
     event.data.selected = false;
+    this.updateRow.emit(event.data);
+    //console.log(event);
   }
 
   isVisible(col: any) {
@@ -77,14 +82,14 @@ export class DataTable implements OnInit {
   }
 
   search(event: any, col: any) {
-    console.log(col);
-    this.filteredResults = [];
+    //console.log(col);
+    col.filteredResults = [];
     if(col.cache.length > 0) {
       for(let i = 0; i < col.cache.length; i++) {
         let name = col.cache[i];
         if(name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-          this.filteredResults.push(name);
-          console.log(name);
+          col.filteredResults.push(name);
+          //console.log(name);
         }
       }
     }

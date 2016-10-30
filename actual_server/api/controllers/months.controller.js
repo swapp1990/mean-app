@@ -98,7 +98,7 @@ module.exports.monthGetAllCost = function(req, res) {
 
 module.exports.monthGetAllNames = function(req, res) {
   var query = {
-    month: req.query.month
+
   };
 
   if(req.query && req.query.category) {
