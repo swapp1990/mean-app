@@ -152,7 +152,6 @@ export class MonthlyComponent implements OnInit {
     this.initializeCategories();
     this.getMonthlyDataByCategory();
     this.getAllCategoryNames();
-    this.initializeColumns();
   }
 
   onSelectedMonth(event) {
@@ -165,6 +164,8 @@ export class MonthlyComponent implements OnInit {
       .subscribe (
         body => {
           this.namesCache = body;
+          console.log(this.namesCache);
+          this.initializeColumns();
         },
         err => {
           console.log(err);

@@ -8,10 +8,11 @@ import {MonthData} from "../../../models/month";
 @Component({
   selector: 'my-data-table',
   template: `<p-dataTable *ngIf='!checked' [value]="files" [editable]="true" selectionMode="single" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" [(selection)]="selectedRow">
-                <p-column *ngFor="let col of dataColumns" field="{{col.field}}" header="{{col.name}}">
+                <p-column *ngFor="let col of dataColumns" field="{{col.field}}" header="{{col.name}}" [style]="{'overflow':'visible'}">
                   <template let-row="rowData" pTemplate type="body">
-                    <p-autoComplete *ngIf='row.selected' [(ngModel)]="row[col.field]">
-                    </p-autoComplete>
+                    <span *ngIf='row.selected'>
+                      <p-autoComplete [suggestions]="filteredResults" (completeMethod)="search($event, col)" [(ngModel)]="row[col.field]"></p-autoComplete>
+                    </span>
                     <span *ngIf='!row.selected'>{{row[col.field]}}</span>
                   </template>
                 </p-column>
@@ -51,36 +52,42 @@ export class DataTable implements OnInit {
   @Input() totalCategory: number;
   text: string;
   brands: string[] = ['Audi','BMW','Fiat','Ford','Honda','Jaguar','Mercedes','Renault','Volvo','VW'];
-  filteredBrands: any[];
-  results: any[];
+  filteredResults: any[];
+  test: any[];
 
   constructor(
     private http: Http) {
-      this.results = [];
-      this.results.push("January");
-      this.results.push("Feb");
-      this.results.push("March");
+      this.test = [];
+      this.test.push("January");
+      this.test.push("Feb");
+      this.test.push("March");
   }
 
   onRowSelect(event) {
-    console.log(event);
     event.data.selected = true;
+    console.log(event);
   }
 
   onRowUnselect(event) {
     event.data.selected = false;
   }
 
-  filterBrands(event) {
-    this.filteredBrands = [];
-    //console.log(this.namesCache);
-    // for(let i = 0; i < this.namesCache.length; i++) {
-    //   let name = this.namesCache[i].name;
-    //   if(name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-    //     this.filteredBrands.push(name);
-    //     console.log(name);
-    //   }
-    // }
+  isVisible(col: any) {
+    return col.cache != null;
+  }
+
+  search(event: any, col: any) {
+    console.log(col);
+    this.filteredResults = [];
+    if(col.cache.length > 0) {
+      for(let i = 0; i < col.cache.length; i++) {
+        let name = col.cache[i];
+        if(name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+          this.filteredResults.push(name);
+          console.log(name);
+        }
+      }
+    }
   }
 
   // handleDropdownClick() {
