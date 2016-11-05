@@ -40,7 +40,7 @@ export class MonthlyTypeComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeCategories();
-    this.initializeColumns();
+    this.getAllCategoryNames();
     this.getMonthlyDataByCategory();
   }
 
@@ -61,7 +61,6 @@ export class MonthlyTypeComponent implements OnInit {
 
   initializeColumns() {
     this.dataColumns = [];
-    this.namesCache = [];
     this.dataColumns.push({name: 'Date', field: 'date', cache: null});
     this.dataColumns.push({name: 'Name', field: 'name', cache: this.namesCache});
     this.dataColumns.push({name: 'Cost', field: 'price', cache: null});
@@ -77,6 +76,21 @@ export class MonthlyTypeComponent implements OnInit {
       .subscribe (
         monthlyData => {
           this.data = monthlyData;
+        },
+        err => {
+          console.log(err);
+        }
+      );
+  }
+
+  getAllCategoryNames() {
+    this.monthlyService.getAllNamesByCategory(this.selectedCategory, this.selectedMonth)
+      .subscribe (
+        body => {
+          this.namesCache = [];
+          this.namesCache = body;
+          console.log("NC " + this.namesCache);
+          this.initializeColumns();
         },
         err => {
           console.log(err);
@@ -127,7 +141,7 @@ export class MonthlyTypeComponent implements OnInit {
     this.totalCategoryAmount = 0;
     this.getMonthlyDataByCategory();
     this.calculateTotalAmount();
-    //this.getAllCategoryNames();
+    this.getAllCategoryNames();
     //this.calculateTotalSpent();
   }
 
@@ -154,6 +168,20 @@ export class MonthlyTypeComponent implements OnInit {
           //this.calculateTotalSpent();
         },
         err => {console.log(err);}
+      );
+  }
+
+
+  onDeleteRow(event: MonthData) {
+    this.monthlyService.deleteMonthlyData(event._id)
+      .subscribe (
+        data => {
+          //console.log("Delete " + data);
+          //this.getAllMonthlyData();
+        },
+        err => {
+          console.log(err);
+        }
       );
   }
 }

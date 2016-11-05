@@ -16,7 +16,7 @@ import {Month} from "../../enums/months";
              <span style="{'display':'inline-block'}">
                     <button pButton type="button" (click)="onClickLeft()" icon="fa-angle-double-left" iconPos="left"></button>
                     <button pButton type="button" (click)="onClickRight()" icon="fa-angle-double-right" iconPos="right"></button>
-                    <h3>{{selectedMonth}}</h3>
+                    <h3>{{selectedMonth}} - Saved: {{totalSaved}} </h3>
              </span>
              <p-accordion>
                  <p-accordionTab header="I.......Expense - {{totalExpense}}">
@@ -36,21 +36,11 @@ import {Month} from "../../enums/months";
 
 export class MonthlyComponent implements OnInit {
   months: SelectItem[];
+  selectedMonth: string;
+
   totalExpense: number = 0;
   totalIncome: number = 0;
-  expenseCategories: Category[];
-  incomeCategories: Category[];
-  dataColumns: any[];
-  namesCache: any[];
-  selectedMonth: string;
-  expenseData: MonthData[];
-  incomeData: MonthData[];
-  selectedExpenseCategory: string;
-  selectedIncomeCategory: string;
-  totalCategory: number = 0;
-  totalAmountMonthly: number = 0;
-  error: any;
-  response: any;
+  totalSaved: number = 0;
 
   constructor(
     private http: Http,
@@ -67,18 +57,8 @@ export class MonthlyComponent implements OnInit {
     });
   }
 
-  // resetCategoryTotalSpent() {
-  //   this.totalAmountMonthly = 0;
-  //   this.expenseCategories.map((category: Category) => {
-  //       category.monthlySpent = 0;
-  //   });
-  // }
-
   ngOnInit(): void {
     this.initializeMonths();
-    //this.initializeCategories();
-    //this.getMonthlyDataByCategory();
-    this.getAllCategoryNames();
   }
 
   onTotalChange(event: any) {
@@ -90,34 +70,7 @@ export class MonthlyComponent implements OnInit {
       this.totalIncome = event.totalAmount;
       this.totalIncome = Math.ceil(this.totalIncome/100)*100;
     }
-
-  }
-
-
-  getAllCategoryNames() {
-    this.monthlyService.getAllNamesByCategory(this.selectedExpenseCategory, this.selectedMonth)
-      .subscribe (
-        body => {
-          this.namesCache = body;
-          console.log(this.namesCache);
-          //this.initializeColumns();
-        },
-        err => {
-          console.log(err);
-        }
-      );
-  }
-
-  getAllMonthlyData() {
-    this.monthlyService.getMonthlyData()
-      .subscribe (
-        monthlyData => {
-          this.expenseData = monthlyData;
-        },
-        err => {
-          console.log(err);
-        }
-      );
+    this.totalSaved = this.totalIncome - this.totalExpense;
   }
 
   onSelectedMonth(event) {
@@ -142,48 +95,21 @@ export class MonthlyComponent implements OnInit {
   }
 
   onSave($event) {
-    setTimeout(() => {
-      //this.getMonthlyDataByCategory();
-      //this.calculateTotalSpent();
-      this.totalCategory = 0;
-    }, 100);
-    this.expenseData.map((body: MonthData) => {
-      if(body._id) {
-        this.monthlyService.updateMonthlyData(body._id, body)
-          .subscribe(
-            data => {
-              //console.log("OK" + data);
-            },
-            err => {console.log(err);}
-          );
-      }
-    });
-  }
-
-  onChangeToggle(event: Object) {
-    this.expenseData.map((body: MonthData) => {
-      if(body._id) {
-        this.monthlyService.updateMonthlyData(body._id, body)
-          .subscribe(
-            data => {
-              //console.log("OK" + data);
-              },
-            err => {console.log(err);}
-          );
-      }
-    });
-  }
-
-  onDeleteRow(event: MonthData) {
-    this.monthlyService.deleteMonthlyData(event._id)
-      .subscribe (
-        data => {
-          console.log("Delete " + data);
-          this.getAllMonthlyData();
-        },
-        err => {
-          console.log(err);
-        }
-      );
+    // setTimeout(() => {
+    //   //this.getMonthlyDataByCategory();
+    //   //this.calculateTotalSpent();
+    //   this.totalCategory = 0;
+    // }, 100);
+    // this.expenseData.map((body: MonthData) => {
+    //   if(body._id) {
+    //     this.monthlyService.updateMonthlyData(body._id, body)
+    //       .subscribe(
+    //         data => {
+    //           //console.log("OK" + data);
+    //         },
+    //         err => {console.log(err);}
+    //       );
+    //   }
+    // });
   }
 }
