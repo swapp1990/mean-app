@@ -7,8 +7,9 @@ export class MonthData {
   type: string;
   date: number;
   month: string;
+  isIncome: string;
 
-  constructor(category: string, month: string) {
+  constructor(category: string, month: string, isIncome: string) {
     this.name = "";
     this.price = 0;
     this.category = category;
@@ -16,5 +17,6 @@ export class MonthData {
     this.type = "";
     this.date = 1;
     this.month = month;
+    this.isIncome = isIncome;
   }
 }

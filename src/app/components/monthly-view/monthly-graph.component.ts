@@ -32,33 +32,41 @@ export class MonthlyGraphView implements OnInit {
 
   intializeDataOne() {
     let months: string[] = EnumUtils.getMonthsString();
+    let categories: string[] = EnumUtils.getExpenseCategoriesString();
+    let datasets: any[] = [];
+    categories.map(cat => {
+      let monthlyData: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      datasets.push({label: cat, data: monthlyData});
+    });
+    //console.log(datasets);
     this.data = {
       labels: months,
-      datasets: [
-        {
-          label: 'Food',
-          backgroundColor: '#42A5F5',
-          borderColor: '#1E88E5',
-          data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        },
-        {
-          label: 'Grocery',
-          backgroundColor: '#42f456',
-          borderColor: '#46f25a',
-          data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        },
-        {
-          label: 'Entertainment',
-          backgroundColor: '#e52424',
-          borderColor: '#ed2a2a',
-          data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        }
-      ]
+      datasets: datasets
     }
+    //console.log(this.data);
+  }
+
+  setDataForGraphOne() {
+    this.monthlyService.monthGetAllCostByCategory()
+      .subscribe (
+        monthlyData => {
+          monthlyData.map(body => {
+            this.data.datasets.map(dataset => {
+              if(body._id.category === dataset.label) {
+                dataset.data[Month[body._id.month]] = body.balance;
+              }
+            });
+          });
+          //console.log(this.data);
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
 
   intializeDataTwo() {
-    let categories: string[] = EnumUtils.getCategoriesString();
+    let categories: string[] = EnumUtils.getExpenseCategoriesString();
 
     this.switchData = {
       labels: categories,
@@ -83,7 +91,7 @@ export class MonthlyGraphView implements OnInit {
     this.monthlyService.monthGetAllCostByCategory()
       .subscribe (
         monthlyData => {
-          //console.log(monthlyData);
+          //console.log(expenseData);
           monthlyData.map(body => {
             //this.data = body;
             this.switchData.datasets.map(dataset => {
@@ -103,25 +111,7 @@ export class MonthlyGraphView implements OnInit {
 
   ngOnInit(): void {
     this.intializeDataOne();
-    this.monthlyService.monthGetAllCostByCategory()
-      .subscribe (
-        monthlyData => {
-          //console.log(monthlyData);
-          monthlyData.map(body => {
-            //this.data = body;
-            this.data.datasets.map(dataset => {
-              //console.log(dataset);
-              if(body._id.category === dataset.label) {
-                //console.log(body._id.month + " Label" + dataset.label);
-                dataset.data[Month[body._id.month]] = body.balance;
-              }
-            });
-          });
-        },
-        err => {
-          console.log(err);
-        }
-      );
+    this.setDataForGraphOne();
   }
 
   getIndexForCategory(category: string) {

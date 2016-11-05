@@ -53,6 +53,9 @@ module.exports.getTotalCost = function(req, res) {
     if(req.query.category) {
       query.category = req.query.category;
     }
+    if(req.query && req.query.isIncome) {
+      query.isIncome = req.query.isIncome;
+    }
   }
   Month.aggregate([
     {
@@ -84,6 +87,9 @@ module.exports.monthGetAllCost = function(req, res) {
 
   if(req.query && req.query.category) {
     query.category = req.query.category;
+  }
+  if(req.query && req.query.isIncome) {
+    query.isIncome = req.query.isIncome;
   }
 
   Month
@@ -122,7 +128,8 @@ module.exports.monthCreateOne = function(req,res) {
       price : req.body.price,
       payment : req.body.payment,
       category: req.body.category,
-      month: req.body.month
+      month: req.body.month,
+      isIncome: req.body.isIncome
     }, function(err, body) {
       if(err) {
         console.log("Error creating new data");
@@ -185,6 +192,7 @@ module.exports.monthUpdateOne = function(req,res) {
           doc.price = req.body.price;
           doc.payment = req.body.payment;
           doc.month = req.body.month;
+          doc.isIncome = req.body.isIncome;
           //services = _splitArray(req.body.services),
           doc.save(function(err, monthUpdated) {
             if(err) {

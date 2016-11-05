@@ -27,7 +27,7 @@ import {MonthData} from "../../../models/month";
                 <p-footerColumnGroup>
                    <p-row>
                       <p-column footer="Total:" colspan="2"></p-column>
-                      <p-column footer="{{totalCategory}}"></p-column>
+                      <p-column footer="{{totalCategoryAmount}}"></p-column>
                    </p-row>
                 </p-footerColumnGroup>
               </p-dataTable>
@@ -58,7 +58,7 @@ export class DataTable implements OnInit {
   @Output() deleteEvent = new EventEmitter();
   checked: boolean = false;
   selectedRow: any;
-  @Input() totalCategory: number;
+  @Input() totalCategoryAmount: number;
   text: string;
   brands: string[] = ['Audi','BMW','Fiat','Ford','Honda','Jaguar','Mercedes','Renault','Volvo','VW'];
   test: any[];

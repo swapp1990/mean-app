@@ -14,7 +14,8 @@ var monthSchema = new mongoose.Schema({
     category : String,
     payment : String,
     type : String,
-    month: String
+    month: String,
+    isIncome: String
 });
 
 mongoose.model('Month', monthSchema, 'monthlySpent');

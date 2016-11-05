@@ -15,6 +15,7 @@ import {TreeTable} from "./components/utils/tree-table/tree-table.component";
 import {MonthlyService} from "./services/months.service";
 import {DataTable} from "./components/utils/data-table/data-table.component";
 import {AutoCompleteColumn} from "./components/utils/data-table/autocomplete-column.component";
+import {MonthlyTypeComponent} from "./components/monthly-view/monthly-type.component";
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import {AutoCompleteColumn} from "./components/utils/data-table/autocomplete-col
     routedComponents,
     TreeTable,
     DataTable,
-    AutoCompleteColumn
+    AutoCompleteColumn,
+    MonthlyTypeComponent
   ],
   imports: [
     BrowserModule,

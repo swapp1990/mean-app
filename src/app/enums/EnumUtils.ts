@@ -1,5 +1,5 @@
 import {Month} from "./months";
-import {CategoryName} from "./categories";
+import {ExpenseCategoryName, IncomeCategoryName} from "./categories";
 
 export class EnumUtils {
 
@@ -12,10 +12,18 @@ export class EnumUtils {
     return months;
   }
 
-  static getCategoriesString(): string[] {
+  static getExpenseCategoriesString(): string[] {
     var categories: string[] = [];
-    for(let n in CategoryName) {
-      if(typeof CategoryName[n] === 'number') categories.push(n);
+    for(let n in ExpenseCategoryName) {
+      if(typeof ExpenseCategoryName[n] === 'number') categories.push(n);
+    }
+    return categories;
+  }
+
+  static getIncomeCategoriesString(): string[] {
+    var categories: string[] = [];
+    for(let n in IncomeCategoryName) {
+      if(typeof IncomeCategoryName[n] === 'number') categories.push(n);
     }
     return categories;
   }
