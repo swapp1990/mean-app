@@ -7,7 +7,7 @@ import {MonthlyService} from "../../services/months.service";
 @Component({
   selector: 'monthly-type-view',
   template: `
-               <p-tabView orientation="left" (onChange)="onTabChange($event)">
+               <p-tabView orientation="left" (onChange)="onCategoryChange($event)">
                   <p-tabPanel *ngFor="let category of categories" header="{{getCategoryHeader(category)}}">
                   <my-data-table [files]="data" 
                         [dataColumns] = "dataColumns"
@@ -89,7 +89,7 @@ export class MonthlyTypeComponent implements OnInit {
         body => {
           this.namesCache = [];
           this.namesCache = body;
-          console.log("NC " + this.namesCache);
+          //console.log("NC " + this.namesCache);
           this.initializeColumns();
         },
         err => {
@@ -116,11 +116,19 @@ export class MonthlyTypeComponent implements OnInit {
             this.setEachCategoryTotal(body._id.category, body.balance);
             //console.log("Total:" + this.totalAmount);
           });
+
+          this.totalAmountOutput.emit({totalAmount: this.totalAmount, type: this.type});
         },
         err => {
           console.log(err);
         }
       );
+  }
+
+  resetEachCategoryTotal() {
+    this.categories.map((category: Category) => {
+      category.monthlyAmount = 0;
+    });
   }
 
   setEachCategoryTotal(categoryName: string, totalAmount: number) {
@@ -132,17 +140,25 @@ export class MonthlyTypeComponent implements OnInit {
         this.totalAmount = +Number(this.totalAmount).toFixed(2);
       }
     });
-    this.totalAmountOutput.emit({totalAmount: this.totalAmount, type: this.type});
   }
 
-  /** Events **/
-  onTabChange(event) {
-    this.selectedCategory = this.categories[event.index].name;
+  onChangeData() {
     this.totalCategoryAmount = 0;
+    this.resetEachCategoryTotal();
     this.getMonthlyDataByCategory();
     this.calculateTotalAmount();
     this.getAllCategoryNames();
-    //this.calculateTotalSpent();
+  }
+
+  onCategoryChange(event: any) {
+    this.selectedCategory = this.categories[event.index].name;
+    this.onChangeData();
+  }
+
+  onMonthChange(month: string) {
+    this.selectedMonth = month;
+    //console.log("Child Called" + this.selectedMonth + " Cagetory: " + this.selectedCategory);
+    this.onChangeData();
   }
 
   onCreate($event) {

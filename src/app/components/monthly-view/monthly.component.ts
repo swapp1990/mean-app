@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import { Router } from '@angular/router';
 import {Observable} from "rxjs/Rx";
 import {Response, Http} from "@angular/http";
@@ -9,6 +9,7 @@ import {MonthData} from "../../models/month";
 import {Category} from "../../models/catagory";
 import {EnumUtils} from "../../enums/EnumUtils";
 import {Month} from "../../enums/months";
+import {MonthlyTypeComponent} from "./monthly-type.component";
 
 @Component({
   selector: 'monthly-view',
@@ -20,13 +21,13 @@ import {Month} from "../../enums/months";
              </span>
              <p-accordion>
                  <p-accordionTab header="I.......Expense - {{totalExpense}}">
-                      <monthly-type-view [type]="'Expense'"
+                      <monthly-type-view #type1 [type]="'Expense'"
                                          [selectedMonth]="selectedMonth"
                                          (totalAmountOutput)="onTotalChange($event)"></monthly-type-view>
                  </p-accordionTab>                
 
                  <p-accordionTab header="I.......Income - {{totalIncome}}">
-                      <monthly-type-view [type]="'Income'"
+                      <monthly-type-view #type2 [type]="'Income'"
                                          [selectedMonth]="selectedMonth"
                                          (totalAmountOutput)="onTotalChange($event)"></monthly-type-view>
                  </p-accordionTab>                
@@ -37,10 +38,17 @@ import {Month} from "../../enums/months";
 export class MonthlyComponent implements OnInit {
   months: SelectItem[];
   selectedMonth: string;
+  selectedMonthIndex: number = 10;
 
   totalExpense: number = 0;
   totalIncome: number = 0;
   totalSaved: number = 0;
+
+  @ViewChild('type1')
+  firstType: MonthlyTypeComponent;
+
+  @ViewChild('type2')
+  secondType: MonthlyTypeComponent;
 
   constructor(
     private http: Http,
@@ -50,7 +58,7 @@ export class MonthlyComponent implements OnInit {
   }
 
   initializeMonths() {
-    this.selectedMonth = Month[Month.October];
+    this.selectedMonth = Month[this.selectedMonthIndex-1];
     this.months = [];
     EnumUtils.getMonthsString().map(month => {
       this.months.push({label: month, value: month});
@@ -62,7 +70,7 @@ export class MonthlyComponent implements OnInit {
   }
 
   onTotalChange(event: any) {
-    console.log("E: " + event.type);
+    console.log("E: " + event.totalAmount);
     if(event.type === "Expense") {
       this.totalExpense = event.totalAmount;
       this.totalExpense = Math.ceil(this.totalExpense/100)*100;
@@ -79,19 +87,15 @@ export class MonthlyComponent implements OnInit {
   }
 
   onClickRight() {
-    if(this.selectedMonth === 'September') {
-      this.selectedMonth = 'October';
-    }
-    //this.getMonthlyDataByCategory();
-    //this.calculateTotalSpent();
+    this.selectedMonth = Month[(++this.selectedMonthIndex)-1];
+    this.firstType.onMonthChange(this.selectedMonth);
+    this.secondType.onMonthChange(this.selectedMonth);
   }
 
   onClickLeft() {
-    if(this.selectedMonth === 'October') {
-      this.selectedMonth = 'September';
-    }
-    //this.getMonthlyDataByCategory();
-    //this.calculateTotalSpent();
+    this.selectedMonth = Month[(--this.selectedMonthIndex)-1];
+    this.firstType.onMonthChange(this.selectedMonth);
+    this.secondType.onMonthChange(this.selectedMonth);
   }
 
   onSave($event) {
