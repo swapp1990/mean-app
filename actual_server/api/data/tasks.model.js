@@ -16,6 +16,12 @@ var tasksSchema = new mongoose.Schema({
         type : String
     },
     percentage : Number,
+    weight : {
+      type: Number,
+      min: 1,
+      max: 5,
+      default: 5
+    },
     counters : [counterSchema],
     counterMax: Number,
     category : [String],

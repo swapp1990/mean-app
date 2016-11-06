@@ -23,7 +23,7 @@ export class MonthlyService {
   }
 
   //Get monthly data for category types
-  getMonthlyDataByCategory(category: string, month: string): Observable<MonthData[]> {
+  getMonthlyDataByCategory(month: string, category: string): Observable<MonthData[]> {
     let newUrl = this.monthsUrl + '?category='+ category+'&month='+ month;
     return this.http
       .get(newUrl)

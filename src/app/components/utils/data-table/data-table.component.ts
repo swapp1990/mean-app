@@ -15,13 +15,13 @@ import {MonthData} from "../../../models/month";
                         [(selection)]="selectedRow">
                 <p-column *ngFor="let col of dataColumns" field="{{col.field}}" header="{{col.name}}" [style]="{'overflow':'visible'}">
                   <template let-row="rowData" pTemplate type="body">
-                    <span *ngIf='row.selected'>
+                    <span *ngIf='row.selected && col.editable'>
                       <p-autoComplete [suggestions]="col.filteredResults" 
                                       (completeMethod)="search($event, col)" 
                                       [minLength]="2"
                                       [(ngModel)]="row[col.field]"></p-autoComplete>
                     </span>
-                    <span *ngIf='!row.selected'>{{row[col.field]}}</span>
+                    <span *ngIf='!row.selected || !col.editable'>{{row[col.field]}}</span>
                   </template>
                 </p-column>
                 <p-footerColumnGroup>
@@ -62,7 +62,7 @@ export class DataTable implements OnInit {
 
   constructor(
     private http: Http) {
- 
+
   }
 
   onRowSelect(event) {
@@ -83,7 +83,7 @@ export class DataTable implements OnInit {
   search(event: any, col: any) {
     //console.log(col);
     col.filteredResults = [];
-    if(col.cache.length > 0) {
+    if(col.cache && col.cache.length > 0) {
       for(let i = 0; i < col.cache.length; i++) {
         let name = col.cache[i];
         if(name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {

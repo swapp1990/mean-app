@@ -19,13 +19,13 @@ import {TaskData} from "../../models/task";
                     <h3>{{selectedMonth}}</h3>
              </span>
              <p-accordion>
-                 <p-accordionTab *ngFor="let cat of taskCategories" header="I.......{{cat}}">
-                    <my-data-table [files]="data" 
+                 <p-accordionTab *ngFor="let cat of taskCategories" header="I.......{{cat.label}}">
+                    <my-data-table [files]="cat.data" 
                         [dataColumns] = "dataColumns"
                         (updateRow)="onUpdateRow($event)"
                         (deleteEvent)="onDeleteRow($event)">
                     </my-data-table>
-                    <button pButton type="text" (click)="onCreate($event)" icon="fa-plus"></button>
+                    <button pButton type="text" (click)="onCreate(cat)" icon="fa-plus"></button>
                  </p-accordionTab>                             
              </p-accordion>
               `
@@ -33,12 +33,11 @@ import {TaskData} from "../../models/task";
 
 export class TasksComponent implements OnInit {
   months: SelectItem[];
-  taskCategories: string[];
+  taskCategories: any[];
   selectedMonth: string;
   selectedMonthIndex: number = 10;
 
   dataColumns: any[];
-  @Input() data: TaskData[];
 
   constructor(
     private http: Http,
@@ -58,15 +57,16 @@ export class TasksComponent implements OnInit {
   initializeCategories() {
     this.taskCategories = [];
     EnumUtils.getTaskCategoriesString().map(category => {
-      this.taskCategories.push(category);
+      this.taskCategories.push({label: category, data: []});
     });
   }
 
   initializeColumns() {
     this.dataColumns = [];
-    this.dataColumns.push({name: 'Name', field: 'name', cache: null});
-    this.dataColumns.push({name: 'Required Counter', field: 'counterMax', cache: null});
-    this.dataColumns.push({name: 'Percentage', field: 'percentage', cache: null});
+    this.dataColumns.push({name: 'Name', field: 'name', cache: null, editable: true});
+    this.dataColumns.push({name: 'Required Counter', field: 'counterMax', cache: null, editable: true});
+    this.dataColumns.push({name: 'Percentage', field: 'percentage', cache: null, editable: false});
+    this.dataColumns.push({name: 'Weight', field: 'weight', cache: null, editable: true});
   }
 
   ngOnInit(): void {
@@ -76,21 +76,47 @@ export class TasksComponent implements OnInit {
     this.getTaskDataByCategory();
   }
 
-  getTaskDataByCategory() {
-    this.taskService.getAllTasksData()
-      .subscribe (
-        taskData => {
-          this.data = taskData;
-          console.log(this.data);
-        },
-        err => {
-          console.log(err);
-        }
-      );
+  getCategoryData(cat) {
+
   }
 
-  onCreate($event) {
-    let emptyData: TaskData = new TaskData();
+  getTaskDataByCategory() {
+    this.taskCategories.forEach(cat => {
+      this.taskService.getMonthlyDataByCategory(this.selectedMonth, cat.label)
+        .subscribe (
+          taskData => {
+            cat.data = taskData;
+            //Update percentage
+            this.updatePercentage(cat.data);
+          },
+          err => {
+            console.log(err);
+          }
+        );
+    });
+  }
+
+  updatePercentage(categoryData: TaskData[]) {
+    let totalWeight: number = 0;
+    categoryData.map((task: TaskData) => {
+      totalWeight += task.weight;
+    });
+
+    //console.log(categoryData);
+    categoryData.map((task: TaskData) => {
+      let eachPercent: number = Math.round((task.weight/totalWeight)*100);
+      if(task.percentage != eachPercent) {
+        task.percentage = eachPercent;
+        this.updateTaskData(task._id, task);
+      }
+    });
+  }
+
+
+  onCreate(category: any) {
+    let categoryArray: string[] = [];
+    categoryArray.push(category.label);
+    let emptyData: TaskData = new TaskData(this.selectedMonth, categoryArray);
     console.log(emptyData);
     this.taskService.createTaskData(emptyData)
       .subscribe(
@@ -98,6 +124,27 @@ export class TasksComponent implements OnInit {
           //console.log("Create" + data);
           this.getTaskDataByCategory();
           //this.calculateTotalSpent();
+        },
+        err => {console.log(err);}
+      );
+  }
+
+  onUpdateRow(event) {
+    //console.log(event);
+    this.updateTaskData(event._id, event);
+  }
+
+  updateTaskData(id: any, taskBody: TaskData) {
+    this.taskService.updateTaskData(id, taskBody)
+      .subscribe(
+        data => {
+          //console.log("OK" + data);
+          this.taskCategories.map(cat => {
+            //console.log("Cat: " + cat.label + "Body: " + taskBody.category[0]);
+            if(cat.label === taskBody.category[0]) {
+              this.updatePercentage(cat.data);
+            }
+          });
         },
         err => {console.log(err);}
       );

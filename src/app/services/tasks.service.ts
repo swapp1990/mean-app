@@ -22,6 +22,21 @@ export class TaskService {
       .map((response: Response) => response.json());
   }
 
+  //Get monthly data for category types
+  getMonthlyDataByCategory(category: string, month: string): Observable<TaskData[]> {
+    let newUrl = this.tasksUrl + '?category='+ month+'&month='+ category;
+    return this.http
+      .get(newUrl)
+      .map((response: Response) => response.json());
+  }
+
+  getTaskDataByMonth(month: string): Observable<TaskData[]> {
+    let newUrl = this.tasksUrl + '?month='+ month;
+    return this.http
+      .get(newUrl)
+      .map((response: Response) => response.json());
+  }
+
   //Create Task Data.
   createTaskData(taskBody: TaskData) {
     let headers = new Headers({
@@ -29,6 +44,18 @@ export class TaskService {
     });
     return this.http
       .post(this.tasksUrl, JSON.stringify(taskBody), { headers: headers })
+      .map((response: Response) => response.json());
+  }
+
+  //Update Task Data.
+  updateTaskData(taskDataId: string, taskBody: TaskData) {
+    let headers = new Headers({
+      'Content-Type': 'application/json'
+    });
+
+    let newUrl = this.tasksUrl + '/'+ taskDataId;
+    return this.http
+      .put(newUrl, JSON.stringify(taskBody), { headers: headers })
       .map((response: Response) => response.json());
   }
 

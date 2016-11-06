@@ -21,11 +21,33 @@ module.exports.tasksGetAll = function(req, res) {
     });
 };
 
+module.exports.tasksGetCategory = function(req, res) {
+  var query = {
+
+  };
+
+  if(req.query && req.query.month) {
+    query.month = req.query.month
+  }
+  // if(req.query.category) {
+  //   //console.log(req.query.category);
+  //   query.category = [req.query.category];
+  // }
+  Tasks
+    .find({category: req.query.category})
+    .where()
+    .exec(function(err, tasks) {
+      //console.log("Found Rows", months.length);
+      res.json(tasks);
+    });
+};
+
 module.exports.taskCreateOne = function(req,res) {
   Tasks
     .create({
       name : req.body.name,
       percentage : req.body.percentage,
+      weight: req.body.weight,
       counterMax: req.body.counterMax,
       category: req.body.category,
       type: req.body.type,
@@ -41,6 +63,53 @@ module.exports.taskCreateOne = function(req,res) {
         res
           .status(201)
           .json(body);
+      }
+    });
+};
+
+module.exports.taskUpdateOne = function(req,res) {
+  var taskId = req.params.taskId;
+  Tasks
+    .findById(taskId)
+    //.select("-reviews -rooms") exclude nested models.
+    .exec(function(err, doc) {
+      var response = {
+        status : 200,
+        message : doc
+      };
+      if(err) {
+        console.log("Error finding task data");
+        response.status = 500;
+        response.message = err;
+      } else if(!doc) {
+        response.status = 404;
+        response.message = {
+          "message": "Task Id not found"
+        };
+      }
+      if(response.status !== 200) {
+        res
+          .status(response.status)
+          .json(response.message);
+      } else {
+        //console.log("req " + req.body.name + " res " + doc.name);
+        if(req.body.name) {
+          doc.name = req.body.name;
+          doc.percentage = req.body.percentage;
+          doc.weight = req.body.weight;
+          doc.counterMax = req.body.counterMax;
+          doc.category = req.body.category;
+          doc.type = req.body.type;
+          doc.month = req.body.month;
+          //services = _splitArray(req.body.services),
+          doc.save(function(err, taskUpdated) {
+            if(err) {
+              res.status(500).json(err);
+            } else {
+              res.status(200).json(taskUpdated);
+            }
+          });
+        }
       }
     });
 };

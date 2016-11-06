@@ -21,8 +21,13 @@ router.route('/months/:monthId')
   .delete(ctrlMonths.monthDeleteOne);
 
 router.route('/tasks')
-  .get(ctrlTasks.tasksGetAll)
+  .get(ctrlTasks.tasksGetCategory)
   .post(ctrlTasks.taskCreateOne);
+
+router.route('/tasks/:taskId')
+  .put(ctrlTasks.taskUpdateOne);
+  //.delete(ctrlMonths.monthDeleteOne);
+
 
 // router.route('/hotels').get(ctrlHotels.hotelsGetAll);
 //
