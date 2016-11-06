@@ -76,6 +76,7 @@ export class MonthlyTypeComponent implements OnInit {
       .subscribe (
         monthlyData => {
           this.data = monthlyData;
+          console.log(this.data);
         },
         err => {
           console.log(err);

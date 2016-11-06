@@ -1,15 +1,3 @@
-
-// export class AppComponent {
-//   title = 'app works!';
-//   observable$: Observable<{}>;
-//
-//   constructor(http: Http) {
-//     this.observable$ = http
-//       .get(environment.server + "/api/simple")
-//       .map((response: Response) => response.json());
-//   }
-// }
-
 import { Component } from '@angular/core';
 
 @Component({
@@ -19,6 +7,7 @@ import { Component } from '@angular/core';
     <nav>
       <a routerLink="/hotels" routerLinkActive="active">Heroes</a>
       <a routerLink="/monthly" routerLinkActive="active">Monthly</a>
+      <a routerLink="/tasks" routerLinkActive="active">Tasks</a>
       <a routerLink="/graph" routerLinkActive="active">Graph</a>
     </nav>
     <router-outlet></router-outlet>

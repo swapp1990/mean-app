@@ -59,16 +59,10 @@ export class DataTable implements OnInit {
   checked: boolean = false;
   selectedRow: any;
   @Input() totalCategoryAmount: number;
-  text: string;
-  brands: string[] = ['Audi','BMW','Fiat','Ford','Honda','Jaguar','Mercedes','Renault','Volvo','VW'];
-  test: any[];
 
   constructor(
     private http: Http) {
-      this.test = [];
-      this.test.push("January");
-      this.test.push("Feb");
-      this.test.push("March");
+ 
   }
 
   onRowSelect(event) {

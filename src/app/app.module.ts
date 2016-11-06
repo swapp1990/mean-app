@@ -16,6 +16,7 @@ import {MonthlyService} from "./services/months.service";
 import {DataTable} from "./components/utils/data-table/data-table.component";
 import {AutoCompleteColumn} from "./components/utils/data-table/autocomplete-column.component";
 import {MonthlyTypeComponent} from "./components/monthly-view/monthly-type.component";
+import {TaskService} from "./services/tasks.service";
 
 @NgModule({
   declarations: [
@@ -43,7 +44,7 @@ import {MonthlyTypeComponent} from "./components/monthly-view/monthly-type.compo
     ChartModule,
     SharedModule
   ],
-  providers: [HotelService, MonthlyService],
+  providers: [HotelService, MonthlyService, TaskService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

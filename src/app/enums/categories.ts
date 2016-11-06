@@ -18,3 +18,13 @@ export enum IncomeCategoryName {
   RentIncome,
   CreditCashback
 }
+
+export enum TasksCategoryName {
+  Cleanliness,
+  Fitness,
+  Knowledge,
+  Creativity,
+  SelfControl,
+  Productivity,
+  Happiness
+}

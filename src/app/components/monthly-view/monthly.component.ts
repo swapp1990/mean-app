@@ -82,17 +82,19 @@ export class MonthlyComponent implements OnInit {
   }
 
   onSelectedMonth(event) {
-    //this.getMonthlyDataByCategory();
-    //this.calculateTotalSpent();
+    this.firstType.onMonthChange(this.selectedMonth);
+    this.secondType.onMonthChange(this.selectedMonth);
   }
 
   onClickRight() {
+    if(this.selectedMonthIndex == 12) this.selectedMonthIndex = 0;
     this.selectedMonth = Month[(++this.selectedMonthIndex)-1];
     this.firstType.onMonthChange(this.selectedMonth);
     this.secondType.onMonthChange(this.selectedMonth);
   }
 
   onClickLeft() {
+    if(this.selectedMonthIndex == 0) this.selectedMonthIndex = 11;
     this.selectedMonth = Month[(--this.selectedMonthIndex)-1];
     this.firstType.onMonthChange(this.selectedMonth);
     this.secondType.onMonthChange(this.selectedMonth);

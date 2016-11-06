@@ -4,17 +4,14 @@ import { Routes, RouterModule } from '@angular/router';
 import {HotelComponent} from "../components/hotel/hotel.component";
 import {MonthlyComponent} from "../components/monthly-view/monthly.component";
 import {MonthlyGraphView} from "../components/monthly-view/monthly-graph.component";
+import {TasksComponent} from "../components/tasks-view/tasks.component";
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/monthly',
+    redirectTo: '/tasks',
     pathMatch: 'full'
   },
-  // {
-  //   path: 'home',
-  //   component: HomeComponent
-  // },
   {
     path: 'monthly',
     component: MonthlyComponent
@@ -22,6 +19,10 @@ const routes: Routes = [
   {
     path: 'graph',
     component: MonthlyGraphView
+  },
+  {
+    path: 'tasks',
+    component: TasksComponent
   },
   {
     path: 'hotels',
@@ -35,4 +36,4 @@ const routes: Routes = [
 })
 export class AppRoutingModule { }
 
-export const routedComponents = [HotelComponent, MonthlyComponent, MonthlyGraphView];
+export const routedComponents = [HotelComponent, MonthlyComponent, MonthlyGraphView, TasksComponent];

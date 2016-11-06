@@ -23,3 +23,4 @@ process.on('SIGINT', function() {
 //Bring in schemas and models
 require('./hotels.model.js');
 require('./month.model.js');
+require('./tasks.model.js');
