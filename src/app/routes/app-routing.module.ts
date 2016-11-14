@@ -5,6 +5,7 @@ import {HotelComponent} from "../components/hotel/hotel.component";
 import {MonthlyComponent} from "../components/monthly-view/monthly.component";
 import {MonthlyGraphView} from "../components/monthly-view/monthly-graph.component";
 import {TasksComponent} from "../components/tasks-view/tasks.component";
+import {RichTextComponent} from "../components/rich-text-view/rich-text.component";
 
 const routes: Routes = [
   {
@@ -27,7 +28,12 @@ const routes: Routes = [
   {
     path: 'hotels',
     component: HotelComponent
+  },
+  {
+    path: 'richtext',
+    component: RichTextComponent
   }
+
 ];
 
 @NgModule({
@@ -36,4 +42,4 @@ const routes: Routes = [
 })
 export class AppRoutingModule { }
 
-export const routedComponents = [HotelComponent, MonthlyComponent, MonthlyGraphView, TasksComponent];
+export const routedComponents = [HotelComponent, MonthlyComponent, MonthlyGraphView, TasksComponent, RichTextComponent];

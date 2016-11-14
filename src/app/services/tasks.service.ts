@@ -8,6 +8,7 @@ import {Observable} from "rxjs/Rx";
 import "rxjs/add/operator/catch";
 import "rxjs/add/operator/map";
 import {TaskData} from "../models/task";
+import {CounterData} from "../models/counter";
 
 @Injectable()
 export class TaskService {
@@ -57,6 +58,22 @@ export class TaskService {
     return this.http
       .put(newUrl, JSON.stringify(taskBody), { headers: headers })
       .map((response: Response) => response.json());
+  }
+
+  //Create Counter Data for Task.
+  createCounterData(taskDataId: string, counterBody: CounterData) {
+    let headers = new Headers({
+      'Content-Type': 'application/json'
+    });
+
+    let newUrl = this.tasksUrl + '/counter' + '?taskId='+ taskDataId;
+    console.log(newUrl);
+    return this.http
+      .post(newUrl, JSON.stringify(counterBody), { headers: headers })
+      .map((response: Response) => {
+        response.json()
+        console.log(response);
+      });
   }
 
   private handleError(error: any): Promise<any> {

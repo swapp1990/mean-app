@@ -43,6 +43,7 @@ module.exports.tasksGetCategory = function(req, res) {
 };
 
 module.exports.taskCreateOne = function(req,res) {
+
   Tasks
     .create({
       name : req.body.name,
@@ -65,6 +66,93 @@ module.exports.taskCreateOne = function(req,res) {
           .json(body);
       }
     });
+};
+
+// GET all counters for a task
+module.exports.countersGetAll = function(req, res) {
+  var id = req.params.taskId;
+  console.log('GET counters for taskId', id);
+
+  Tasks
+    .findById(id)
+    .select('counters')
+    .exec(function(err, doc) {
+      var response = {
+        status : 200,
+        message : []
+      };
+      if (err) {
+        console.log("Error finding task");
+        response.status = 500;
+        response.message = err;
+      } else if(!doc) {
+        console.log("Task id not found in database", id);
+        response.status = 404;
+        response.message = {
+          "message" : "Task ID not found " + id
+        };
+      } else {
+        response.message = doc.counters ? doc.counters : [];
+      }
+      res
+        .status(response.status)
+        .json(response.message);
+    });
+};
+
+var _addTask = function (req, res, task) {
+
+  task.counters.push({
+    counter : req.body.counter,
+    datePerformed : req.body.datePerformed,
+    percentageGot : req.body.percentageGot
+  });
+  task.save(function(err, taskUpdated) {
+    if (err) {
+      res
+        .status(500)
+        .json(err);
+    } else {
+      res
+        .status(200)
+        .json(taskUpdated.counters[taskUpdated.counters.length - 1]);
+    }
+  });
+
+};
+
+module.exports.counterAddOne = function(req, res) {
+  console.log('POST counter to taskId');
+
+  var id = req.params.taskId;
+  Tasks
+    .findById(id)
+    .select('counters')
+    .exec(function(err, doc) {
+      var response = {
+        status : 200,
+        message : doc
+      };
+      if (err) {
+        console.log("Error finding Task");
+        response.status = 500;
+        response.message = err;
+      } else if(!doc) {
+        console.log("TaskId not found in database", id);
+        response.status = 404;
+        response.message = {
+          "message" : "Task ID not found " + id
+        };
+      }
+      if (doc) {
+        _addTask(req, res, doc);
+      } else {
+        res
+          .status(response.status)
+          .json(response.message);
+      }
+    });
+
 };
 
 module.exports.taskUpdateOne = function(req,res) {

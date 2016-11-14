@@ -28,6 +28,12 @@ router.route('/tasks/:taskId')
   .put(ctrlTasks.taskUpdateOne);
   //.delete(ctrlMonths.monthDeleteOne);
 
+//Counter routes
+router
+  .route('/tasks/counter/:taskId')
+  .get(ctrlTasks.countersGetAll)
+  .post(ctrlTasks.counterAddOne);
+
 
 // router.route('/hotels').get(ctrlHotels.hotelsGetAll);
 //

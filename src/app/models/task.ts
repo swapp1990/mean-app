@@ -6,6 +6,7 @@ export class TaskData {
   counterMax: number;
   category: string[];
   month: string;
+  counters: any[];
 
   constructor(month: string, category: string[]) {
     this.name = "S";

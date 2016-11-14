@@ -9,6 +9,7 @@ import {EnumUtils} from "../../enums/EnumUtils";
 import {Month} from "../../enums/months";
 import {TaskService} from "../../services/tasks.service";
 import {TaskData} from "../../models/task";
+import {CounterData} from "../../models/counter";
 
 @Component({
   selector: 'tasks-view',
@@ -19,14 +20,38 @@ import {TaskData} from "../../models/task";
                     <h3>{{selectedMonth}}</h3>
              </span>
              <p-accordion>
-                 <p-accordionTab *ngFor="let cat of taskCategories" header="I.......{{cat.label}}">
-                    <my-data-table [files]="cat.data" 
-                        [dataColumns] = "dataColumns"
-                        (updateRow)="onUpdateRow($event)"
-                        (deleteEvent)="onDeleteRow($event)">
-                    </my-data-table>
-                    <button pButton type="text" (click)="onCreate(cat)" icon="fa-plus"></button>
-                 </p-accordionTab>                             
+                 <p-accordionTab *ngFor="let cat of taskCategories">
+                    <header>
+                        <div class="text-xs-center" id="example-caption-3">{{cat.label}}</div>
+                        <progress class="progress" value="50" max="100" aria-describedby="example-caption-3"></progress>
+                    </header>
+                    <!--<my-data-table [files]="cat.data" -->
+                        <!--[dataColumns] = "dataColumns"-->
+                        <!--(updateRow)="onUpdateRow($event)"-->
+                        <!--(deleteEvent)="onDeleteRow($event)">-->
+                    <!--</my-data-table>-->
+                    <!--<button pButton type="text" (click)="onCreate(cat)" icon="fa-plus"></button>-->
+                    <p-tree [value]="cat.tree" selectionMode="single" (onNodeSelect)="nodeSelect($event)">
+                      <template let-node  pTemplate type="checkbox">
+                        <p-checkbox name="node.counter" [(ngModel)]="node.isFinished"
+                                    binary="false" label="{{node.label}}"
+                                    (onChange)="checkBoxSelected(cat.data, node)"></p-checkbox>
+                        <input type="number" pInputText [(ngModel)]="node.date"/>
+                      </template>
+                      <template let-node  pTemplate type="checked">
+                        <p-checkbox name="node.counter" [(ngModel)]="node.isFinished"
+                                    binary="true" label="{{node.label}}"></p-checkbox>
+                        <input type="text" pInputText
+                              size = "5"
+                              [(ngModel)]="node.originalData.percentageGot"
+                              [disabled]="node.disabled" />
+                        <input type="text" pInputText
+                              size = "5"
+                              [(ngModel)]="node.originalData.datePerformed"
+                              [disabled]="node.disabled" />
+                      </template>
+                    </p-tree>
+                 </p-accordionTab>
              </p-accordion>
               `
 })
@@ -57,7 +82,7 @@ export class TasksComponent implements OnInit {
   initializeCategories() {
     this.taskCategories = [];
     EnumUtils.getTaskCategoriesString().map(category => {
-      this.taskCategories.push({label: category, data: []});
+      this.taskCategories.push({label: category, data: [], tree: []});
     });
   }
 
@@ -86,6 +111,8 @@ export class TasksComponent implements OnInit {
         .subscribe (
           taskData => {
             cat.data = taskData;
+            cat.tree = this.convertToTree(cat.data);
+            //console.log(cat.tree);
             //Update percentage
             this.updatePercentage(cat.data);
           },
@@ -94,6 +121,36 @@ export class TasksComponent implements OnInit {
           }
         );
     });
+  }
+
+  convertToTree(taskData: TaskData[]) {
+    let treeData: TreeNode[] = [];
+    //console.log(taskData);
+    taskData.map((task: TaskData) => {
+      let singleData: any = { label: task.name,
+                              data: task.name,
+                              type: "default",
+                              expandedIcon: "fa-folder-open",
+                              collapsedIcon: "fa-folder",
+                              children: []};
+      for(let i = 0; i < task.counters.length; i++) {
+        let counterVm: any = task.counters[i];
+        if(counterVm.counter) {
+          console.log(counterVm);
+          let counterBody: CounterData = new CounterData(task._id, (i+1), counterVm.datePerformed, counterVm.percentageGot);
+          let childNode: any = this.convertToTreeData(task.name, "checked", counterBody, true);
+          singleData.children.push(childNode);
+        }
+      }
+
+      treeData.push(singleData);
+    });
+    return treeData;
+  }
+
+  convertToTreeData(label: string, type: string, data: any, isFinished: boolean) {
+    let treeData: any = {label: data.counter, data: label, type: type, originalData: data, isFinished: isFinished, disabled: true};
+    return treeData;
   }
 
   updatePercentage(categoryData: TaskData[]) {
@@ -112,6 +169,9 @@ export class TasksComponent implements OnInit {
     });
   }
 
+  nodeSelect(event) {
+    //console.log("node select");
+  }
 
   onCreate(category: any) {
     let categoryArray: string[] = [];
@@ -148,6 +208,12 @@ export class TasksComponent implements OnInit {
         },
         err => {console.log(err);}
       );
+  }
+
+  checkBoxSelected(cat: TaskData[], node: any) {
+    console.log(cat);
+    console.log(node);
+    this.taskService.createCounterData(node.originalData.parentId, node.originalData);
   }
 
   onSelectedMonth(event) {

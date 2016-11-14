@@ -5,10 +5,10 @@ import { Component } from '@angular/core';
   template: `
     <div class="header-bar"></div>
     <nav>
-      <a routerLink="/hotels" routerLinkActive="active">Heroes</a>
-      <a routerLink="/monthly" routerLinkActive="active">Monthly</a>
-      <a routerLink="/tasks" routerLinkActive="active">Tasks</a>
-      <a routerLink="/graph" routerLinkActive="active">Graph</a>
+      <!--<a routerLink="/hotels" routerLinkActive="active">Heroes</a>-->
+      <!--<a routerLink="/monthly" routerLinkActive="active">Monthly</a>-->
+      <!--<a routerLink="/tasks" routerLinkActive="active">Tasks</a>-->
+      <!--<a routerLink="/graph" routerLinkActive="active">Graph</a>-->
     </nav>
     <router-outlet></router-outlet>
   `,

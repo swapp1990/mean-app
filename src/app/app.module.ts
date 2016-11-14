@@ -8,8 +8,8 @@ import {HotelService} from "./services/hotels.service";
 import {routedComponents, AppRoutingModule} from "./routes/app-routing.module";
 
 import {
-  InputTextModule, AccordionModule, TabViewModule, TreeTableModule, TreeNode, SharedModule, DataTableModule,
-  ToggleButtonModule, ButtonModule, DropdownModule, AutoCompleteModule, ChartModule
+  InputTextModule, AccordionModule, TabViewModule, TreeTableModule, TreeNode, TreeModule, SharedModule, DataTableModule,
+  ToggleButtonModule, ButtonModule, DropdownModule, AutoCompleteModule, ChartModule, CheckboxModule, EditorModule
 } from 'primeng/primeng';
 import {TreeTable} from "./components/utils/tree-table/tree-table.component";
 import {MonthlyService} from "./services/months.service";
@@ -17,6 +17,9 @@ import {DataTable} from "./components/utils/data-table/data-table.component";
 import {AutoCompleteColumn} from "./components/utils/data-table/autocomplete-column.component";
 import {MonthlyTypeComponent} from "./components/monthly-view/monthly-type.component";
 import {TaskService} from "./services/tasks.service";
+import {QuantityData} from "./components/rich-text-view/QuantityData.component";
+import { CKEditorModule } from 'ng2-ckeditor';
+import { Ng2Summernote } from 'ng2-summernote/ng2-summernote';
 
 @NgModule({
   declarations: [
@@ -25,7 +28,9 @@ import {TaskService} from "./services/tasks.service";
     TreeTable,
     DataTable,
     AutoCompleteColumn,
-    MonthlyTypeComponent
+    MonthlyTypeComponent,
+    QuantityData,
+    Ng2Summernote
   ],
   imports: [
     BrowserModule,
@@ -37,12 +42,16 @@ import {TaskService} from "./services/tasks.service";
     TabViewModule,
     DataTableModule,
     TreeTableModule,
+    TreeModule,
     ToggleButtonModule,
     DropdownModule,
     ButtonModule,
     AutoCompleteModule,
+    CheckboxModule,
+    EditorModule,
     ChartModule,
-    SharedModule
+    SharedModule,
+    CKEditorModule
   ],
   providers: [HotelService, MonthlyService, TaskService],
   bootstrap: [AppComponent]
