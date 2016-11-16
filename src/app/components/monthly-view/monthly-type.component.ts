@@ -72,7 +72,7 @@ export class MonthlyTypeComponent implements OnInit {
   }
 
   getMonthlyDataByCategory() {
-    this.monthlyService.getMonthlyDataByCategory(this.selectedCategory, this.selectedMonth)
+    this.monthlyService.getMonthlyDataByCategory(this.selectedMonth, this.selectedCategory)
       .subscribe (
         monthlyData => {
           this.data = monthlyData;

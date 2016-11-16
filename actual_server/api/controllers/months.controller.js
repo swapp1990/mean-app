@@ -31,14 +31,14 @@ module.exports.monthGetCategory = function(req, res) {
   };
 
   if(req.query && req.query.category) {
-    //console.log(req.query.category);
+    console.log(req.query.category);
     query.category = req.query.category;
   }
   Month
     .find()
     .where(query)
     .exec(function(err, months) {
-      //console.log("Found Rows", months.length);
+      console.log("Found Rows", months.length);
       res.json(months);
     });
 };

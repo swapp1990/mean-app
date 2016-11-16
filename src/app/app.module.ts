@@ -9,7 +9,8 @@ import {routedComponents, AppRoutingModule} from "./routes/app-routing.module";
 
 import {
   InputTextModule, AccordionModule, TabViewModule, TreeTableModule, TreeNode, TreeModule, SharedModule, DataTableModule,
-  ToggleButtonModule, ButtonModule, DropdownModule, AutoCompleteModule, ChartModule, CheckboxModule, EditorModule
+  ToggleButtonModule, ButtonModule, DropdownModule, AutoCompleteModule, ChartModule, CheckboxModule, EditorModule,
+  ContextMenuModule, MenuItem, MenuModule
 } from 'primeng/primeng';
 import {TreeTable} from "./components/utils/tree-table/tree-table.component";
 import {MonthlyService} from "./services/months.service";
@@ -20,6 +21,7 @@ import {TaskService} from "./services/tasks.service";
 import {QuantityData} from "./components/rich-text-view/QuantityData.component";
 import { CKEditorModule } from 'ng2-ckeditor';
 import { Ng2Summernote } from 'ng2-summernote/ng2-summernote';
+import {TreeView} from "./components/utils/tree/s-tree.component";
 
 @NgModule({
   declarations: [
@@ -27,6 +29,7 @@ import { Ng2Summernote } from 'ng2-summernote/ng2-summernote';
     routedComponents,
     TreeTable,
     DataTable,
+    TreeView,
     AutoCompleteColumn,
     MonthlyTypeComponent,
     QuantityData,
@@ -49,6 +52,8 @@ import { Ng2Summernote } from 'ng2-summernote/ng2-summernote';
     AutoCompleteModule,
     CheckboxModule,
     EditorModule,
+    ContextMenuModule,
+    MenuModule,
     ChartModule,
     SharedModule,
     CKEditorModule
