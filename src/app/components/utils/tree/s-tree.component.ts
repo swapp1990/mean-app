@@ -1,4 +1,4 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import {TreeNodeData} from "./treeNode";
 import {MenuItem} from "primeng/primeng";
 
@@ -8,10 +8,20 @@ import {MenuItem} from "primeng/primeng";
                       selectionMode="single"
                       [(selection)]="selectedNode"
                      (onNodeSelect)="nodeSelected($event)"
+                     [style]="{'max-height':'200px','overflow':'auto', 'width':'600px'}"
                      [contextMenu]="cm">
                 <template let-node  pTemplate type="editable">
-                  <input [(ngModel)]="node.label" type="text">
+                  <input [(ngModel)]="node.data.name" type="text" style="'width': '20px'">
+                  <input [(ngModel)]="node.data.weight" type="text" style="'width': '20px'">
                   <button pButton type="button" icon="fa-check" iconPos="left" (click)="onClick()"></button>
+                </template>
+                <template let-node  pTemplate type="create-new">
+                  <button *ngIf="!node.plusClicked" pButton type="button" icon="fa-plus" iconPos="left" (click)="onPlus()"></button>
+                  <div *ngIf="node.plusClicked">
+                    <input [(ngModel)]="node.data.name" type="text" style="'width': '20px'">
+                    <input [(ngModel)]="node.data.weight" type="text" style="'width': '20px'">
+                    <button pButton type="button" icon="fa-check" iconPos="left" (click)="onPlus()"></button>
+                  </div>
                 </template>
               </p-tree>
               <p-contextMenu #cm [model]="items"></p-contextMenu>
@@ -20,6 +30,10 @@ import {MenuItem} from "primeng/primeng";
 
 export class TreeView implements OnInit {
   @Input() treeData: TreeNodeData[];
+  @Output() onCreate = new EventEmitter();
+  @Output() onUpdate = new EventEmitter();
+  @Output() onDelete = new EventEmitter();
+
   items: MenuItem[];
   selectedNode: TreeNodeData;
 
@@ -29,7 +43,7 @@ export class TreeView implements OnInit {
 
   ngOnInit(): void {
     this.items = [
-      {label: 'Delete', icon: 'fa-remove', command: (event) => null},
+      {label: 'Delete', icon: 'fa-remove', command: (event) => this.deleteNode()},
       {label: 'Edit', icon: 'fa-pencil', command: (event) => this.editNode()}
     ];
   }
@@ -38,12 +52,25 @@ export class TreeView implements OnInit {
     this.selectedNode.setType("editable");
   }
 
+  deleteNode() {
+    this.onDelete.emit(this.selectedNode.data);
+  }
+
   nodeSelected(event) {
 
   }
 
   onClick() {
+    this.onUpdate.emit(this.selectedNode.data);
     this.selectedNode.setType("default");
   }
 
+  onPlus() {
+    if(this.selectedNode) {
+      this.selectedNode.plusClicked = !this.selectedNode.plusClicked;
+      if(!this.selectedNode.plusClicked) {
+        this.onCreate.emit(this.selectedNode.data);
+      }
+    }
+  }
 }

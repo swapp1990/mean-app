@@ -68,6 +68,25 @@ module.exports.taskCreateOne = function(req,res) {
     });
 };
 
+//Task deletes one
+module.exports.taskDeleteOne = function(req,res) {
+  var taskId = req.params.taskId;
+  Tasks
+    .findByIdAndRemove(taskId)
+    .exec(function(err, doc) {
+      if(err) {
+        console.log("Error deleting task data");
+        res.status(500).json(err);
+      } else {
+        console.log("Deleting task data successful", doc);
+        res.status = 200;
+        res.message = {
+          "message" : "Task ID deleted " + taskId
+        };
+      }
+    });
+};
+
 // GET all counters for a task
 module.exports.countersGetAll = function(req, res) {
   var id = req.params.taskId;

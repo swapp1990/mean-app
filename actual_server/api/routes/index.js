@@ -25,8 +25,8 @@ router.route('/tasks')
   .post(ctrlTasks.taskCreateOne);
 
 router.route('/tasks/:taskId')
-  .put(ctrlTasks.taskUpdateOne);
-  //.delete(ctrlMonths.monthDeleteOne);
+  .put(ctrlTasks.taskUpdateOne)
+  .delete(ctrlTasks.taskDeleteOne);
 
 //Counter routes
 router

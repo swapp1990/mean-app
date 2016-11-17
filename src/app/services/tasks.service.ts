@@ -60,6 +60,14 @@ export class TaskService {
       .map((response: Response) => response.json());
   }
 
+  //Delete Task Data by Id.
+  deleteTaskData(taskDataId: string) {
+    let newUrl = this.tasksUrl + '/'+taskDataId;
+    return this.http
+      .delete(newUrl)
+      .map((response: Response) => response.json());
+  }
+
   //Create Counter Data for Task.
   createCounterData(taskDataId: string, counterBody: CounterData) {
     let headers = new Headers({

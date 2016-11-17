@@ -14,6 +14,9 @@ export class TreeNodeData {
   leaf: boolean; //Used in lazy loading
   orientation: string; //valid values are 'vertical' and 'horizontal'.
 
+  //Should not be here
+  plusClicked: boolean = false;
+
   constructor(label: string, data: any) {
     this.label = label;
     this.data = data;
@@ -22,6 +25,7 @@ export class TreeNodeData {
     this.expandedIcon = "fa-circle-o";
     this.collapsedIcon = "fa-circle";
     this.children = [];
+    this.plusClicked = false;
   }
 
   setType(type: string) {

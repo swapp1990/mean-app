@@ -20,7 +20,10 @@ import {TreeNodeData} from "../utils/tree/treeNode";
                     <button pButton type="button" (click)="onClickRight()" icon="fa-angle-double-right" iconPos="right"></button>
                     <h3>{{selectedMonth}}</h3>
              </span>
-             <s-tree [treeData]="taskDataAsTree"></s-tree>
+             <s-tree [treeData]="taskDataAsTree" 
+                     (onCreate)="createNodeData($event)"
+                     (onUpdate)="updateNodeData($event)"
+                     (onDelete)="deleteNodeData($event)"></s-tree>
              <!--<p-accordion>-->
                  <!--<p-accordionTab *ngFor="let cat of taskCategories">-->
                     <!--<header>-->
@@ -165,11 +168,79 @@ export class TasksComponent implements OnInit {
 
   convertToTree(taskData: TaskData[], category: string) {
     let treeNode: TreeNodeData = this.taskDataAsTree.find(node => node.data.label === category);
+    treeNode.children = [];
     taskData.map((singleTask: TaskData) => {
       let treeNodeLabel = singleTask.name + " (0/" + singleTask.percentage + ")";
       let treeNodeData = new TreeNodeData(treeNodeLabel, singleTask);
       treeNode.addChildNode(treeNodeData);
     });
+
+    //Add create button
+    let categoryArray: string[] = [];
+    categoryArray.push(category);
+    let createData: TaskData = new TaskData(this.selectedMonth, categoryArray);
+    let createNode = new TreeNodeData("", createData);
+    createNode.setType("create-new");
+    treeNode.addChildNode(createNode);
+  }
+
+  createNodeData(event: any) {
+    console.log(event);
+    this.createSingelTask(event);
+  }
+
+  updateNodeData(event: any) {
+    this.updateSingleTask(event);
+  }
+
+  updateSingleTask(task: TaskData) {
+    this.taskService.updateTaskData(task._id, task)
+      .subscribe(
+        data => {
+          console.log("Update: ", task.name);
+          this.updateRendering(data);
+        },
+        err => {console.log(err);}
+      );
+  }
+
+  createSingelTask(task: TaskData) {
+    this.taskService.createTaskData(task)
+      .subscribe(
+        data => {
+          console.log("Create", task.name);
+          this.updateRendering(data);
+        },
+        err => {console.log(err);}
+      );
+  }
+
+  //Updates the whole category with all if its tasks.
+  updateRendering(data: TaskData) {
+    let taskCategoryToUpdate: any = this.taskCategories.find(cat => cat.label === data.category[0]);
+    this.taskService.getMonthlyDataByCategory(this.selectedMonth, taskCategoryToUpdate.label)
+      .subscribe (
+        (taskData: TaskData[]) => {
+          taskCategoryToUpdate.data = taskData;
+          this.convertToTree(taskCategoryToUpdate.data, taskCategoryToUpdate.label);
+          //Update percentage
+          this.updatePercentage(taskCategoryToUpdate.data);
+        },
+        err => {
+          console.log(err);
+        }
+      );
+  }
+
+  deleteNodeData(event: any) {
+    this.taskService.deleteTaskData(event._id)
+      .subscribe(
+        data => {
+          //console.log("Delete" + data);
+          this.getTaskDataByCategory();
+        },
+        err => {console.log(err);}
+      );
   }
 
 
@@ -239,7 +310,7 @@ export class TasksComponent implements OnInit {
       let eachPercent: number = Math.round((task.weight/totalWeight)*100);
       if(task.percentage != eachPercent) {
         task.percentage = eachPercent;
-        this.updateTaskData(task._id, task);
+        this.updateSingleTask(task);
       }
     });
   }
@@ -266,23 +337,7 @@ export class TasksComponent implements OnInit {
 
   onUpdateRow(event) {
     //console.log(event);
-    this.updateTaskData(event._id, event);
-  }
-
-  updateTaskData(id: any, taskBody: TaskData) {
-    this.taskService.updateTaskData(id, taskBody)
-      .subscribe(
-        data => {
-          //console.log("OK" + data);
-          this.taskCategories.map(cat => {
-            //console.log("Cat: " + cat.label + "Body: " + taskBody.category[0]);
-            if(cat.label === taskBody.category[0]) {
-              this.updatePercentage(cat.data);
-            }
-          });
-        },
-        err => {console.log(err);}
-      );
+    //this.updateTaskData(event._id, event);
   }
 
   checkBoxSelected(cat: TaskData[], node: any) {
