@@ -126,6 +126,7 @@ var _addTask = function (req, res, task) {
     datePerformed : req.body.datePerformed,
     percentageGot : req.body.percentageGot
   });
+  console.log("Counters ", task.counters);
   task.save(function(err, taskUpdated) {
     if (err) {
       res

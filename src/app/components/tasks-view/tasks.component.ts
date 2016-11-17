@@ -166,12 +166,19 @@ export class TasksComponent implements OnInit {
     });
   }
 
+  /**
+   * Creates a tree view for given 'category' with array of 'TaskData'.
+   * @param taskData
+   * @param category
+   */
   convertToTree(taskData: TaskData[], category: string) {
     let treeNode: TreeNodeData = this.taskDataAsTree.find(node => node.data.label === category);
     treeNode.children = [];
     taskData.map((singleTask: TaskData) => {
       let treeNodeLabel = singleTask.name + " (0/" + singleTask.percentage + ")";
       let treeNodeData = new TreeNodeData(treeNodeLabel, singleTask);
+        let counterChildNodes: TreeNodeData[] = this.getCounterTreeNodesforSingleTask(singleTask);
+        treeNodeData.children = counterChildNodes;
       treeNode.addChildNode(treeNodeData);
     });
 
@@ -184,8 +191,21 @@ export class TasksComponent implements OnInit {
     treeNode.addChildNode(createNode);
   }
 
+  getCounterTreeNodesforSingleTask(singleTask: TaskData): TreeNodeData[] {
+    let childNodes: TreeNodeData[] = [];
+
+    for(let i = 0; i < singleTask.counters.length; i++) {
+      let singleCounter: CounterData = singleTask.counters[i];
+      let labelCounter: string = String(i+1) + " Date: " + singleCounter.datePerformed;
+      let counterNode: TreeNodeData = new TreeNodeData(labelCounter, singleCounter);
+      counterNode.setType("check-box");
+      childNodes.push(counterNode);
+    }
+
+    return childNodes;
+  }
+
   createNodeData(event: any) {
-    console.log(event);
     this.createSingelTask(event);
   }
 
@@ -198,6 +218,7 @@ export class TasksComponent implements OnInit {
       .subscribe(
         data => {
           console.log("Update: ", task.name);
+          this.updateCounters(data);
           this.updateRendering(data);
         },
         err => {console.log(err);}
@@ -215,10 +236,25 @@ export class TasksComponent implements OnInit {
       );
   }
 
+  updateCounters(data: TaskData) {
+    if(data.counterMax > data.counters.length) {
+      for(let i = data.counters.length; i < data.counterMax; i++) {
+        let counterData: CounterData = new CounterData(data._id, i+1, 1, 100);
+        this.taskService.createCounterData(data._id, counterData)
+          .subscribe(
+            returnResponse => {
+              //console.log("Create Counter:", counterData.counter);
+              //this.updateRendering(data);
+            }
+          )
+      }
+    }
+  }
   //Updates the whole category with all if its tasks.
   updateRendering(data: TaskData) {
-    let taskCategoryToUpdate: any = this.taskCategories.find(cat => cat.label === data.category[0]);
-    this.taskService.getMonthlyDataByCategory(this.selectedMonth, taskCategoryToUpdate.label)
+    console.log("update", data.name);
+    let taskCategoryToUpdate: any = data.category[0];
+    this.taskService.getMonthlyDataByCategory(this.selectedMonth, data.category[0])
       .subscribe (
         (taskData: TaskData[]) => {
           taskCategoryToUpdate.data = taskData;

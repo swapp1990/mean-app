@@ -4,6 +4,7 @@ export class CounterData {
   datePerformed: number;
   percentageGot: number;
 
+  //For tree template
   parentId: string;
   type: string;
   isFinished: boolean;
@@ -14,7 +15,7 @@ export class CounterData {
     this.datePerformed = datePerformed;
     this.percentageGot = percentageGot;
 
-    this.type = "CheckBox";
+    this.type = "check-box";
     this.isFinished = false;
   }
 }

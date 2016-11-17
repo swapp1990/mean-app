@@ -13,7 +13,6 @@ import {CounterData} from "../models/counter";
 @Injectable()
 export class TaskService {
   private tasksUrl = environment.server +'/api/tasks';  // URL to web api
-
   constructor(private http: Http) { }
 
   //Get all tasks data
@@ -74,7 +73,7 @@ export class TaskService {
       'Content-Type': 'application/json'
     });
 
-    let newUrl = this.tasksUrl + '/counter' + '?taskId='+ taskDataId;
+    let newUrl = this.tasksUrl + '/counter/' + taskDataId;
     console.log(newUrl);
     return this.http
       .post(newUrl, JSON.stringify(counterBody), { headers: headers })

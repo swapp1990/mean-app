@@ -1,3 +1,4 @@
+import {CounterData} from "./counter";
 export class TaskData {
   _id: string;
   name: string;
@@ -6,7 +7,7 @@ export class TaskData {
   counterMax: number;
   category: string[];
   month: string;
-  counters: any[];
+  counters: CounterData[];
 
   constructor(month: string, category: string[]) {
     this.name = "S";

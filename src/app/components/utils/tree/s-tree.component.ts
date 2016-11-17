@@ -1,6 +1,7 @@
 import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import {TreeNodeData} from "./treeNode";
 import {MenuItem} from "primeng/primeng";
+import {TaskData} from "../../../models/task";
 
 @Component({
   selector: 's-tree',
@@ -8,11 +9,13 @@ import {MenuItem} from "primeng/primeng";
                       selectionMode="single"
                       [(selection)]="selectedNode"
                      (onNodeSelect)="nodeSelected($event)"
-                     [style]="{'max-height':'200px','overflow':'auto', 'width':'600px'}"
+                     [style]="{'max-height':'200px','overflow':'auto', 'width':'700px'}"
                      [contextMenu]="cm">
+                     
                 <template let-node  pTemplate type="editable">
                   <input [(ngModel)]="node.data.name" type="text" style="'width': '20px'">
                   <input [(ngModel)]="node.data.weight" type="text" style="'width': '20px'">
+                  <input [(ngModel)]="node.data.counterMax" type="text" style="'width': '20px'">
                   <button pButton type="button" icon="fa-check" iconPos="left" (click)="onClick()"></button>
                 </template>
                 <template let-node  pTemplate type="create-new">
@@ -20,8 +23,18 @@ import {MenuItem} from "primeng/primeng";
                   <div *ngIf="node.plusClicked">
                     <input [(ngModel)]="node.data.name" type="text" style="'width': '20px'">
                     <input [(ngModel)]="node.data.weight" type="text" style="'width': '20px'">
+                    <input [(ngModel)]="node.data.counterMax" type="text" style="'width': '20px'">
                     <button pButton type="button" icon="fa-check" iconPos="left" (click)="onPlus()"></button>
                   </div>
+                </template>
+                
+                <template let-node  pTemplate type="check-box">
+                  <div *ngIf="!node.plusClicked">
+                       <span class="label label-default">{{node.label}}</span>
+                  </div>
+                  <!--<div *ngIf="node.plusClicked">-->
+                       <!--<span class="label label-default">{{node.label}}</span>-->
+                  <!--</div>-->
                 </template>
               </p-tree>
               <p-contextMenu #cm [model]="items"></p-contextMenu>
@@ -49,7 +62,14 @@ export class TreeView implements OnInit {
   }
 
   editNode() {
-    this.selectedNode.setType("editable");
+    console.log(this.selectedNode.type);
+    if(this.selectedNode.type === "check-box") {
+      this.selectedNode.setType("counter-editable");
+      console.log(this.selectedNode);
+    } else {
+      this.selectedNode.setType("editable");
+    }
+
   }
 
   deleteNode() {
@@ -57,6 +77,7 @@ export class TreeView implements OnInit {
   }
 
   nodeSelected(event) {
+    this.selectedNode.plusClicked = !this.selectedNode.plusClicked;
 
   }
 
