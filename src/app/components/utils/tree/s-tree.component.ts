@@ -30,11 +30,9 @@ import {TaskData} from "../../../models/task";
                 
                 <template let-node  pTemplate type="check-box">
                   <div *ngIf="!node.plusClicked">
+                      <p-checkbox [(ngModel)]="node.isFinished" binary="{{node.isFinished}}"></p-checkbox>
                        <span class="label label-default">{{node.label}}</span>
                   </div>
-                  <!--<div *ngIf="node.plusClicked">-->
-                       <!--<span class="label label-default">{{node.label}}</span>-->
-                  <!--</div>-->
                 </template>
               </p-tree>
               <p-contextMenu #cm [model]="items"></p-contextMenu>
@@ -73,11 +71,11 @@ export class TreeView implements OnInit {
   }
 
   deleteNode() {
-    this.onDelete.emit(this.selectedNode.data);
+    this.onDelete.emit(this.selectedNode);
   }
 
   nodeSelected(event) {
-    this.selectedNode.plusClicked = !this.selectedNode.plusClicked;
+    //this.selectedNode.plusClicked = !this.selectedNode.plusClicked;
 
   }
 

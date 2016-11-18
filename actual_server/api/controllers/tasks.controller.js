@@ -87,6 +87,52 @@ module.exports.taskDeleteOne = function(req,res) {
     });
 };
 
+//Counter delete one
+module.exports.counterDeleteOne = function(req,res) {
+  var taskId = req.params.taskId;
+  Tasks
+    .findById(id)
+    .select('counters')
+    .exec(function(err, doc) {
+      var response = {
+        status: 200,
+        message: doc
+      };
+      if (err) {
+        console.log("Error finding Task");
+        response.status = 500;
+        response.message = err;
+      } else if (!doc) {
+        console.log("TaskId not found in database", id);
+        response.status = 404;
+        response.message = {
+          "message": "Task ID not found " + id
+        };
+      }
+      if (doc) {
+        var counterId = req.params.counterId;
+        doc.counters
+            .findByIdAndRemove(counterId)
+            .exec(function(err2, doc2) {
+              if (err2) {
+                console.log("Error deleting task data");
+                res.status(500).json(err);
+              } else {
+                console.log("Deleting Counter data successful", doc2);
+                res.status = 200;
+                res.message = {
+                  "message": "Counter ID deleted " + counterId
+                };
+              }
+            });
+      } else {
+        res
+          .status(response.status)
+          .json(response.message);
+      }
+    });
+};
+
 // GET all counters for a task
 module.exports.countersGetAll = function(req, res) {
   var id = req.params.taskId;
@@ -119,7 +165,7 @@ module.exports.countersGetAll = function(req, res) {
     });
 };
 
-var _addTask = function (req, res, task) {
+var _addCounter = function (req, res, task) {
 
   task.counters.push({
     counter : req.body.counter,
@@ -165,7 +211,7 @@ module.exports.counterAddOne = function(req, res) {
         };
       }
       if (doc) {
-        _addTask(req, res, doc);
+        _addCounter(req, res, doc);
       } else {
         res
           .status(response.status)

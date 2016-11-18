@@ -29,4 +29,4 @@ var tasksSchema = new mongoose.Schema({
     month: String
 });
 
-mongoose.model('Tasks', tasksSchema, 'monthlyTasks');
+  mongoose.model('Tasks', tasksSchema, 'monthlyTasks');

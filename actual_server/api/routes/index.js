@@ -34,7 +34,9 @@ router
   .get(ctrlTasks.countersGetAll)
   .post(ctrlTasks.counterAddOne);
 
-
+router
+  .route('/tasks/:taskId/counter/:counterId')
+  .delete(ctrlTasks.counterDeleteOne);
 // router.route('/hotels').get(ctrlHotels.hotelsGetAll);
 //
 // router.route('/hotels/:hotelId').get(ctrlHotels.hotelsGetById);

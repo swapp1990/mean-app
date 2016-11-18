@@ -1,24 +1,10 @@
-declare var Quill: any;
-
-// import Inline = require('blots/inline');
-//
-// class XVideoBlot extends Inline { }
-// XVideoBlot.blotName = 'xvideo';
-// XVideoBlot.tagName = 'x-video';
-//
-// Quill.register(XVideoBlot);
-
 import {Component, OnInit, ViewChild, Input, AfterViewInit} from '@angular/core';
 import { Router } from '@angular/router';
 import {Editor} from "primeng/primeng";
 
-
 @Component({
   selector: 'rich-text',
-  template: `<p-editor #editor [(ngModel)]="text"
-                       (onTextChange)="textChanged($event)" (onSelectionChange)="selectionChanged($event)">
-             </p-editor>
-
+  template: `
               <button pButton icon="fa-check" (click)="onClick()"></button>
               <p>Value: {{text||'empty'}}</p>
             `
@@ -66,10 +52,7 @@ export class RichTextComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.quill = this.editor.quill;
-    //console.log(this.editor.toolbar);
-    var toolbar = this.quill.getModule('toolbar');
-    console.log(toolbar);
+    
   }
 
   onClick() {

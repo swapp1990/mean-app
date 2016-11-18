@@ -74,13 +74,21 @@ export class TaskService {
     });
 
     let newUrl = this.tasksUrl + '/counter/' + taskDataId;
-    console.log(newUrl);
+    //console.log(newUrl);
     return this.http
       .post(newUrl, JSON.stringify(counterBody), { headers: headers })
       .map((response: Response) => {
         response.json()
         console.log(response);
       });
+  }
+
+  deleteCounterData(taskDataId: string, counterId: string) {
+    let newUrl = this.tasksUrl+ '/'+taskDataId + '/counter/'+counterId;
+    console.log(newUrl);
+    return this.http
+      .delete(newUrl)
+      .map((response: Response) => response.json());
   }
 
   private handleError(error: any): Promise<any> {

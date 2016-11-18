@@ -269,11 +269,30 @@ export class TasksComponent implements OnInit {
   }
 
   deleteNodeData(event: any) {
-    this.taskService.deleteTaskData(event._id)
+    if(event.type === "check-box") {
+      console.log(event);
+      this.deleteCounterData(event.data.parentId, event.data._id);
+    } else {
+      this.deleteTaskData(event.data);
+    }
+  }
+
+  deleteTaskData(task: TaskData) {
+    this.taskService.deleteTaskData(task._id)
       .subscribe(
         data => {
           //console.log("Delete" + data);
           this.getTaskDataByCategory();
+        },
+        err => {console.log(err);}
+      );
+  }
+
+  deleteCounterData(taskId: string, counterId: string) {
+    this.taskService.deleteCounterData(taskId, counterId)
+      .subscribe(
+        data => {
+          console.log("Delete" + data);
         },
         err => {console.log(err);}
       );
