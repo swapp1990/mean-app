@@ -8,7 +8,9 @@ var counterSchema = new mongoose.Schema({
     max : 31,
     default : 1
   },
-  percentageGot: Number
+  percentageGot: Number,
+  parentId: String,
+  isFinished: Boolean
 });
 
 var tasksSchema = new mongoose.Schema({

@@ -30,8 +30,12 @@ import {TaskData} from "../../../models/task";
                 
                 <template let-node  pTemplate type="check-box">
                   <div *ngIf="!node.plusClicked">
-                      <p-checkbox [(ngModel)]="node.isFinished" binary="{{node.isFinished}}"></p-checkbox>
-                       <span class="label label-default">{{node.label}}</span>
+                    <p-checkbox [(ngModel)]="node.isFinished" binary="{{node.isFinished}}"></p-checkbox>
+                    <span class="label label-default">{{node.label}}</span>
+                  </div>
+                  <div *ngIf="node.plusClicked">
+                    <input [(ngModel)]="node.data.datePerformed" type="text" style="'width': '20px'">
+                    <button pButton type="button" icon="fa-check" iconPos="left" (click)="onCounterYes()"></button>
                   </div>
                 </template>
               </p-tree>
@@ -75,8 +79,11 @@ export class TreeView implements OnInit {
   }
 
   nodeSelected(event) {
-    //this.selectedNode.plusClicked = !this.selectedNode.plusClicked;
-
+    if(this.selectedNode.type === "check-box") {
+      if(!this.selectedNode.plusClicked) {
+        this.selectedNode.plusClicked = true;
+      }
+    }
   }
 
   onClick() {
@@ -90,6 +97,12 @@ export class TreeView implements OnInit {
       if(!this.selectedNode.plusClicked) {
         this.onCreate.emit(this.selectedNode.data);
       }
+    }
+  }
+
+  onCounterYes() {
+    if(this.selectedNode.type === "check-box") {
+      this.onUpdate.emit(this.selectedNode.data);
     }
   }
 }

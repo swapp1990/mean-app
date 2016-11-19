@@ -83,11 +83,24 @@ export class TaskService {
       });
   }
 
+  //Delete Counter Data.
   deleteCounterData(taskDataId: string, counterId: string) {
-    let newUrl = this.tasksUrl+ '/'+taskDataId + '/counter/'+counterId;
+    let newUrl = this.tasksUrl+ '/'+taskDataId + '/counter/'+ counterId;
     console.log(newUrl);
     return this.http
       .delete(newUrl)
+      .map((response: Response) => response.json());
+  }
+
+  //Update Counter Data.
+  updateCounterData(taskDataId: string, counterId: string, counterBody: CounterData) {
+    let headers = new Headers({
+      'Content-Type': 'application/json'
+    });
+
+    let newUrl = this.tasksUrl + '/'+ taskDataId+ '/counter/'+ counterId;
+    return this.http
+      .put(newUrl, JSON.stringify(counterBody), { headers: headers })
       .map((response: Response) => response.json());
   }
 

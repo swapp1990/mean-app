@@ -210,7 +210,11 @@ export class TasksComponent implements OnInit {
   }
 
   updateNodeData(event: any) {
-    this.updateSingleTask(event);
+    if(event.counter) {
+      this.updateSingleCounter(event);
+    } else {
+      this.updateSingleTask(event);
+    }
   }
 
   updateSingleTask(task: TaskData) {
@@ -225,11 +229,24 @@ export class TasksComponent implements OnInit {
       );
   }
 
+  updateSingleCounter(counterBody: CounterData) {
+    console.log(counterBody);
+    this.taskService.updateCounterData(counterBody.parentId, counterBody._id, counterBody)
+      .subscribe(
+        data => {
+          console.log("Update: ", counterBody.counter);
+          //this.updateRendering(data);
+        },
+        err => {console.log(err);}
+      );
+  }
+
   createSingelTask(task: TaskData) {
     this.taskService.createTaskData(task)
       .subscribe(
         data => {
           console.log("Create", task.name);
+          this.updateCounters(data);
           this.updateRendering(data);
         },
         err => {console.log(err);}
@@ -252,15 +269,14 @@ export class TasksComponent implements OnInit {
   }
   //Updates the whole category with all if its tasks.
   updateRendering(data: TaskData) {
-    console.log("update", data.name);
-    let taskCategoryToUpdate: any = data.category[0];
-    this.taskService.getMonthlyDataByCategory(this.selectedMonth, data.category[0])
+    let taskCategoryToUpdate: string = data.category[0];
+    console.log("update render", taskCategoryToUpdate);
+    this.taskService.getMonthlyDataByCategory(this.selectedMonth, taskCategoryToUpdate)
       .subscribe (
         (taskData: TaskData[]) => {
-          taskCategoryToUpdate.data = taskData;
-          this.convertToTree(taskCategoryToUpdate.data, taskCategoryToUpdate.label);
+          this.convertToTree(taskData, taskCategoryToUpdate);
           //Update percentage
-          this.updatePercentage(taskCategoryToUpdate.data);
+          this.updatePercentage(taskData);
         },
         err => {
           console.log(err);

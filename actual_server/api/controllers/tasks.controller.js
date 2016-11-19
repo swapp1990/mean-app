@@ -170,7 +170,9 @@ var _addCounter = function (req, res, task) {
   task.counters.push({
     counter : req.body.counter,
     datePerformed : req.body.datePerformed,
-    percentageGot : req.body.percentageGot
+    percentageGot : req.body.percentageGot,
+    parentId: req.body.parentId,
+    isFinished: req.body.isFinished
   });
   console.log("Counters ", task.counters);
   task.save(function(err, taskUpdated) {
@@ -267,6 +269,69 @@ module.exports.taskUpdateOne = function(req,res) {
       }
     });
 };
+
+module.exports.counterUpdateOne = function(req,res) {
+  var taskId = req.params.taskId;
+  Tasks
+    .findById(taskId)
+    .select('counters')
+    .exec(function(err, doc) {
+      var response = {
+        status: 200,
+        message: doc
+      };
+      if (err) {
+        console.log("Error finding Task");
+        response.status = 500;
+        response.message = err;
+      } else if (!doc) {
+        console.log("TaskId not found in database", id);
+        response.status = 404;
+        response.message = {
+          "message": "Task ID not found " + id
+        };
+      }
+      if (doc) {
+        console.log("update counter", doc);
+        var counterId = req.params.counterId;
+        doc.counters
+          .findById(counterId)
+          .exec(function(err, doc) {
+            var response = {
+              status : 200,
+              message : doc
+            };
+            if(err) {
+              console.log("Error finding counter data");
+              response.status = 500;
+              response.message = err;
+            } else if(!doc) {
+              response.status = 404;
+              response.message = {
+                "message": "counter Id not found"
+              };
+            }
+            if(response.status !== 200) {
+              res
+                .status(response.status)
+                .json(response.message);
+            } else {
+                doc.datePerformed = req.body.datePerformed;
+                doc.percentageGot = req.body.percentageGot;
+                doc.isFinished = req.body.isFinished;
+                doc.save(function(err, counterUpdated) {
+                  if(err) {
+                    res.status(500).json(err);
+                  } else {
+                    res.status(200).json(counterUpdated);
+                  }
+                });
+              }
+          });
+      }
+    });
+}
+
 
 var _splitArray = function(input) {
   var output;

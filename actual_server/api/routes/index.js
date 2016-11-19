@@ -36,6 +36,7 @@ router
 
 router
   .route('/tasks/:taskId/counter/:counterId')
+  .put(ctrlTasks.counterUpdateOne)
   .delete(ctrlTasks.counterDeleteOne);
 // router.route('/hotels').get(ctrlHotels.hotelsGetAll);
 //

@@ -1,21 +1,21 @@
 export class CounterData {
   _id: string;
+  parentId: string;
   counter: number;
   datePerformed: number;
   percentageGot: number;
+  isFinished: boolean;
 
   //For tree template
-  parentId: string;
   type: string;
-  isFinished: boolean;
 
   constructor(parentId: string, counter: number, datePerformed: number, percentageGot: number) {
     this.parentId = parentId;
     this.counter = counter;
     this.datePerformed = datePerformed;
     this.percentageGot = percentageGot;
+    this.isFinished = false;
 
     this.type = "check-box";
-    this.isFinished = false;
   }
 }
