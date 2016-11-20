@@ -15,13 +15,13 @@ import {MonthData} from "../../../models/month";
                         [(selection)]="selectedRow">
                 <p-column *ngFor="let col of dataColumns" field="{{col.field}}" header="{{col.name}}" [style]="{'overflow':'visible'}">
                   <template let-row="rowData" pTemplate type="body">
-                    <span *ngIf='row.selected && col.editable'>
+                    <span *ngIf='row.selected'>
                       <p-autoComplete [suggestions]="col.filteredResults" 
                                       (completeMethod)="search($event, col)" 
                                       [minLength]="2"
                                       [(ngModel)]="row[col.field]"></p-autoComplete>
                     </span>
-                    <span *ngIf='!row.selected || !col.editable'>{{row[col.field]}}</span>
+                    <span *ngIf='!row.selected'>{{row[col.field]}}</span>
                   </template>
                 </p-column>
                 <p-footerColumnGroup>
@@ -67,7 +67,7 @@ export class DataTable implements OnInit {
 
   onRowSelect(event) {
     event.data.selected = true;
-    //console.log(event);
+    console.log(event);
   }
 
   onRowUnselect(event) {

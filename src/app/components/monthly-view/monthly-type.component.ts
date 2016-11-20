@@ -61,10 +61,10 @@ export class MonthlyTypeComponent implements OnInit {
 
   initializeColumns() {
     this.dataColumns = [];
-    this.dataColumns.push({name: 'Date', field: 'date', cache: null});
-    this.dataColumns.push({name: 'Name', field: 'name', cache: this.namesCache});
-    this.dataColumns.push({name: 'Cost', field: 'price', cache: null});
-    this.dataColumns.push({name: 'Payment', field: 'payment', cache: null});
+    this.dataColumns.push({name: 'Date', field: 'date', filteredResults: null});
+    this.dataColumns.push({name: 'Name', field: 'name', filteredResults: this.namesCache});
+    this.dataColumns.push({name: 'Cost', field: 'price', filteredResults: null});
+    this.dataColumns.push({name: 'Payment', field: 'payment', filteredResults: null});
   }
 
   getCategoryHeader(categoryBody: Category) {
@@ -181,8 +181,8 @@ export class MonthlyTypeComponent implements OnInit {
     this.monthlyService.updateMonthlyData(event._id, event)
       .subscribe(
         data => {
-          //console.log("OK" + data);
-          //this.calculateTotalSpent();
+          console.log("OK ", data);
+          this.calculateTotalAmount();
         },
         err => {console.log(err);}
       );
