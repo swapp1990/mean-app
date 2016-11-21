@@ -6,6 +6,7 @@ var ctrlReviews = require('../controllers/reviews.controllers.js');
 var ctrlMonths = require('../controllers/months.controller.js');
 var ctrlTasks = require('../controllers/tasks.controller.js');
 
+//Months App
 router.route('/months')
   .get(ctrlMonths.monthGetCategory)
   .post(ctrlMonths.monthCreateOne);
@@ -20,6 +21,10 @@ router.route('/months/:monthId')
   .put(ctrlMonths.monthUpdateOne)
   .delete(ctrlMonths.monthDeleteOne);
 
+router.route('/search')
+  .get(ctrlMonths.getDataBasedOnQuery);
+
+//Tasks App
 router.route('/tasks')
   .get(ctrlTasks.tasksGetCategory)
   .post(ctrlTasks.taskCreateOne);

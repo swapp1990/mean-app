@@ -14,7 +14,8 @@ import {MonthlyService} from "../../services/months.service";
                         [totalCategoryAmount]="totalCategoryAmount"
                         (changeToggle)="onChangeToggle($event)" 
                         (updateRow)="onUpdateRow($event)"
-                        (deleteEvent)="onDeleteRow($event)">
+                        (deleteEvent)="onDeleteRow($event)"
+                        (copyRow)="onCopyRow()">
                   </my-data-table>
                   <button pButton type="text" (click)="onCreate($event)" icon="fa-plus"></button>
                   <button pButton type="text" (click)="onSave($event)" icon="fa-check"></button>
@@ -200,5 +201,9 @@ export class MonthlyTypeComponent implements OnInit {
           console.log(err);
         }
       );
+  }
+
+  onCopyRow(event: any) {
+    console.log("Test");
   }
 }

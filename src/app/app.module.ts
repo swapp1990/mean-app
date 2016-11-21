@@ -22,6 +22,7 @@ import {QuantityData} from "./components/rich-text-view/QuantityData.component";
 import { CKEditorModule } from 'ng2-ckeditor';
 import { Ng2Summernote } from 'ng2-summernote/ng2-summernote';
 import {TreeView} from "./components/utils/tree/s-tree.component";
+import {MyGraph} from "./components/utils/graph/graph.component";
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import {TreeView} from "./components/utils/tree/s-tree.component";
     TreeTable,
     DataTable,
     TreeView,
+    MyGraph,
     AutoCompleteColumn,
     MonthlyTypeComponent,
     QuantityData,

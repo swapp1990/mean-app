@@ -25,6 +25,25 @@ module.exports.monthGetAll = function(req, res) {
         });
 };
 
+module.exports.getDataBasedOnQuery = function(req, res) {
+  var query = {};
+
+  if(req.query) {
+    if(req.query.name) {
+      query.name = req.query.name;
+    }
+  }
+
+  Month
+    .find()
+    .where(query)
+    .exec(function(err, months) {
+      console.log("Found Rows", months.length);
+      res.json(months);
+    });
+
+};
+
 module.exports.monthGetCategory = function(req, res) {
   var query = {
     month: req.query.month
@@ -129,7 +148,8 @@ module.exports.monthCreateOne = function(req,res) {
       payment : req.body.payment,
       category: req.body.category,
       month: req.body.month,
-      isIncome: req.body.isIncome
+      isIncome: req.body.isIncome,
+      details: req.body.details
     }, function(err, body) {
       if(err) {
         console.log("Error creating new data");
@@ -190,9 +210,11 @@ module.exports.monthUpdateOne = function(req,res) {
           doc.name = req.body.name;
           doc.date = req.body.date;
           doc.price = req.body.price;
+          doc.category = req.body.category;
           doc.payment = req.body.payment;
           doc.month = req.body.month;
           doc.isIncome = req.body.isIncome;
+          doc.details = req.body.details;
           //services = _splitArray(req.body.services),
           doc.save(function(err, monthUpdated) {
             if(err) {

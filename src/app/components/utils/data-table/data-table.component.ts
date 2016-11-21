@@ -2,7 +2,7 @@ import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { Router } from '@angular/router';
 import {Observable} from "rxjs/Rx";
 import {Response, Http} from "@angular/http";
-import {TreeNode} from "primeng/primeng";
+import {TreeNode, MenuItem} from "primeng/primeng";
 import {MonthData} from "../../../models/month";
 
 @Component({
@@ -12,7 +12,8 @@ import {MonthData} from "../../../models/month";
                         (onRowSelect)="onRowSelect($event)" 
                         (onRowUnselect)="onRowUnselect($event)" 
                         [rows]="5" [paginator]="true" 
-                        [(selection)]="selectedRow">
+                        [(selection)]="selectedRow"
+                        [contextMenu]="cm">
                 <p-column *ngFor="let col of dataColumns" field="{{col.field}}" header="{{col.name}}" [style]="{'overflow':'visible'}">
                   <template let-row="rowData" pTemplate type="body">
                     <span *ngIf='row.selected'>
@@ -31,6 +32,7 @@ import {MonthData} from "../../../models/month";
                    </p-row>
                 </p-footerColumnGroup>
               </p-dataTable>
+              <p-contextMenu #cm [model]="contextItems"></p-contextMenu>
               `
 
 //               <p-dataTable *ngIf='checked' [value]="files" [editable]="true">
@@ -56,24 +58,48 @@ export class DataTable implements OnInit {
   @Output() changeToggle = new EventEmitter();
   @Output() updateRow = new EventEmitter();
   @Output() deleteEvent = new EventEmitter();
+  @Output() copyRow = new EventEmitter();
   checked: boolean = false;
   selectedRow: any;
   @Input() totalCategoryAmount: number;
+
+  contextItems: MenuItem[];
 
   constructor(
     private http: Http) {
 
   }
 
+  ngOnInit(): void {
+    this.contextItems = [
+      {label: 'Edit', icon: 'fa-search', command: (event) => this.onEdit(event)},
+      {label: 'Delete', icon: 'fa-close', command: (event) => this.onDelete()},
+      {label: 'Copy', icon: 'fa-copy', command: (event) => this.onCopy(this.copyRow)},
+    ];
+  }
+
   onRowSelect(event) {
-    event.data.selected = true;
-    console.log(event);
+    //event.data.selected = true;
+    //console.log(event);
   }
 
   onRowUnselect(event) {
     event.data.selected = false;
     this.updateRow.emit(event.data);
-    //console.log(event);
+  }
+
+  onEdit(event) {
+    this.selectedRow.selected = true;
+    //console.log(this.selectedRow);
+  }
+
+  onDelete() {
+
+  }
+
+  onCopy(copyRow) {
+    console.log("Copy ", copyRow);
+    copyRow.emit();
   }
 
   isVisible(col: any) {
@@ -120,8 +146,5 @@ export class DataTable implements OnInit {
   deleteRow(row: any) {
     //console.log(row);
     this.deleteEvent.emit(row);
-  }
-
-  ngOnInit(): void {
   }
 }

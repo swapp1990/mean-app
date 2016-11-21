@@ -12,6 +12,7 @@ import {MonthData} from "../models/month";
 @Injectable()
 export class MonthlyService {
   private monthsUrl = environment.server +'/api/months';  // URL to web api
+  private searchurl = environment.server +'/api/search';
 
   constructor(private http: Http) { }
 
@@ -82,12 +83,31 @@ export class MonthlyService {
       .get(newUrl)
       .map((response: Response) => response.json());
   }
+  
+  getAllNames(): Observable<any[]> {
+    let newUrl = this.monthsUrl +'/name';
+    return this.http
+      .get(newUrl)
+      .map((response: Response) => response.json());
+  }
 
   //Delete Monthly Data by Id.
   deleteMonthlyData(monthDataId: string) {
     let newUrl = this.monthsUrl + '/'+monthDataId;
     return this.http
       .delete(newUrl)
+      .map((response: Response) => response.json());
+  }
+
+  //Get Data based on Query.
+  getAllDataBasedOnQuery(name: string): Observable<MonthData[]> {
+    let newUrl = this.searchurl;
+    if(name) {
+      newUrl = this.searchurl + '?name=' + name;
+    }
+
+    return this.http
+      .get(newUrl)
       .map((response: Response) => response.json());
   }
 
@@ -101,54 +121,6 @@ export class MonthlyService {
       .post(this.monthsUrl, JSON.stringify(hotel), { headers: headers })
       .map((response: Response) => response.json());
   }
-
-  // getHotels(): Promise<Hotel[]> {
-  //   return this.http
-  //     .get(this.hotelsUrl)
-  //     .toPromise()
-  //     .then(response => response.json() as Hotel[])
-  //     .catch(this.handleError);
-  // }
-
-  // getHero(id: number): Promise<Hero> {
-  //   return this.getHeroes()
-  //     .then(heroes => heroes.find(hero => hero.id === id));
-  // }
-
-  // save(hero: Hero): Promise<Hero> {
-  //   if (hero.id) {
-  //     return this.put(hero);
-  //   }
-  //   return this.post(hero);
-  // }
-
-  // delete(hero: Hero): Promise<Response> {
-  //   let headers = new Headers();
-  //   headers.append('Content-Type', 'application/json');
-  //
-  //   let url = `${this.heroesUrl}/${hero.id}`;
-  //
-  //   return this.http
-  //     .delete(url, { headers: headers })
-  //     .toPromise()
-  //     .catch(this.handleError);
-  // }
-
-
-
-  // Update existing Hero
-  // private put(hero: Hero): Promise<Hero> {
-  //   let headers = new Headers();
-  //   headers.append('Content-Type', 'application/json');
-  //
-  //   let url = `${this.heroesUrl}/${hero.id}`;
-  //
-  //   return this.http
-  //     .put(url, JSON.stringify(hero), { headers: headers })
-  //     .toPromise()
-  //     .then(() => hero)
-  //     .catch(this.handleError);
-  // }
 
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error);
