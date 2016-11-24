@@ -1,6 +1,10 @@
-import {Component, OnInit, ViewChild, Input, AfterViewInit} from '@angular/core';
+import {
+  Component, OnInit, ViewChild, Input, AfterViewInit, ViewContainerRef,
+  ComponentFactoryResolver, ComponentFactory, Compiler
+} from '@angular/core';
 import { Router } from '@angular/router';
 import {Editor} from "primeng/primeng";
+import {TestComponent} from "./test-comp.component";
 declare var Quill:any;
 
 @Component({
@@ -10,11 +14,13 @@ declare var Quill:any;
                 <div id="editor">
                 </div>
                 <ul class="completions">
+
                 </ul>
                 <div id="tooltip-controls">
                   <button pButton icon="fa fa-circle-o" (click)="onClick()"></button>
                 </div>
               </div>
+              <span #insertComponentHere></span>
               <p>Value: {{text||'empty'}}</p>
             `
 })
@@ -28,7 +34,11 @@ export class RichTextComponent implements AfterViewInit {
   quill: any;
   cursorPosition: number = 0;
 
-  constructor() {}
+  @ViewChild(TestComponent) other;
+  @ViewChild("insertComponentHere", { read: ViewContainerRef }) insertComponentHere: ViewContainerRef;
+  constructor() {
+
+  }
 
   ngOnInit(): void {
     this.picklistUnits = ["cm, mm"];
@@ -43,25 +53,6 @@ export class RichTextComponent implements AfterViewInit {
           onOpen: () => console.log("Opening"),
           users: [
             {id: 1, name: 'Christy'},
-            {id: 2, name: 'Micha'},
-            {id: 3, name: 'Sima'},
-            {id: 4, name: 'Coreen'},
-            {id: 5, name: 'Aimee'},
-            {id: 6, name: 'Brant'},
-            {id: 7, name: 'Maryetta'},
-            {id: 8, name: 'Nicol'},
-            {id: 9, name: 'Thresa'},
-            {id: 10, name: 'Pura'},
-            {id: 11, name: 'Audie'},
-            {id: 12, name: 'Jacob'},
-            {id: 13, name: 'Mika'},
-            {id: 14, name: 'Nubia'},
-            {id: 15, name: 'Ana'},
-            {id: 16, name: 'Sudie'},
-            {id: 17, name: 'Raymundo'},
-            {id: 18, name: 'Carolyne'},
-            {id: 19, name: 'Doretha'},
-            {id: 20, name: 'Milo'},
           ]
         }
       }
@@ -69,12 +60,18 @@ export class RichTextComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-
+    console.log(this.other.getHtmlContent());
   }
 
   onClick() {
+    // this.componentResolver.resolveComponent(TestComponent).then((factory: ComponentFactory<any> ) => {
+    //   let comp = this.insertComponentHere.createComponent(factory);
+    //   console.log(comp);
+    //   //comp.instance.descriptor = this.descriptor;
+    // });
     var index = this.quill.getSelection(true).index;
-    this.quill.insertEmbed(index,"s-input","Test");
+    let htmlValue = this.other.getHtmlContent();
+    this.quill.insertEmbed(index,"s-angular", htmlValue);
     this.text = this.quill.container.firstChild.innerHTML;
   }
 

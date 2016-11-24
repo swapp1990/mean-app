@@ -23,6 +23,7 @@ import { CKEditorModule } from 'ng2-ckeditor';
 import { Ng2Summernote } from 'ng2-summernote/ng2-summernote';
 import {TreeView} from "./components/utils/tree/s-tree.component";
 import {MyGraph} from "./components/utils/graph/graph.component";
+import {TestComponent} from "./components/rich-text-view/test-comp.component";
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import {MyGraph} from "./components/utils/graph/graph.component";
     AutoCompleteColumn,
     MonthlyTypeComponent,
     QuantityData,
+    TestComponent,
     Ng2Summernote
   ],
   imports: [

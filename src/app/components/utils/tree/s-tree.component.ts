@@ -18,6 +18,7 @@ import {TaskData} from "../../../models/task";
                   <input [(ngModel)]="node.data.counterMax" type="text" style="'width': '20px'">
                   <button pButton type="button" icon="fa-check" iconPos="left" (click)="onClick()"></button>
                 </template>
+                
                 <template let-node  pTemplate type="create-new">
                   <button *ngIf="!node.plusClicked" pButton type="button" icon="fa-plus" iconPos="left" (click)="onPlus()"></button>
                   <div *ngIf="node.plusClicked">
@@ -65,9 +66,10 @@ export class TreeView implements OnInit {
 
   editNode() {
     console.log(this.selectedNode.type);
-    if(this.selectedNode.type === "check-box") {
-      this.selectedNode.setType("counter-editable");
-      console.log(this.selectedNode);
+    if(this.selectedNode.type === "check-box" || this.selectedNode.type === "counter-editable") {
+      if(!this.selectedNode.plusClicked) {
+        this.selectedNode.plusClicked = true;
+      }
     } else {
       this.selectedNode.setType("editable");
     }
@@ -88,7 +90,7 @@ export class TreeView implements OnInit {
 
   onClick() {
     this.onUpdate.emit(this.selectedNode.data);
-    this.selectedNode.setType("default");
+    //this.selectedNode.setType("default");
   }
 
   onPlus() {

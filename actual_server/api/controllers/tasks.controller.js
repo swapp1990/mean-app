@@ -271,31 +271,9 @@ module.exports.taskUpdateOne = function(req,res) {
 };
 
 module.exports.counterUpdateOne = function(req,res) {
-  var taskId = req.params.taskId;
-  Tasks
-    .findById(taskId)
-    .select('counters')
-    .exec(function(err, doc) {
-      var response = {
-        status: 200,
-        message: doc
-      };
-      if (err) {
-        console.log("Error finding Task");
-        response.status = 500;
-        response.message = err;
-      } else if (!doc) {
-        console.log("TaskId not found in database", id);
-        response.status = 404;
-        response.message = {
-          "message": "Task ID not found " + id
-        };
-      }
-      if (doc) {
-        console.log("update counter", doc);
         var counterId = req.params.counterId;
-        doc.counters
-          .findById(counterId)
+        Tasks.counters
+          .find(counterId)
           .exec(function(err, doc) {
             var response = {
               status : 200,
@@ -328,8 +306,6 @@ module.exports.counterUpdateOne = function(req,res) {
                 });
               }
           });
-      }
-    });
 }
 
 

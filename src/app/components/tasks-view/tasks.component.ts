@@ -230,7 +230,7 @@ export class TasksComponent implements OnInit {
   }
 
   updateSingleCounter(counterBody: CounterData) {
-    console.log(counterBody);
+    console.log("Counter ", counterBody);
     this.taskService.updateCounterData(counterBody.parentId, counterBody._id, counterBody)
       .subscribe(
         data => {
