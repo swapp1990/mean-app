@@ -19,11 +19,11 @@ export class MonthData {
     this.date = 1;
     this.month = month;
     this.isIncome = isIncome;
-    this.details = "Details";
+    this.details = [];
   }
 }
 
 export class DetailsData {
-  
+
 }
 

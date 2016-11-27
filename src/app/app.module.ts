@@ -15,7 +15,6 @@ import {
 import {TreeTable} from "./components/utils/tree-table/tree-table.component";
 import {MonthlyService} from "./services/months.service";
 import {DataTable} from "./components/utils/data-table/data-table.component";
-import {AutoCompleteColumn} from "./components/utils/data-table/autocomplete-column.component";
 import {MonthlyTypeComponent} from "./components/monthly-view/monthly-type.component";
 import {TaskService} from "./services/tasks.service";
 import {QuantityData} from "./components/rich-text-view/QuantityData.component";
@@ -25,6 +24,8 @@ import {TreeView} from "./components/utils/tree/s-tree.component";
 import {MyGraph} from "./components/utils/graph/graph.component";
 import {TestComponent} from "./components/rich-text-view/test-comp.component";
 import {MyOverlay} from "./components/utils/overlay-panel/my-overlay.component";
+import {MyExpander} from "./components/utils/expander/expander-view.component";
+import {MyAutoComplete} from "./components/utils/auto-complete/autocomplete.component";
 
 @NgModule({
   declarations: [
@@ -34,8 +35,9 @@ import {MyOverlay} from "./components/utils/overlay-panel/my-overlay.component";
     DataTable,
     TreeView,
     MyOverlay,
+    MyExpander,
     MyGraph,
-    AutoCompleteColumn,
+    MyAutoComplete,
     MonthlyTypeComponent,
     QuantityData,
     TestComponent,

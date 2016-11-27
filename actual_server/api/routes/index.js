@@ -17,12 +17,18 @@ router.route('/months/price')
 router.route('/months/name')
   .get(ctrlMonths.monthGetAllNames);
 
+router.route('/months/details')
+  .get(ctrlMonths.monthGetAllDetails);
+
 router.route('/months/:monthId')
   .put(ctrlMonths.monthUpdateOne)
   .delete(ctrlMonths.monthDeleteOne);
 
 router.route('/search')
   .get(ctrlMonths.getDataBasedOnQuery);
+
+router.route('/search/details')
+  .get(ctrlMonths.getDataByDetails);
 
 //Tasks App
 router.route('/tasks')

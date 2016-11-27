@@ -17,9 +17,10 @@ import {MonthlyService} from "../../services/months.service";
                         (updateRow)="onUpdateRow($event)"
                         (selectRow)="onSelectRow($event)"
                         (deleteEvent)="onDeleteRow($event)"
-                        (copyRow)="onCopyRow()">
+                        (copyRow)="onCopyRow($event)">
                   </my-data-table>
                   <button pButton type="text" (click)="onCreate($event)" icon="fa-plus"></button>
+                  <button pButton type="text" (click)="onCreateCopy($event)" icon="fa-copy"></button>
                   <button pButton type="text" (click)="onSave($event)" icon="fa-check"></button>
                   <h3>Details Data</h3>
                   <my-data-table [files]="detailsData" 
@@ -180,12 +181,21 @@ export class MonthlyTypeComponent implements OnInit {
   onCreate($event) {
     let emptyData: MonthData = new MonthData(this.selectedCategory, this.selectedMonth, this.type);
     //console.log(emptyData);
-    this.monthlyService.createMonthData(emptyData)
+    this.createData(emptyData);
+  }
+
+  onCreateCopy(event) {
+    if(this.selectedRow) {
+      this.createData(this.selectedRow);
+    }
+  }
+
+  createData(data: MonthData) {
+    this.monthlyService.createMonthData(data)
       .subscribe(
         data => {
-          console.log("Create" + data);
+          console.log("Create ", data);
           this.getMonthlyDataByCategory();
-          //this.calculateTotalSpent();
         },
         err => {console.log(err);}
       );
@@ -204,24 +214,22 @@ export class MonthlyTypeComponent implements OnInit {
 
     if(!rowdata._id) {
       //console.log("To Update ", this.selectedRow);
-      this.monthlyService.updateMonthlyData(this.selectedRow._id, this.selectedRow)
-        .subscribe(
-          data => {
-            console.log("Updated ", data);
-            this.calculateTotalAmount();
-          },
-          err => {console.log(err);}
-        );
+      this.updateMonthData(this.selectedRow);
     } else {
-      this.monthlyService.updateMonthlyData(rowdata._id, rowdata)
-        .subscribe(
-          data => {
-            console.log("Updated ", data);
-            this.calculateTotalAmount();
-          },
-          err => {console.log(err);}
-        );
+      //console.log("To Update ", rowdata);
+      this.updateMonthData(rowdata);
     }
+  }
+
+  updateMonthData(data: MonthData) {
+    this.monthlyService.updateMonthlyData(data._id, data)
+      .subscribe(
+        data => {
+          console.log("Updated ", data);
+          this.calculateTotalAmount();
+        },
+        err => {console.log(err);}
+      );
   }
 
   onSelectRow(data: MonthData) {

@@ -83,9 +83,16 @@ export class MonthlyService {
       .get(newUrl)
       .map((response: Response) => response.json());
   }
-  
+
   getAllNames(): Observable<any[]> {
     let newUrl = this.monthsUrl +'/name';
+    return this.http
+      .get(newUrl)
+      .map((response: Response) => response.json());
+  }
+
+  getAllDetails(): Observable<any[]> {
+    let newUrl = this.monthsUrl +'/details';
     return this.http
       .get(newUrl)
       .map((response: Response) => response.json());
@@ -106,6 +113,14 @@ export class MonthlyService {
       newUrl = this.searchurl + '?name=' + name;
     }
 
+    return this.http
+      .get(newUrl)
+      .map((response: Response) => response.json());
+  }
+
+  //Get all data based on details query
+  getDataBasedOnDetails(key: string, value: string): Observable<MonthData[]> {
+    let newUrl = this.searchurl + '/details' + '?key=' + key + '&value=' + value;
     return this.http
       .get(newUrl)
       .map((response: Response) => response.json());

@@ -7,11 +7,9 @@ import {MonthData} from "../../../models/month";
 
 @Component({
   selector: 'my-data-table',
-  styles: [`.ui-tabview {
-              position: initial;
-          }`],
   template: `<p-dataTable *ngIf='!checked' [value]="files" [editable]="true" 
                         selectionMode="single" 
+                        expandableRows="true"
                         (onRowSelect)="onRowSelect($event)" 
                         (onRowUnselect)="onRowUnselect($event)" 
                         [rows]="5" [paginator]="true" 
@@ -23,6 +21,11 @@ import {MonthData} from "../../../models/month";
                     <!--<my-overlay #op1></my-overlay>-->
                   <!--</template>-->
                 <!--</p-column>-->
+                <p-column *ngIf='isExpander' expander="true" styleClass="col-icon">
+                  <template let-row>
+                    <my-expander (editDone)="onEditDetails($event)" [inputCols]="expanderDetails[row._id]"></my-expander>
+                  </template>
+                </p-column>
                 <p-column *ngFor="let col of dataColumns" field="{{col.field}}" header="{{col.name}}" [style]="{'overflow':'visible'}">
                   <template let-row="rowData" pTemplate type="body">
                     <span *ngIf='row.selected'>
@@ -65,6 +68,8 @@ import {MonthData} from "../../../models/month";
 export class DataTable implements OnInit {
   @Input() files: any[];
   @Input() dataColumns: any[];
+  @Input() isExpander: boolean = false;
+  @Input() expanderDetails: any = [];
   @Output() changeToggle = new EventEmitter();
   @Output() updateRow = new EventEmitter();
   @Output() selectRow = new EventEmitter();
@@ -94,8 +99,6 @@ export class DataTable implements OnInit {
       console.log("Error: No data defined!");
     }
     this.selectRow.emit(event.data);
-    //event.data.selected = true;
-    //console.log(event);
   }
 
   onRowUnselect(event) {
@@ -103,9 +106,22 @@ export class DataTable implements OnInit {
     this.updateRow.emit(event.data);
   }
 
+  onEditDetails(event: any) {
+    //console.log("Selected", this.selectedRow.details);
+    if(this.selectedRow) {
+      if(this.selectedRow.details) {
+        event.forEach(col => {
+          //console.log(this.selectedRow.details[0][col.name]);
+          this.selectedRow.details[0][col.name] = col.value;
+        });
+      }
+    }
+    this.updateRow.emit(this.selectedRow);
+  }
+
   onEdit(event) {
     this.selectedRow.selected = true;
-    //console.log(this.selectedRow);
+    //console.log("Row to Edit ", this.selectedRow);
   }
 
   onDelete() {
@@ -113,7 +129,7 @@ export class DataTable implements OnInit {
   }
 
   onCopy(copyRow) {
-    console.log("Copy ", copyRow);
+    //console.log("Copy ", copyRow);
     copyRow.emit();
   }
 
@@ -138,6 +154,27 @@ export class DataTable implements OnInit {
   selectCar(event, row: any, overlaypanel: OverlayPanel) {
     //console.log(car);
     overlaypanel.toggle(row, event);
+  }
+
+  getExpanderForRow(row: any) {
+    let detailsFound: any = this.expanderDetails.filter(item => item.rowId === row._id)[0];
+    //console.log(detailsFound);
+
+    let inputCols: any = [];
+    if(detailsFound) {
+      detailsFound.detailsData.forEach(detail => {
+        let columns: string[] = Object.keys(detail);
+        columns.forEach(colDetail => {
+          let objToPush: any = {name: "", value: null};
+          objToPush.name = colDetail;
+          objToPush.value = detail[colDetail];
+          inputCols.push(objToPush);
+        });
+      });
+    }
+
+    console.log(inputCols);
+    return inputCols;
   }
 
   // handleDropdownClick() {

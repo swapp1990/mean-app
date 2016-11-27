@@ -26,22 +26,36 @@ module.exports.monthGetAll = function(req, res) {
 };
 
 module.exports.getDataBasedOnQuery = function(req, res) {
-  var query = {};
+  var query = {
+
+  };
 
   if(req.query) {
     if(req.query.name) {
       query.name = req.query.name;
     }
   }
-
   Month
     .find()
     .where(query)
+    //.where('details.Game','Gone Home')
     .exec(function(err, months) {
       console.log("Found Rows", months.length);
       res.json(months);
     });
+};
 
+module.exports.getDataByDetails = function(req, res) {
+  var key = 'details.';
+  key = key + req.query.key;
+
+  Month
+    .find()
+    .where(key,req.query.value)
+    .exec(function(err, months) {
+      console.log("Found Rows", months.length);
+      res.json(months);
+    });
 };
 
 module.exports.monthGetCategory = function(req, res) {
@@ -133,9 +147,24 @@ module.exports.monthGetAllNames = function(req, res) {
   Month
     .find()
     .where(query)
+    //.distinct(req.query.distinct)
     .distinct('name')
     .exec(function(err, months) {
       res.json(months);
+    });
+};
+
+module.exports.monthGetAllDetails = function (req, res) {
+  var query = {
+
+  };
+
+  Month
+    .find()
+    .where(query)
+    .distinct('details')
+    .exec(function(err, data) {
+      res.json(data);
     });
 };
 
@@ -217,8 +246,8 @@ module.exports.monthUpdateOne = function(req,res) {
           if(req.body.details) {
             doc.details = req.body.details;
           } else {
-            var value = {"val1": 5, "val2": "hello"};
-            doc.details = value;
+            // var value = {"val1": 5, "val2": "hello"};
+            // doc.details = value;
           }
           console.log("doc " , doc);
           //services = _splitArray(req.body.services),

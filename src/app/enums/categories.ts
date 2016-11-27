@@ -16,7 +16,8 @@ export enum ExpenseCategoryName {
 export enum IncomeCategoryName {
   Salary,
   RentIncome,
-  CreditCashback
+  CreditCashback,
+  HealthSavings
 }
 
 export enum TasksCategoryName {
