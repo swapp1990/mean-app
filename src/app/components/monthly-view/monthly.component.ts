@@ -38,7 +38,7 @@ import {MonthlyTypeComponent} from "./monthly-type.component";
 export class MonthlyComponent implements OnInit {
   months: SelectItem[];
   selectedMonth: string;
-  selectedMonthIndex: number = 10;
+  selectedMonthIndex: number = 11;
 
   totalExpense: number = 0;
   totalIncome: number = 0;
@@ -70,7 +70,7 @@ export class MonthlyComponent implements OnInit {
   }
 
   onTotalChange(event: any) {
-    console.log("E: " + event.totalAmount);
+    //console.log("E: " + event.totalAmount);
     if(event.type === "Expense") {
       this.totalExpense = event.totalAmount;
       this.totalExpense = Math.ceil(this.totalExpense/100)*100;

@@ -11,7 +11,7 @@ import {SearchViewComponent} from "../components/monthly-view/search-view.compon
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/tasks',
+    redirectTo: '/monthly',
     pathMatch: 'full'
   },
   {

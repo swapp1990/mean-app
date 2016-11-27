@@ -205,7 +205,7 @@ module.exports.monthUpdateOne = function(req,res) {
           .status(response.status)
           .json(response.message);
       } else {
-        //console.log("req " + req.body.name + " res " + doc.name);
+        //console.log("req " , req.body);
         if(req.body.name) {
           doc.name = req.body.name;
           doc.date = req.body.date;
@@ -214,7 +214,13 @@ module.exports.monthUpdateOne = function(req,res) {
           doc.payment = req.body.payment;
           doc.month = req.body.month;
           doc.isIncome = req.body.isIncome;
-          doc.details = req.body.details;
+          if(req.body.details) {
+            doc.details = req.body.details;
+          } else {
+            var value = {"val1": 5, "val2": "hello"};
+            doc.details = value;
+          }
+          console.log("doc " , doc);
           //services = _splitArray(req.body.services),
           doc.save(function(err, monthUpdated) {
             if(err) {

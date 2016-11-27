@@ -9,16 +9,25 @@ import {MonthlyService} from "../../services/months.service";
   template: `
                <p-tabView orientation="left" (onChange)="onCategoryChange($event)">
                   <p-tabPanel *ngFor="let category of categories" header="{{getCategoryHeader(category)}}">
+                  <h3>Monthly Data</h3>
                   <my-data-table [files]="data" 
                         [dataColumns] = "dataColumns"
                         [totalCategoryAmount]="totalCategoryAmount"
                         (changeToggle)="onChangeToggle($event)" 
                         (updateRow)="onUpdateRow($event)"
+                        (selectRow)="onSelectRow($event)"
                         (deleteEvent)="onDeleteRow($event)"
                         (copyRow)="onCopyRow()">
                   </my-data-table>
                   <button pButton type="text" (click)="onCreate($event)" icon="fa-plus"></button>
                   <button pButton type="text" (click)="onSave($event)" icon="fa-check"></button>
+                  <h3>Details Data</h3>
+                  <my-data-table [files]="detailsData" 
+                        [dataColumns] = "detailsColumns"
+                        (updateRow)= "onUpdateRow($event)">
+                  </my-data-table>
+                  <input [(ngModel)]="colNameToAdd" type="text">
+                  <button pButton type="text" (click)="onEditDetails($event)" icon="fa-plus"></button>
                   </p-tabPanel>
                </p-tabView>
             `
@@ -30,8 +39,12 @@ export class MonthlyTypeComponent implements OnInit {
   dataColumns: any[];
   namesCache: any[];
   selectedCategory: string;
+  selectedRow: MonthData;
   @Input() selectedMonth: string;
   @Input() data: MonthData[];
+  @Input() detailsData: any;
+  detailsColumns: any[];
+  colNameToAdd: string = "";
   @Input() totalCategoryAmount: number = 0;
 
   @Output() totalAmountOutput = new EventEmitter();
@@ -62,6 +75,7 @@ export class MonthlyTypeComponent implements OnInit {
 
   initializeColumns() {
     this.dataColumns = [];
+    this.detailsColumns = [];
     this.dataColumns.push({name: 'Date', field: 'date', filteredResults: null});
     this.dataColumns.push({name: 'Name', field: 'name', filteredResults: this.namesCache});
     this.dataColumns.push({name: 'Cost', field: 'price', filteredResults: null});
@@ -77,7 +91,7 @@ export class MonthlyTypeComponent implements OnInit {
       .subscribe (
         monthlyData => {
           this.data = monthlyData;
-          console.log(this.data);
+          console.log("Get Data ", this.data);
         },
         err => {
           console.log(err);
@@ -102,7 +116,7 @@ export class MonthlyTypeComponent implements OnInit {
 
   //Total Spent for Monthly Data.
   calculateTotalAmount() {
-    console.log(this.selectedMonth);
+    //console.log(this.selectedMonth);
     //this.resetCategoryTotalSpent();
     this.totalAmount = 0;
     this.monthlyService.monthGetAllCost(this.selectedMonth)
@@ -165,11 +179,11 @@ export class MonthlyTypeComponent implements OnInit {
 
   onCreate($event) {
     let emptyData: MonthData = new MonthData(this.selectedCategory, this.selectedMonth, this.type);
-    console.log(emptyData);
+    //console.log(emptyData);
     this.monthlyService.createMonthData(emptyData)
       .subscribe(
         data => {
-          //console.log("Create" + data);
+          console.log("Create" + data);
           this.getMonthlyDataByCategory();
           //this.calculateTotalSpent();
         },
@@ -177,18 +191,91 @@ export class MonthlyTypeComponent implements OnInit {
       );
   }
 
-  onUpdateRow(event) {
-    //console.log(event);
-    this.monthlyService.updateMonthlyData(event._id, event)
+  onEditDetails(event) {
+    if(this.selectedRow) {
+      //First add all the details already present.
+      this.addAllDetails(this.selectedRow.details);
+      //then add the column
+      this.addSingleEmptyDetailColumn();
+    }
+  }
+
+  onUpdateRow(rowdata: MonthData) {
+
+    if(!rowdata._id) {
+      //console.log("To Update ", this.selectedRow);
+      this.monthlyService.updateMonthlyData(this.selectedRow._id, this.selectedRow)
+        .subscribe(
+          data => {
+            console.log("Updated ", data);
+            this.calculateTotalAmount();
+          },
+          err => {console.log(err);}
+        );
+    } else {
+      this.monthlyService.updateMonthlyData(rowdata._id, rowdata)
+        .subscribe(
+          data => {
+            console.log("Updated ", data);
+            this.calculateTotalAmount();
+          },
+          err => {console.log(err);}
+        );
+    }
+  }
+
+  onSelectRow(data: MonthData) {
+    this.detailsColumns = [];
+    this.detailsData = [];
+    this.selectedRow = data;
+    if(data.details) {
+      this.addAllDetails(data.details);
+    }
+  }
+
+  addSingleEmptyDetailColumn() {
+    this.detailsColumns = [];
+    this.detailsData = [];
+
+    var obj = {};
+    if(!this.selectedRow.details) {
+      this.selectedRow.details = [];
+    }
+    this.selectedRow.details.forEach(detail => {
+      let columns: string[] = Object.keys(detail);
+      columns.forEach(col => {
+        this.detailsColumns.push({name: col, field: col, filteredResults: null});
+        obj[col] = "";
+      });
+    });
+
+    obj[this.colNameToAdd] = "";
+    this.detailsColumns.push({name: this.colNameToAdd, field: this.colNameToAdd, filteredResults: null});
+    this.detailsData.push(obj);
+
+    console.log(this.detailsData);
+    this.selectedRow.details = this.detailsData;
+    this.monthlyService.updateMonthlyData(this.selectedRow._id, this.selectedRow)
       .subscribe(
         data => {
-          console.log("OK ", data);
+          console.log("Updated ", data);
           this.calculateTotalAmount();
         },
         err => {console.log(err);}
       );
   }
 
+  addAllDetails(detailsGot: any) {
+    if(detailsGot) {
+      detailsGot.forEach(detail => {
+        let columns: string[] = Object.keys(detail);
+        columns.forEach(col => {
+          this.detailsColumns.push({name: col, field: col, filteredResults: null});
+        });
+      });
+      this.detailsData = detailsGot;
+    }
+  }
 
   onDeleteRow(event: MonthData) {
     this.monthlyService.deleteMonthlyData(event._id)

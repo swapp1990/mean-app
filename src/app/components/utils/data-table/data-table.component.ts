@@ -2,11 +2,14 @@ import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { Router } from '@angular/router';
 import {Observable} from "rxjs/Rx";
 import {Response, Http} from "@angular/http";
-import {TreeNode, MenuItem} from "primeng/primeng";
+import {TreeNode, MenuItem, OverlayPanel} from "primeng/primeng";
 import {MonthData} from "../../../models/month";
 
 @Component({
   selector: 'my-data-table',
+  styles: [`.ui-tabview {
+              position: initial;
+          }`],
   template: `<p-dataTable *ngIf='!checked' [value]="files" [editable]="true" 
                         selectionMode="single" 
                         (onRowSelect)="onRowSelect($event)" 
@@ -14,6 +17,12 @@ import {MonthData} from "../../../models/month";
                         [rows]="5" [paginator]="true" 
                         [(selection)]="selectedRow"
                         [contextMenu]="cm">
+                <!--<p-column [style]="{'width':'10%','text-align':'center'}" header="Logo">-->
+                  <!--<template let-car="rowData" pTemplate type="body">-->
+                    <!--<button type="button" pButton (click)="selectCar($event,car,op1);" icon="fa-search"></button>-->
+                    <!--<my-overlay #op1></my-overlay>-->
+                  <!--</template>-->
+                <!--</p-column>-->
                 <p-column *ngFor="let col of dataColumns" field="{{col.field}}" header="{{col.name}}" [style]="{'overflow':'visible'}">
                   <template let-row="rowData" pTemplate type="body">
                     <span *ngIf='row.selected'>
@@ -33,6 +42,7 @@ import {MonthData} from "../../../models/month";
                 </p-footerColumnGroup>
               </p-dataTable>
               <p-contextMenu #cm [model]="contextItems"></p-contextMenu>
+              
               `
 
 //               <p-dataTable *ngIf='checked' [value]="files" [editable]="true">
@@ -57,6 +67,7 @@ export class DataTable implements OnInit {
   @Input() dataColumns: any[];
   @Output() changeToggle = new EventEmitter();
   @Output() updateRow = new EventEmitter();
+  @Output() selectRow = new EventEmitter();
   @Output() deleteEvent = new EventEmitter();
   @Output() copyRow = new EventEmitter();
   checked: boolean = false;
@@ -79,6 +90,10 @@ export class DataTable implements OnInit {
   }
 
   onRowSelect(event) {
+    if(!event.data) {
+      console.log("Error: No data defined!");
+    }
+    this.selectRow.emit(event.data);
     //event.data.selected = true;
     //console.log(event);
   }
@@ -118,6 +133,11 @@ export class DataTable implements OnInit {
         }
       }
     }
+  }
+
+  selectCar(event, row: any, overlaypanel: OverlayPanel) {
+    //console.log(car);
+    overlaypanel.toggle(row, event);
   }
 
   // handleDropdownClick() {

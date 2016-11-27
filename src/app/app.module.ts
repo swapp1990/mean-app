@@ -10,7 +10,7 @@ import {routedComponents, AppRoutingModule} from "./routes/app-routing.module";
 import {
   InputTextModule, AccordionModule, TabViewModule, TreeTableModule, TreeNode, TreeModule, SharedModule, DataTableModule,
   ToggleButtonModule, ButtonModule, DropdownModule, AutoCompleteModule, ChartModule, CheckboxModule, EditorModule,
-  ContextMenuModule, MenuItem, MenuModule
+  ContextMenuModule, MenuItem, MenuModule, OverlayPanelModule
 } from 'primeng/primeng';
 import {TreeTable} from "./components/utils/tree-table/tree-table.component";
 import {MonthlyService} from "./services/months.service";
@@ -24,6 +24,7 @@ import { Ng2Summernote } from 'ng2-summernote/ng2-summernote';
 import {TreeView} from "./components/utils/tree/s-tree.component";
 import {MyGraph} from "./components/utils/graph/graph.component";
 import {TestComponent} from "./components/rich-text-view/test-comp.component";
+import {MyOverlay} from "./components/utils/overlay-panel/my-overlay.component";
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import {TestComponent} from "./components/rich-text-view/test-comp.component";
     TreeTable,
     DataTable,
     TreeView,
+    MyOverlay,
     MyGraph,
     AutoCompleteColumn,
     MonthlyTypeComponent,
@@ -60,6 +62,7 @@ import {TestComponent} from "./components/rich-text-view/test-comp.component";
     MenuModule,
     ChartModule,
     SharedModule,
+    OverlayPanelModule,
     CKEditorModule
   ],
   providers: [HotelService, MonthlyService, TaskService],

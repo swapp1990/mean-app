@@ -16,7 +16,7 @@ var monthSchema = new mongoose.Schema({
     type : String,
     month: String,
     isIncome: String,
-    details: String
+    details: mongoose.Schema.Types.Mixed
 });
 
 mongoose.model('Month', monthSchema, 'monthlySpent');
