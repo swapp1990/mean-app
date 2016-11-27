@@ -156,27 +156,6 @@ export class DataTable implements OnInit {
     overlaypanel.toggle(row, event);
   }
 
-  getExpanderForRow(row: any) {
-    let detailsFound: any = this.expanderDetails.filter(item => item.rowId === row._id)[0];
-    //console.log(detailsFound);
-
-    let inputCols: any = [];
-    if(detailsFound) {
-      detailsFound.detailsData.forEach(detail => {
-        let columns: string[] = Object.keys(detail);
-        columns.forEach(colDetail => {
-          let objToPush: any = {name: "", value: null};
-          objToPush.name = colDetail;
-          objToPush.value = detail[colDetail];
-          inputCols.push(objToPush);
-        });
-      });
-    }
-
-    console.log(inputCols);
-    return inputCols;
-  }
-
   // handleDropdownClick() {
   //   this.filteredBrands = [];
   //
