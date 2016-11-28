@@ -60,9 +60,17 @@ export class MonthlyService {
       .map((response: Response) => response.json());
   }
 
-  //Get all Expenses for Monthly Data.
-  monthGetAllCost(month: string): Observable<any[]> {
+  //Get all Amount (Income & Expense) for Monthly Data.
+  monthGetAllAmount(month: string): Observable<any[]> {
     let newUrl = this.monthsUrl +'/price'+ '?month='+ month;
+    return this.http
+      .get(newUrl)
+      .map((response: Response) => response.json());
+  }
+
+  //Get all Essential
+  monthGetAllEssentialCost(month: string): Observable<any[]> {
+    let newUrl = this.monthsUrl +'/price'+ '?month='+ month +'&isEssential=true';
     return this.http
       .get(newUrl)
       .map((response: Response) => response.json());
@@ -103,7 +111,7 @@ export class MonthlyService {
     let newUrl = this.monthsUrl + '/'+monthDataId;
     return this.http
       .delete(newUrl)
-      .map((response: Response) => response.json());
+      .map((response: Response) => null);
   }
 
   //Get Data based on Query.

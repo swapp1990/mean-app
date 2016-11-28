@@ -3,13 +3,10 @@ import { Router } from '@angular/router';
 import {Observable} from "rxjs/Rx";
 import {Response, Http} from "@angular/http";
 import {TreeNode, SelectItem} from "primeng/primeng";
-
-import {MonthlyService} from "../../services/months.service";
-import {MonthData} from "../../models/month";
-import {Category} from "../../models/catagory";
-import {EnumUtils} from "../../enums/EnumUtils";
-import {Month} from "../../enums/months";
 import {MonthlyTypeComponent} from "./monthly-type.component";
+import {MonthlyService} from "../../../services/months.service";
+import {Month} from "../../../enums/months";
+import {EnumUtils} from "../../../enums/EnumUtils";
 
 @Component({
   selector: 'monthly-view',
@@ -70,7 +67,7 @@ export class MonthlyComponent implements OnInit {
   }
 
   onTotalChange(event: any) {
-    //console.log("E: " + event.totalAmount);
+    //console.log("E: " + event.totalAmountByType);
     if(event.type === "Expense") {
       this.totalExpense = event.totalAmount;
       this.totalExpense = Math.ceil(this.totalExpense/100)*100;
@@ -98,24 +95,5 @@ export class MonthlyComponent implements OnInit {
     this.selectedMonth = Month[(--this.selectedMonthIndex)-1];
     this.firstType.onMonthChange(this.selectedMonth);
     this.secondType.onMonthChange(this.selectedMonth);
-  }
-
-  onSave($event) {
-    // setTimeout(() => {
-    //   //this.getMonthlyDataByCategory();
-    //   //this.calculateTotalSpent();
-    //   this.totalCategory = 0;
-    // }, 100);
-    // this.expenseData.map((body: MonthData) => {
-    //   if(body._id) {
-    //     this.monthlyService.updateMonthlyData(body._id, body)
-    //       .subscribe(
-    //         data => {
-    //           //console.log("OK" + data);
-    //         },
-    //         err => {console.log(err);}
-    //       );
-    //   }
-    // });
   }
 }

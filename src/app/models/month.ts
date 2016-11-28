@@ -9,8 +9,9 @@ export class MonthData {
   month: string;
   isIncome: string;
   details: any;
+  isEssential: string = "false";
 
-  constructor(category: string, month: string, isIncome: string) {
+  constructor(category: string, month: string, isIncome: string, isEssential: string) {
     this.name = "";
     this.price = 0;
     this.category = category;
@@ -20,6 +21,7 @@ export class MonthData {
     this.month = month;
     this.isIncome = isIncome;
     this.details = [];
+    this.isEssential = isEssential;
   }
 }
 

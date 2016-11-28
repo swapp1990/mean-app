@@ -1,10 +1,10 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MonthlyService} from "../../services/months.service";
-import {MonthData} from "../../models/month";
-import {GraphDataSet, GraphData} from "../utils/graph/graph-data.model";
-import {EnumUtils} from "../../enums/EnumUtils";
-import {Month} from "../../enums/months";
-import {MyAutoComplete} from "../utils/auto-complete/autocomplete.component";
+import {MonthlyService} from "../../../services/months.service";
+import {MonthData} from "../../../models/month";
+import {GraphDataSet, GraphData} from "../../utils/graph/graph-data.model";
+import {EnumUtils} from "../../../enums/EnumUtils";
+import {Month} from "../../../enums/months";
+import {MyAutoComplete} from "../../utils/auto-complete/autocomplete.component";
 
 @Component({
   selector: 'search-view',
@@ -132,7 +132,7 @@ export class SearchViewComponent implements OnInit {
 
   onCreate($event) {
     if(this.autoComplete1.textInput !== "") {
-      let emptyData: MonthData = new MonthData("Rent", "October", "Expense");
+      let emptyData: MonthData = new MonthData("Rent", "October", "Expense", "false");
       emptyData.name = this.autoComplete1.textInput;
       this.createData(emptyData);
     }

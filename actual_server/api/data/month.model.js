@@ -16,6 +16,7 @@ var monthSchema = new mongoose.Schema({
     type : String,
     month: String,
     isIncome: String,
+    isEssential: String,
     details: mongoose.Schema.Types.Mixed
 });
 

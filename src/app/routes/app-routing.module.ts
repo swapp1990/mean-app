@@ -2,11 +2,12 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import {HotelComponent} from "../components/hotel/hotel.component";
-import {MonthlyComponent} from "../components/monthly-view/monthly.component";
-import {MonthlyGraphView} from "../components/monthly-view/monthly-graph.component";
+
+import {MonthlyGraphView} from "../components/expense-app/graph-view/monthly-graph.component";
 import {TasksComponent} from "../components/tasks-view/tasks.component";
 import {RichTextComponent} from "../components/rich-text-view/rich-text.component";
-import {SearchViewComponent} from "../components/monthly-view/search-view.component";
+import {SearchViewComponent} from "../components/expense-app/search-view/search-view.component";
+import {MonthlyComponent} from "../components/expense-app/monthly-view/monthly.component";
 
 const routes: Routes = [
   {

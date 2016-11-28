@@ -15,7 +15,7 @@ import {
 import {TreeTable} from "./components/utils/tree-table/tree-table.component";
 import {MonthlyService} from "./services/months.service";
 import {DataTable} from "./components/utils/data-table/data-table.component";
-import {MonthlyTypeComponent} from "./components/monthly-view/monthly-type.component";
+
 import {TaskService} from "./services/tasks.service";
 import {QuantityData} from "./components/rich-text-view/QuantityData.component";
 import { CKEditorModule } from 'ng2-ckeditor';
@@ -26,6 +26,8 @@ import {TestComponent} from "./components/rich-text-view/test-comp.component";
 import {MyOverlay} from "./components/utils/overlay-panel/my-overlay.component";
 import {MyExpander} from "./components/utils/expander/expander-view.component";
 import {MyAutoComplete} from "./components/utils/auto-complete/autocomplete.component";
+import {MonthlyTypeComponent} from "./components/expense-app/monthly-view/monthly-type.component";
+import {CategoryView} from "./components/expense-app/monthly-view/category-view.component";
 
 @NgModule({
   declarations: [
@@ -39,6 +41,7 @@ import {MyAutoComplete} from "./components/utils/auto-complete/autocomplete.comp
     MyGraph,
     MyAutoComplete,
     MonthlyTypeComponent,
+    CategoryView,
     QuantityData,
     TestComponent,
     Ng2Summernote

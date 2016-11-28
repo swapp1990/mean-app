@@ -89,6 +89,9 @@ module.exports.getTotalCost = function(req, res) {
     if(req.query && req.query.isIncome) {
       query.isIncome = req.query.isIncome;
     }
+    if(req.query.isEssential) {
+      query.isEssential = req.query.isEssential;
+    }
   }
   Month.aggregate([
     {
@@ -178,6 +181,7 @@ module.exports.monthCreateOne = function(req,res) {
       category: req.body.category,
       month: req.body.month,
       isIncome: req.body.isIncome,
+      isEssential: req.body.isEssential,
       details: req.body.details
     }, function(err, body) {
       if(err) {
@@ -243,6 +247,7 @@ module.exports.monthUpdateOne = function(req,res) {
           doc.payment = req.body.payment;
           doc.month = req.body.month;
           doc.isIncome = req.body.isIncome;
+          doc.isEssential = req.body.isEssential;
           if(req.body.details) {
             doc.details = req.body.details;
           } else {

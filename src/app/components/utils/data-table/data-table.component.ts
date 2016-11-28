@@ -12,9 +12,9 @@ import {MonthData} from "../../../models/month";
                         expandableRows="true"
                         (onRowSelect)="onRowSelect($event)" 
                         (onRowUnselect)="onRowUnselect($event)" 
-                        [rows]="5" [paginator]="true" 
-                        [(selection)]="selectedRow"
-                        [contextMenu]="cm">
+                        [rows]="rows" 
+                        [paginator]="true" 
+                        [(selection)]="selectedRow">
                 <!--<p-column [style]="{'width':'10%','text-align':'center'}" header="Logo">-->
                   <!--<template let-car="rowData" pTemplate type="body">-->
                     <!--<button type="button" pButton (click)="selectCar($event,car,op1);" icon="fa-search"></button>-->
@@ -37,14 +37,14 @@ import {MonthData} from "../../../models/month";
                     <span *ngIf='!row.selected'>{{row[col.field]}}</span>
                   </template>
                 </p-column>
-                <p-footerColumnGroup>
-                   <p-row>
-                      <p-column footer="Total:" colspan="2"></p-column>
-                      <p-column footer="{{totalCategoryAmount}}"></p-column>
-                   </p-row>
-                </p-footerColumnGroup>
+                <!--<p-footerColumnGroup>-->
+                   <!--<p-row>-->
+                      <!--<p-column footer="Total:" colspan="2"></p-column>-->
+                      <!--<p-column footer="{{totalCategoryAmount}}"></p-column>-->
+                   <!--</p-row>-->
+                <!--</p-footerColumnGroup>-->
               </p-dataTable>
-              <p-contextMenu #cm [model]="contextItems"></p-contextMenu>
+              <!--<p-contextMenu #cm [model]="contextItems"></p-contextMenu>-->
               
               `
 
@@ -78,6 +78,9 @@ export class DataTable implements OnInit {
   checked: boolean = false;
   selectedRow: any;
   @Input() totalCategoryAmount: number;
+
+  //Customizable Options
+  @Input() rows: number = 5;
 
   contextItems: MenuItem[];
 
@@ -122,6 +125,10 @@ export class DataTable implements OnInit {
   onEdit(event) {
     this.selectedRow.selected = true;
     //console.log("Row to Edit ", this.selectedRow);
+  }
+
+  onEditOutside() {
+    this.selectedRow.selected = true;
   }
 
   onDelete() {

@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import {Observable} from "rxjs/Rx";
 import {Response, Http} from "@angular/http";
 import {TreeNode} from "primeng/primeng";
-import {MonthlyService} from "../../services/months.service";
-import {Month} from "../../enums/months";
-import {EnumUtils} from "../../enums/EnumUtils";
+import {MonthlyService} from "../../../services/months.service";
+import {Month} from "../../../enums/months";
+import {EnumUtils} from "../../../enums/EnumUtils";
 
 @Component({
   selector: 'monthly-graph',
