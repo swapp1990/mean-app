@@ -10,7 +10,7 @@ import {routedComponents, AppRoutingModule} from "./routes/app-routing.module";
 import {
   InputTextModule, AccordionModule, TabViewModule, TreeTableModule, TreeNode, TreeModule, SharedModule, DataTableModule,
   ToggleButtonModule, ButtonModule, DropdownModule, AutoCompleteModule, ChartModule, CheckboxModule, EditorModule,
-  ContextMenuModule, MenuItem, MenuModule, OverlayPanelModule
+  ContextMenuModule, MenuItem, MenuModule, OverlayPanelModule, ProgressBarModule
 } from 'primeng/primeng';
 import {TreeTable} from "./components/utils/tree-table/tree-table.component";
 import {MonthlyService} from "./services/months.service";
@@ -28,6 +28,8 @@ import {MyExpander} from "./components/utils/expander/expander-view.component";
 import {MyAutoComplete} from "./components/utils/auto-complete/autocomplete.component";
 import {MonthlyTypeComponent} from "./components/expense-app/monthly-view/monthly-type.component";
 import {CategoryView} from "./components/expense-app/monthly-view/category-view.component";
+import {MyProgressBar} from "./components/utils/progress-bar/progress-bar.component";
+import DynamicComponent from "./components/utils/dynamic-component/dynamic-component";
 
 @NgModule({
   declarations: [
@@ -40,11 +42,13 @@ import {CategoryView} from "./components/expense-app/monthly-view/category-view.
     MyExpander,
     MyGraph,
     MyAutoComplete,
+    MyProgressBar,
     MonthlyTypeComponent,
     CategoryView,
     QuantityData,
     TestComponent,
-    Ng2Summernote
+    Ng2Summernote,
+    DynamicComponent
   ],
   imports: [
     BrowserModule,
@@ -68,6 +72,7 @@ import {CategoryView} from "./components/expense-app/monthly-view/category-view.
     ChartModule,
     SharedModule,
     OverlayPanelModule,
+    ProgressBarModule,
     CKEditorModule
   ],
   providers: [HotelService, MonthlyService, TaskService],

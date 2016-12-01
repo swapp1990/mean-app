@@ -4,14 +4,21 @@ import {Month} from "../../../enums/months";
 import {EnumUtils} from "../../../enums/EnumUtils";
 import {MonthData} from "../../../models/month";
 import {DataTable} from "../../utils/data-table/data-table.component";
+import {isNullOrUndefined} from "util";
+import {MyProgressBar} from "../../utils/progress-bar/progress-bar.component";
 
 @Component({
   selector: 'category-view',
   template: `<h3>Monthly Data</h3>
+             <div class="label label-primary">Essential Amount - {{essentialAmt}}</div>
+             <div class="label label-primary">Once Amount - {{onceAmt}}</div>
              <my-data-table #table1 [files]="categoryData"
                             [dataColumns] = "dataColumns"
+                            [isExpander] = "'true'"
+                            [expanderDetails] = "formattedDetails"
                             (selectRow)= "onSelectRow($event)"
-                            (updateRow)="onUpdateRow($event)"></my-data-table> 
+                            (updateRow)="onUpdateRow($event)"
+                            (createDetailClicked)="onCreateDetail($event)"></my-data-table> 
              <button pButton type="text" (click)="onCreateNew($event)" icon="fa-plus"></button>
              <button pButton type="text" (click)="onCreateCopy($event)" icon="fa-copy"></button>
              <button pButton type="text" (click)="onEdit($event)" icon="fa-edit"></button>
@@ -29,6 +36,10 @@ export class CategoryView implements OnInit {
   categoryData: MonthData[] = [];
   dataColumns: any[];
   selectedRow: MonthData = null;
+  formattedDetails: any[];
+
+  essentialAmt: number = 0;
+  onceAmt: number = 0;
 
   @ViewChild('table1')
    myTable: DataTable;
@@ -51,6 +62,8 @@ export class CategoryView implements OnInit {
         (monthlyData: MonthData[]) => {
           this.categoryData = monthlyData;
           console.log("Get Data", this.categoryData);
+          this.calculateAmounts();
+          this.formatDetailsForExpander();
         },
         err => {
           console.log(err);
@@ -64,6 +77,8 @@ export class CategoryView implements OnInit {
         (monthlyData: MonthData[]) => {
           this.categoryData = monthlyData;
           console.log("Get Data", this.categoryData);
+          this.calculateAmounts();
+          this.formatDetailsForExpander();
         },
         err => {
           console.log(err);
@@ -115,6 +130,78 @@ export class CategoryView implements OnInit {
       );
   }
 
+  calculateAmounts() {
+    this.essentialAmt = 0;
+    this.onceAmt = 0;
+    this.categoryData.forEach((monthData: MonthData) => {
+      if(isNullOrUndefined(monthData.isEssential) || !monthData.isEssential) {
+        this.onceAmt += monthData.price;
+        this.onceAmt =  Math.round(this.onceAmt);
+      } else {
+        this.essentialAmt += monthData.price;
+        this.essentialAmt =  Math.round(this.essentialAmt);
+      }
+    });
+  }
+
+  addSingleEmptyDetailColumn(columnName: string) {
+    console.log("detail ", columnName);
+    if(!this.selectedRow.details) {
+      this.selectedRow.details = [];
+    }
+    var obj = this.addAllDetails(this.selectedRow.details);
+    obj[columnName] = "";
+    this.selectedRow.details = [];
+    this.selectedRow.details.push(obj);
+    this.updateMonthData(this.selectedRow);
+  }
+
+  addAllDetails(detailsGot: any): any {
+      var obj = {};
+      detailsGot.forEach(detail => {
+        obj = detail;
+      });
+      return obj;
+  }
+
+
+  formatDetailsForExpander() {
+    this.formattedDetails = [];
+    this.categoryData.forEach((monthData: MonthData) => {
+      if(monthData.details) {
+
+        let objToPush:any = {name: "", value: null};
+        monthData.details.forEach(detail => {
+          let detailS: any = [];
+          let detailPlusCustom: any = {};
+          let columns:string[] = Object.keys(detail);
+          columns.forEach(colDetail => {
+            let objToPush:any = {name: "", value: null};
+            objToPush.name = colDetail;
+            objToPush.value = detail[colDetail];
+            detailS.push(objToPush);
+          });
+          let customComponent = null
+          if(monthData.name === "India Education Loan") {
+            customComponent = {
+              component: MyProgressBar,
+              inputs: {
+                showNum: 78
+              }
+            }
+          }
+          detailPlusCustom = {details: detailS, custom: customComponent};
+          console.log(detailPlusCustom);
+          this.formattedDetails[monthData._id] = detailPlusCustom;
+        });
+      }
+    });
+
+    //Add custom component details
+
+    //console.log("Formatted Details: ", this.formattedDetails);
+  }
+
   /**
    * Data Table Events
    */
@@ -124,8 +211,17 @@ export class CategoryView implements OnInit {
 
   onUpdateRow(data: MonthData) {
     //console.log("To Update ", this.selectedRow);
-    this.updateMonthData(this.selectedRow);
-    this.selectedRow = null;
+    if(this.selectedRow != null) {
+      this.updateMonthData(this.selectedRow);
+      this.selectedRow = null;
+    }
+  }
+
+  onCreateDetail(event: any) {
+    //First add all the details already present.
+    //this.addAllDetails(this.selectedRow.details);
+
+    this.addSingleEmptyDetailColumn(event);
   }
 
   /**

@@ -23,9 +23,13 @@ import {MonthData} from "../../../models/month";
                 <!--</p-column>-->
                 <p-column *ngIf='isExpander' expander="true" styleClass="col-icon">
                   <template let-row>
-                    <my-expander (editDone)="onEditDetails($event)" [inputCols]="expanderDetails[row._id]"></my-expander>
+                    <my-expander (editDone)="onEditDetails($event)" 
+                                 (createClicked)="onCreateDetails($event)" 
+                                 [rowSelected]='isRowSelected' 
+                                 [inputCols]="expanderDetails[row._id].details"
+                                 [extraComponent]="expanderDetails[row._id].custom"></my-expander>
                   </template>
-                </p-column>
+                </p-column> 
                 <p-column *ngFor="let col of dataColumns" field="{{col.field}}" header="{{col.name}}" [style]="{'overflow':'visible'}">
                   <template let-row="rowData" pTemplate type="body">
                     <span *ngIf='row.selected'>
@@ -68,19 +72,27 @@ import {MonthData} from "../../../models/month";
 export class DataTable implements OnInit {
   @Input() files: any[];
   @Input() dataColumns: any[];
-  @Input() isExpander: boolean = false;
-  @Input() expanderDetails: any = [];
+
   @Output() changeToggle = new EventEmitter();
   @Output() updateRow = new EventEmitter();
   @Output() selectRow = new EventEmitter();
   @Output() deleteEvent = new EventEmitter();
   @Output() copyRow = new EventEmitter();
   checked: boolean = false;
+  isRowSelected: boolean = false;
   selectedRow: any;
   @Input() totalCategoryAmount: number;
 
   //Customizable Options
   @Input() rows: number = 5;
+
+  //Move outside of this class
+  @Output() createDetailClicked = new EventEmitter();
+
+  //Expander Details
+  @Input() isExpander: boolean = false;
+  @Input() expanderDetails: any = {};
+  @Input() customComponent: any = null;
 
   contextItems: MenuItem[];
 
@@ -102,11 +114,19 @@ export class DataTable implements OnInit {
       console.log("Error: No data defined!");
     }
     this.selectRow.emit(event.data);
+    this.isRowSelected = true;
   }
 
   onRowUnselect(event) {
     event.data.selected = false;
     this.updateRow.emit(event.data);
+    this.isRowSelected = false;
+  }
+
+  onCreateDetails(event: any) {
+    if(this.isRowSelected) {
+      this.createDetailClicked.emit(event);
+    }
   }
 
   onEditDetails(event: any) {
@@ -119,6 +139,10 @@ export class DataTable implements OnInit {
         });
       }
     }
+
+    delete this.selectedRow.details[0]['selected'];
+
+    console.log(this.selectedRow);
     this.updateRow.emit(this.selectedRow);
   }
 

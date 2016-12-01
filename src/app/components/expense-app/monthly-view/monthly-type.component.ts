@@ -172,53 +172,9 @@ export class MonthlyTypeComponent implements OnInit {
   onEditDetails(event) {
     if(this.selectedRow) {
       //First add all the details already present.
-      this.addAllDetails(this.selectedRow.details);
+      //this.addAllDetails(this.selectedRow.details);
       //then add the column
-      this.addSingleEmptyDetailColumn();
-    }
-  }
-
-  addSingleEmptyDetailColumn() {
-    this.detailsColumns = [];
-    this.detailsData = [];
-
-    var obj = {};
-    if(!this.selectedRow.details) {
-      this.selectedRow.details = [];
-    }
-    this.selectedRow.details.forEach(detail => {
-      let columns: string[] = Object.keys(detail);
-      columns.forEach(col => {
-        this.detailsColumns.push({name: col, field: col, filteredResults: null});
-        obj[col] = "";
-      });
-    });
-
-    obj[this.colNameToAdd] = "";
-    this.detailsColumns.push({name: this.colNameToAdd, field: this.colNameToAdd, filteredResults: null});
-    this.detailsData.push(obj);
-
-    console.log(this.detailsData);
-    this.selectedRow.details = this.detailsData;
-    this.monthlyService.updateMonthlyData(this.selectedRow._id, this.selectedRow)
-      .subscribe(
-        data => {
-          console.log("Updated ", data);
-          this.calculateTotalAmount();
-        },
-        err => {console.log(err);}
-      );
-  }
-
-  addAllDetails(detailsGot: any) {
-    if(detailsGot) {
-      detailsGot.forEach(detail => {
-        let columns: string[] = Object.keys(detail);
-        columns.forEach(col => {
-          this.detailsColumns.push({name: col, field: col, filteredResults: null});
-        });
-      });
-      this.detailsData = detailsGot;
+      //this.addSingleEmptyDetailColumn();
     }
   }
 }
