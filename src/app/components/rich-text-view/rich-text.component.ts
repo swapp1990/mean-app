@@ -1,6 +1,6 @@
 import {
   Component, OnInit, ViewChild, Input, AfterViewInit, ViewContainerRef,
-  ComponentFactoryResolver, ComponentFactory, Compiler
+  ComponentFactoryResolver, ComponentFactory, Compiler, ElementRef
 } from '@angular/core';
 import { Router } from '@angular/router';
 import {Editor} from "primeng/primeng";
@@ -10,18 +10,14 @@ declare var Quill:any;
 @Component({
   selector: 'rich-text',
   styleUrls: ['rich-text.component.css'],
-  template: ` <div style="position: relative">
-                <div id="editor">
-                </div>
-                <ul class="completions">
-
-                </ul>
-                <div id="tooltip-controls">
-                  <button pButton icon="fa fa-circle-o" (click)="onClick()"></button>
-                </div>
-              </div>
-              <span #insertComponentHere></span>
-              <p>Value: {{text||'empty'}}</p>
+  template: ` 
+            <div #test>
+                <!--<dynamic-component [componentData]="componentData"></dynamic-component>-->
+                <text-data [inputText]=""></text-data>
+                <quantity-data></quantity-data>
+                <text-data></text-data>
+            </div>
+            {{model}}
             `
 })
 
@@ -29,50 +25,56 @@ export class RichTextComponent implements AfterViewInit {
 
   text: string;
   picklistUnits: string[];
-
+  elRef: ElementRef
   insertText: any = "Test ";
   quill: any;
   cursorPosition: number = 0;
+  model = 'some text';
 
-  @ViewChild(TestComponent) other;
+  @ViewChild('test') el:ElementRef;
+
+  componentData = null;
+
   @ViewChild("insertComponentHere", { read: ViewContainerRef }) insertComponentHere: ViewContainerRef;
-  constructor() {
-
+  constructor(private elementRef: ElementRef) {
+    this.elRef = elementRef;
   }
 
   ngOnInit(): void {
     this.picklistUnits = ["cm, mm"];
     this.text = ``;
-    this.quill = new Quill('#editor', {
-      placeholder: 'Compose an epic...',
-      theme: 'snow',
-      modules: {
-        mentions: {
-          container: '.completions',  //On the html
-          onClose: val => this.onClose(),
-          onOpen: () => console.log("Opening"),
-          users: [
-            {id: 1, name: 'Christy'},
-          ]
-        }
-      }
-    });
+    var el1 = document.getElementById("test");
+    // this.quill = new Quill('#editor', {
+    //   placeholder: 'Compose an epic...',
+    //   theme: 'snow',
+    //   modules: {
+    //     mentions: {
+    //       container: '.completions',  //On the html
+    //       onClose: val => this.onClose(),
+    //       onOpen: () => console.log("Opening"),
+    //       users: [
+    //         {id: 1, name: 'Christy'},
+    //       ]
+    //     }
+    //   }
+    // });
+
+  }
+
+  onClick(event) {
+    var range = document.createRange();
+    var sel = window.getSelection();
+    var range = sel.getRangeAt(0);
+    console.log(range);
+  }
+
+  onKeyUp(event) {
+    console.log(event);
   }
 
   ngAfterViewInit(): void {
-    console.log(this.other.getHtmlContent());
-  }
-
-  onClick() {
-    // this.componentResolver.resolveComponent(TestComponent).then((factory: ComponentFactory<any> ) => {
-    //   let comp = this.insertComponentHere.createComponent(factory);
-    //   console.log(comp);
-    //   //comp.instance.descriptor = this.descriptor;
-    // });
-    var index = this.quill.getSelection(true).index;
-    let htmlValue = this.other.getHtmlContent();
-    this.quill.insertEmbed(index,"s-angular", htmlValue);
-    this.text = this.quill.container.firstChild.innerHTML;
+    //console.log(this.other.getHtmlContent());
+    console.log(this.el.nativeElement.selectionStart);
   }
 
   onClose() {

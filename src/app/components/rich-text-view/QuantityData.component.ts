@@ -57,7 +57,7 @@ import {
  */
 export class QuantityData implements AfterViewInit {
   @ViewChild('myInput') myInput;
-  descriptor: any;
+  descriptor: any = {value: "", picklistUnits: ["cm", "mm"]};
   /**
    * Constructor
    */

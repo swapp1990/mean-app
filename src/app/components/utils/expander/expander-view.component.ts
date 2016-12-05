@@ -46,7 +46,7 @@ export class MyExpander implements OnInit {
   colNameToAdd: string = "";
 
   componentData = null;
-  constructor(private resolver: ComponentFactoryResolver) {
+  constructor() {
 
   }
 

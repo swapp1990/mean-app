@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, Injector} from "@angular/core";
+import {Component, OnInit, Input, Injector, AfterViewInit} from "@angular/core";
 
 @Component({
   selector: 'my-progress-bar',
@@ -7,19 +7,20 @@ import {Component, OnInit, Input, Injector} from "@angular/core";
             `
 })
 
-export class MyProgressBar implements OnInit {
+export class MyProgressBar implements AfterViewInit {
   value: number = 0;
-  showNum = 0;
+  @Input() showNum = 0;
 
-  constructor(private injector: Injector) {
-    this.showNum = this.injector.get('showNum');
+  constructor() {
+    //this.showNum = this.injector.get('showNum');
   }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     let interval = setInterval(() => {
       this.value = this.value + Math.floor(Math.random() * 10) + 1;
       if(this.value >= this.showNum) {
         this.value = this.showNum;
+        console.log(this.showNum);
         clearInterval(interval);
       }
     }, 10);

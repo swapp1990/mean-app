@@ -184,10 +184,7 @@ export class CategoryView implements OnInit {
           let customComponent = null
           if(monthData.name === "India Education Loan") {
             customComponent = {
-              component: MyProgressBar,
-              inputs: {
-                showNum: 78
-              }
+              component: MyProgressBar
             }
           }
           detailPlusCustom = {details: detailS, custom: customComponent};

@@ -8,11 +8,12 @@ import {TasksComponent} from "../components/tasks-view/tasks.component";
 import {RichTextComponent} from "../components/rich-text-view/rich-text.component";
 import {SearchViewComponent} from "../components/expense-app/search-view/search-view.component";
 import {MonthlyComponent} from "../components/expense-app/monthly-view/monthly.component";
+import {DetailsView} from "../components/expense-app/details-view/details-view.component";
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/monthly',
+    redirectTo: '/details-view',
     pathMatch: 'full'
   },
   {
@@ -22,6 +23,10 @@ const routes: Routes = [
   {
     path: 'search-view',
     component: SearchViewComponent
+  },
+  {
+    path: 'details-view',
+    component: DetailsView
   },
   {
     path: 'graph',
@@ -52,6 +57,7 @@ export const routedComponents = [
   HotelComponent,
   MonthlyComponent,
   MonthlyGraphView,
+  DetailsView,
   TasksComponent,
   RichTextComponent,
   SearchViewComponent

@@ -1,9 +1,10 @@
 import {Component, Input, ViewContainerRef, ViewChild, ReflectiveInjector, ComponentFactoryResolver} from '@angular/core';
 import {MyProgressBar} from "../progress-bar/progress-bar.component";
+import {EducationLoan} from "../../expense-app/details-view/education-loan.dyn.component";
 
 @Component({
   selector: 'dynamic-component',
-  entryComponents: [MyProgressBar], // Reference to the components must be here in order to dynamically create them
+  entryComponents: [MyProgressBar, EducationLoan], // Reference to the components must be here in order to dynamically create them
   template: `
     <div #dynamicComponentContainer></div>
   `,

@@ -30,6 +30,9 @@ import {MonthlyTypeComponent} from "./components/expense-app/monthly-view/monthl
 import {CategoryView} from "./components/expense-app/monthly-view/category-view.component";
 import {MyProgressBar} from "./components/utils/progress-bar/progress-bar.component";
 import DynamicComponent from "./components/utils/dynamic-component/dynamic-component";
+import {TextData} from "./components/rich-text-view/TextData.component";
+import {DetailsView} from "./components/expense-app/details-view/details-view.component";
+import {EducationLoan} from "./components/expense-app/details-view/education-loan.dyn.component";
 
 @NgModule({
   declarations: [
@@ -45,7 +48,10 @@ import DynamicComponent from "./components/utils/dynamic-component/dynamic-compo
     MyProgressBar,
     MonthlyTypeComponent,
     CategoryView,
+    DetailsView,
+    EducationLoan,
     QuantityData,
+    TextData,
     TestComponent,
     Ng2Summernote,
     DynamicComponent
