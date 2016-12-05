@@ -43,6 +43,7 @@ export default class DynamicComponent {
     }
 
     this.currentComponent = component;
+    //console.log(this.currentComponent);
   }
 
   constructor(private resolver: ComponentFactoryResolver) {

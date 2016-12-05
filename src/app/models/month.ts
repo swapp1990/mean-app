@@ -8,9 +8,11 @@ export class MonthData {
   date: number;
   month: string;
   isIncome: string;
-  details: any;
   isEssential: string = "false";
 
+  details: any;
+  detailsView: any;
+  
   constructor(category: string, month: string, isIncome: string, isEssential: string) {
     this.name = "";
     this.price = 0;
@@ -20,8 +22,10 @@ export class MonthData {
     this.date = 1;
     this.month = month;
     this.isIncome = isIncome;
-    this.details = [];
     this.isEssential = isEssential;
+
+    this.details = [];
+    this.detailsView = null;
   }
 }
 

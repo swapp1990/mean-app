@@ -6,6 +6,7 @@ import {MonthData} from "../../../models/month";
 import {DataTable} from "../../utils/data-table/data-table.component";
 import {isNullOrUndefined} from "util";
 import {MyProgressBar} from "../../utils/progress-bar/progress-bar.component";
+import {DetailsView} from "../details-view/details-view.component";
 
 @Component({
   selector: 'category-view',
@@ -15,7 +16,6 @@ import {MyProgressBar} from "../../utils/progress-bar/progress-bar.component";
              <my-data-table #table1 [files]="categoryData"
                             [dataColumns] = "dataColumns"
                             [isExpander] = "'true'"
-                            [expanderDetails] = "formattedDetails"
                             (selectRow)= "onSelectRow($event)"
                             (updateRow)="onUpdateRow($event)"
                             (createDetailClicked)="onCreateDetail($event)"></my-data-table> 
@@ -164,39 +164,42 @@ export class CategoryView implements OnInit {
       return obj;
   }
 
-
   formatDetailsForExpander() {
     this.formattedDetails = [];
     this.categoryData.forEach((monthData: MonthData) => {
-      if(monthData.details) {
-
-        let objToPush:any = {name: "", value: null};
-        monthData.details.forEach(detail => {
-          let detailS: any = [];
-          let detailPlusCustom: any = {};
-          let columns:string[] = Object.keys(detail);
-          columns.forEach(colDetail => {
-            let objToPush:any = {name: "", value: null};
-            objToPush.name = colDetail;
-            objToPush.value = detail[colDetail];
-            detailS.push(objToPush);
-          });
-          let customComponent = null
-          if(monthData.name === "India Education Loan") {
-            customComponent = {
-              component: MyProgressBar
-            }
-          }
-          detailPlusCustom = {details: detailS, custom: customComponent};
-          console.log(detailPlusCustom);
-          this.formattedDetails[monthData._id] = detailPlusCustom;
-        });
-      }
+      monthData.detailsView = {
+        component: DetailsView,
+        inputs: {
+          monthData: monthData
+        }
+      };
+      // if(monthData.details) {
+      //
+      //   let objToPush:any = {name: "", value: null};
+      //   monthData.details.forEach(detail => {
+      //     let detailS: any = [];
+      //     let detailPlusCustom: any = {};
+      //     let columns:string[] = Object.keys(detail);
+      //     columns.forEach(colDetail => {
+      //       let objToPush:any = {name: "", value: null};
+      //       objToPush.name = colDetail;
+      //       objToPush.value = detail[colDetail];
+      //       detailS.push(objToPush);
+      //     });
+      //     let customComponent = null
+      //     if(monthData.name === "India Education Loan") {
+      //       customComponent = {
+      //         component: MyProgressBar
+      //       }
+      //     }
+      //     detailPlusCustom = {details: detailS, custom: customComponent};
+      //     console.log(detailPlusCustom);
+      //     this.formattedDetails[monthData._id] = detailPlusCustom;
+      //   });
+      // }
     });
 
     //Add custom component details
-
-    //console.log("Formatted Details: ", this.formattedDetails);
   }
 
   /**
@@ -207,7 +210,7 @@ export class CategoryView implements OnInit {
   }
 
   onUpdateRow(data: MonthData) {
-    //console.log("To Update ", this.selectedRow);
+    console.log("To Update ", this.selectedRow);
     if(this.selectedRow != null) {
       this.updateMonthData(this.selectedRow);
       this.selectedRow = null;

@@ -1,49 +1,26 @@
 import {
   Component, ViewChild, EventEmitter, Input, OnInit, Output, Injector, ElementRef,
-  ComponentFactoryResolver, ViewContainerRef
+  ComponentFactoryResolver, ViewContainerRef, AfterViewInit
 } from "@angular/core";
 import {MyProgressBar} from "../progress-bar/progress-bar.component";
+import DynamicComponent from "../dynamic-component/dynamic-component";
+import {DetailsView} from "../../expense-app/details-view/details-view.component";
 
 @Component({
   selector: 'my-expander',
-  entryComponents: [MyProgressBar],
-  template: ` <div class="ui-grid ui-grid-responsive ui-fluid" style="font-size:16px;padding:20px">
-                <div class="ui-grid-row">
-                  <div class="ui-grid-col-9">
-                    <div class="ui-grid ui-grid-responsive ui-grid-pad">
-                        <div *ngFor="let col of inputCols">
-                            <div class="ui-grid-row">
-                              <div class="ui-grid-col-2 label">{{col.name}}: </div>
-                              <div *ngIf="!editDetails" class="ui-grid-col-10">{{col.value}}</div>
-                              <input *ngIf="editDetails" type="text" [(ngModel)]="col.value">
-                            </div>
-                        </div>
-                    </div>
-                  </div>      
-                </div>
-              </div>
-              <div *ngIf="rowSelected">
-                <button  pButton type="text" (click)="onEdit($event)" icon="fa-edit"></button>
-                <input [(ngModel)]="colNameToAdd" type="text">
-                <button pButton type="text" (click)="onCreate($event)" icon="fa-plus"></button>
-              </div>
-              <dynamic-component [componentData]="componentData"></dynamic-component>
-
+  entryComponents: [],
+  template: ` 
+              <dynamic-component #dc [componentData]="componentData"></dynamic-component>
             `
 })
 
-export class MyExpander implements OnInit {
+export class MyExpander implements OnInit, AfterViewInit {
 
-  @Input() inputCols: any;
-  @Input() extraComponent: any = null;
-  @Input() rowSelected: boolean = false;
-  editDetails: boolean = false;
+  @Input() renderedComponent: any = null;
 
   @Output() editDone = new EventEmitter();
-  @Output() createClicked = new EventEmitter();
 
-  //Move outside of this class
-  colNameToAdd: string = "";
+  @ViewChild('dc') dynamic: DynamicComponent;
 
   componentData = null;
   constructor() {
@@ -51,19 +28,19 @@ export class MyExpander implements OnInit {
   }
 
   ngOnInit(): void {
-    this.componentData = this.extraComponent;
+    this.componentData = this.renderedComponent;
+    //console.log("Init Expander");
   }
 
-  onEdit(event) {
-    if(this.editDetails) {
-      this.editDone.emit(this.inputCols);
-    }
-    this.editDetails = !this.editDetails;
-  }
-
-  onCreate(event) {
-    if(this.colNameToAdd !== "") {
-      this.createClicked.emit(this.colNameToAdd);
+  ngAfterViewInit(): void {
+    //console.log("After Init Expander ", this.dynamic.currentComponent.instance);
+    let detailsView: DetailsView = this.dynamic.currentComponent.instance;
+    if(detailsView) {
+      detailsView.updateDetails.addListener("Update",
+        data => {
+          console.log("Update This ", data);
+          this.editDone.emit(data);
+      });
     }
   }
 }

@@ -23,11 +23,8 @@ import {MonthData} from "../../../models/month";
                 <!--</p-column>-->
                 <p-column *ngIf='isExpander' expander="true" styleClass="col-icon">
                   <template let-row>
-                    <my-expander (editDone)="onEditDetails($event)" 
-                                 (createClicked)="onCreateDetails($event)" 
-                                 [rowSelected]='isRowSelected' 
-                                 [inputCols]="expanderDetails[row._id].details"
-                                 [extraComponent]="expanderDetails[row._id].custom"></my-expander>
+                    <my-expander [renderedComponent]="row.detailsView"
+                                 (editDone)="onEditDetails(event)"></my-expander>
                   </template>
                 </p-column> 
                 <p-column *ngFor="let col of dataColumns" field="{{col.field}}" header="{{col.name}}" [style]="{'overflow':'visible'}">
@@ -130,19 +127,7 @@ export class DataTable implements OnInit {
   }
 
   onEditDetails(event: any) {
-    //console.log("Selected", this.selectedRow.details);
-    if(this.selectedRow) {
-      if(this.selectedRow.details) {
-        event.forEach(col => {
-          //console.log(this.selectedRow.details[0][col.name]);
-          this.selectedRow.details[0][col.name] = col.value;
-        });
-      }
-    }
-
-    delete this.selectedRow.details[0]['selected'];
-
-    console.log(this.selectedRow);
+    //console.log("Edit Details", this.selectedRow);
     this.updateRow.emit(this.selectedRow);
   }
 

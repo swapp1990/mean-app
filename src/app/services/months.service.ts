@@ -48,6 +48,10 @@ export class MonthlyService {
     });
 
     let newUrl = this.monthsUrl + '/'+monthDataId;
+    if(monthBody.detailsView) {
+      delete monthBody.detailsView;
+    }
+    console.log(monthBody);
     return this.http
       .put(newUrl, JSON.stringify(monthBody), { headers: headers })
       .map((response: Response) => response.json());
