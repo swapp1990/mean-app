@@ -1,8 +1,12 @@
-import {Component, OnInit, ComponentFactoryResolver, Input, Injector, Output} from '@angular/core';
+import {
+  Component, OnInit, ComponentFactoryResolver, Input, Injector, Output, AfterViewInit,
+  ChangeDetectorRef
+} from '@angular/core';
 import { Router } from '@angular/router';
 import {EducationLoan} from "./education-loan.dyn.component";
 import {MonthData} from "../../../models/month";
 import {EventEmitter} from "events";
+import {CarLoan} from "./car-loan.dyn.component";
 
 export class DetailViewData {
   columnName: string;
@@ -11,6 +15,48 @@ export class DetailViewData {
   constructor(name: string, data: any) {
     this.columnName = name;
     this.columnData = data;
+  }
+}
+
+//Should be exported seperate
+//Should be in a database
+export class SpecialDetailForName {
+  dataName: string;
+  columns: string[];
+  specialComponent: any;
+
+  constructor(name: string, columns: string[], specialComponent: any) {
+    this.dataName = name;
+    this.columns = columns;
+    this.specialComponent = specialComponent;
+  }
+}
+
+export class SpecialDataTemp {
+  data: SpecialDetailForName[] = [];
+
+  static getData (): SpecialDetailForName[] {
+    let data: SpecialDetailForName[] = [];
+      //Car Loan
+      let carComponent = {
+        component: CarLoan,
+        inputs: {
+          selectedMonth: ""
+        }
+      }
+      let carLoan = new SpecialDetailForName("Car Loan", ["For Loan"], carComponent);
+      data.push(carLoan);
+
+      //Education Loan
+      let educationComponent = {
+        component: EducationLoan,
+        inputs: {
+          selectedMonth: ""
+        }
+      }
+      let eduLoan = new SpecialDetailForName("India Education Loan", ["For Loan", "Indian Rupees"], educationComponent);
+      data.push(eduLoan);
+    return data;
   }
 }
 
@@ -29,10 +75,11 @@ export class DetailViewData {
              </div>
              <button pButton type="text" (click)="onCreateNewDetail($event)" icon="fa-plus"></button>
              <button *ngIf="editFields" pButton type="text" (click)="onUpdateDetail($event)" icon="fa-check"></button>
-             <!--<dynamic-component [componentData]="componentData"></dynamic-component>-->
+             <div></div>
+             <dynamic-component [componentData]="specialComponent"></dynamic-component>
             `
 })
-export class DetailsView implements OnInit {
+export class DetailsView implements OnInit, AfterViewInit {
   monthData: MonthData = null;
 
   detailData: DetailViewData[] = [];
@@ -40,36 +87,66 @@ export class DetailsView implements OnInit {
   @Output() updateDetails: EventEmitter = new EventEmitter();
 
   editFields: boolean = false;
+  specialComponent: any = null;
 
-  constructor(private injector: Injector) {
+  constructor(private injector: Injector, changeDetector: ChangeDetectorRef) {
     this.monthData = this.injector.get('monthData');
   }
 
   ngOnInit(): void {
-    if(this.monthData.details.length > 0) {
-      this.renderDetailData();
+    //console.log(this.monthData.details.length);
+    this.renderDetailData();
+    if(this.monthData.details && this.monthData.details.length > 0) {
+
     } else {
       this.monthData.details = [];
-      var newCol = {};
-      this.monthData.details.push(newCol);
-      this.updateDetails.emit("Test", this.monthData);
+      //this.checkForUpdates();
     }
+  }
 
-    // this.componentData = {
-    //   component: EducationLoan,
-    //   inputs: {}
-    // };
+  ngAfterViewInit(): void {
+
+  }
+
+  checkForUpdates() {
+    let data: SpecialDetailForName[] = SpecialDataTemp.getData();
+    var detailForDb = {};
+    data.forEach((nameDetail: SpecialDetailForName) => {
+      if(this.monthData.name === nameDetail.dataName) {
+        nameDetail.columns.forEach(col => {
+          detailForDb[col] = "";
+        });
+        this.monthData.details[0] = detailForDb;
+        console.log(this.monthData);
+        this.updateDetails.emit("Update", this.monthData);
+      }
+    });
   }
 
   renderDetailData() {
     this.detailData = [];
     this.monthData.details.forEach(detail => {
       let columns:string[] = Object.keys(detail);
-      //console.log(columns);
+      console.log(columns);
       columns.forEach(col => {
         this.detailData.push(new DetailViewData(col, detail[col]));
       });
     });
+
+    //Add Special Components
+    let data: SpecialDetailForName[] = SpecialDataTemp.getData();
+    data.forEach((nameDetail: SpecialDetailForName) => {
+      if(this.monthData.name === nameDetail.dataName) {
+        this.specialComponent = nameDetail.specialComponent;
+        this.specialComponent.inputs.selectedMonth = this.monthData.month;
+      }
+    });
+    // if(this.monthData.name === "India Education Loan") {
+    //   this.specialComponent = {
+    //     component: EducationLoan,
+    //     inputs: {selectedMonth: this.monthData.month}
+    //   }
+    // }
   }
 
   /**

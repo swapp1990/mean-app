@@ -33,6 +33,8 @@ import DynamicComponent from "./components/utils/dynamic-component/dynamic-compo
 import {TextData} from "./components/rich-text-view/TextData.component";
 import {DetailsView} from "./components/expense-app/details-view/details-view.component";
 import {EducationLoan} from "./components/expense-app/details-view/education-loan.dyn.component";
+import {CarLoan} from "./components/expense-app/details-view/car-loan.dyn.component";
+import {ComponentList} from "./components/rich-text-view/ComponentList.component";
 
 @NgModule({
   declarations: [
@@ -50,6 +52,8 @@ import {EducationLoan} from "./components/expense-app/details-view/education-loa
     CategoryView,
     DetailsView,
     EducationLoan,
+    ComponentList,
+    CarLoan,
     QuantityData,
     TextData,
     TestComponent,

@@ -1,7 +1,7 @@
 import {Component, OnInit, Input, Output, EventEmitter, ViewChild} from '@angular/core';
 
 import {isNullOrUndefined} from "util";
-import {Category} from "../../../models/catagory";
+import {Category, Amount} from "../../../models/catagory";
 import {MonthData} from "../../../models/month";
 import {MonthlyService} from "../../../services/months.service";
 import {EnumUtils} from "../../../enums/EnumUtils";
@@ -12,22 +12,6 @@ import {CategoryView} from "./category-view.component";
   template: `
                <p-tabView orientation="left" (onChange)="onCategoryChange($event)">
                   <p-tabPanel *ngFor="let category of categories" header="{{getCategoryHeader(category)}}">
-                  <!--<my-data-table [files]="dataOnce" -->
-                        <!--[dataColumns] = "dataColumns"-->
-                        <!--[totalCategoryAmount]="totalCategoryAmountOnce"-->
-                        <!--(changeToggle)="onChangeToggle($event)" -->
-                        <!--(updateRow)="onUpdateRow($event)"-->
-                        <!--(selectRow)="onSelectRow($event)"-->
-                        <!--(deleteEvent)="onDeleteRow($event)"-->
-                        <!--(copyRow)="onCopyRow($event)">-->
-                  <!--</my-data-table>-->
-                  <!--<h3>Details Data</h3>-->
-                  <!--<my-data-table [files]="detailsData" -->
-                        <!--[dataColumns] = "detailsColumns"-->
-                        <!--(updateRow)= "onUpdateRow($event)">-->
-                  <!--</my-data-table>-->
-                  <!--<input [(ngModel)]="colNameToAdd" type="text">-->
-                  <!--<button pButton type="text" (click)="onEditDetails($event)" icon="fa-plus"></button>-->
                   </p-tabPanel>
                   <!-- Shows Category View Based on Tab Selected -->
                   <category-view #cv
@@ -44,6 +28,7 @@ export class MonthlyTypeComponent implements OnInit {
   categories: Category[]; //Category List
   @Output() totalAmountOutput = new EventEmitter();
   totalAmountByType: number = 0;
+  totalAmountOnceByType: number = 0;
 
   selectedCategory: string;
   @Input() selectedMonth: string;
@@ -52,17 +37,6 @@ export class MonthlyTypeComponent implements OnInit {
     categoryView: CategoryView;
 
   namesCache: any[];
-  selectedRow: MonthData;
-
-  @Input() dataOnce: MonthData[];
-  @Input() dataEssential: MonthData[];
-  @Input() detailsData: any;
-  detailsColumns: any[];
-  colNameToAdd: string = "";
-  @Input() totalCategoryAmount: number = 0;
-  totalCategoryAmountOnce: number = 0;
-  totalCategoryAmountEssential: number = 0;
-
 
   constructor(private monthlyService: MonthlyService) {}
 
@@ -70,9 +44,6 @@ export class MonthlyTypeComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeCategories();
-
-    //this.getAllCategoryNames();
-    //this.getMonthlyDataByCategory();
   }
 
   //Show Categories
@@ -80,19 +51,19 @@ export class MonthlyTypeComponent implements OnInit {
     this.categories = [];
     if(this.type === "Expense") {
       EnumUtils.getExpenseCategoriesString().map(expense => {
-        this.categories.push({name: expense, monthlyAmount: 0});
+        this.categories.push({name: expense, monthlyAmount: new Amount()});
       });
     } else {
       EnumUtils.getIncomeCategoriesString().map(income => {
-        this.categories.push({name: income, monthlyAmount: 0});
+        this.categories.push({name: income, monthlyAmount: new Amount()});
       });
     }
     this.selectedCategory = this.categories[0].name;
-    this.calculateTotalAmount();
+    this.calculateTotalAmount(this.selectedMonth);
   }
 
   getCategoryHeader(categoryBody: Category) {
-    return categoryBody.name + " - " + categoryBody.monthlyAmount;
+    return categoryBody.name + " - " + categoryBody.monthlyAmount.total + " (" + categoryBody.monthlyAmount.once + ")";
   }
 
   isSelected(category: string) {
@@ -116,15 +87,16 @@ export class MonthlyTypeComponent implements OnInit {
 
   resetEachCategoryTotal() {
     this.totalAmountByType = 0;
+    this.totalAmountOnceByType = 0;
     this.categories.map((category: Category) => {
-      category.monthlyAmount = 0;
+      category.monthlyAmount = new Amount();
     });
   }
 
   //Total Spent for Monthly Data.
-  calculateTotalAmount() {
+  calculateTotalAmount(month: string) {
     this.resetEachCategoryTotal();
-    this.monthlyService.monthGetAllAmount(this.selectedMonth)
+    this.monthlyService.monthGetAllAmount(month)
       .subscribe (
         amountData => {
           amountData.map(body => {
@@ -132,22 +104,49 @@ export class MonthlyTypeComponent implements OnInit {
             //console.log("Total Amount by Type:" + this.totalAmountByType);
           });
 
-          this.totalAmountOutput.emit({totalAmount: this.totalAmountByType, type: this.type});
+          this.totalAmountOutput.emit({totalAmount: this.totalAmountByType,
+                                       totalAmountOnce: this.totalAmountOnceByType,
+                                       type: this.type});
         },
         err => {
           console.log(err);
         }
       );
+
+    //TODO : Have to get all the amounts in a single rest call instead of two.
+    this.monthlyService.monthGetAllEssentialCost(month)
+      .subscribe (
+        amountData => {
+          amountData.map(body => {
+            this.setEachCategoryOther(body._id.category, body.balance);
+            //console.log("Total Amount Essential by Type:" + this.totalAmountByType);
+          });
+
+          this.totalAmountOutput.emit({totalAmount: this.totalAmountByType,
+            totalAmountOnce: this.totalAmountOnceByType,
+            type: this.type});
+        });
   }
 
   //Sets amount for each category and also calculates total amount.
   setEachCategoryTotal(categoryName: string, totalAmount: number) {
     this.categories.map((category: Category) => {
       if(category.name === categoryName) {
-        category.monthlyAmount = totalAmount;
-        category.monthlyAmount = Math.round(category.monthlyAmount);
-        this.totalAmountByType += category.monthlyAmount;
+        category.monthlyAmount.total = Math.round(totalAmount);
+        this.totalAmountByType += category.monthlyAmount.total;
         this.totalAmountByType = Math.round(this.totalAmountByType);
+      }
+    });
+  }
+
+  //Sets amount (once & essential) for each category and also calculates total once amount.
+  setEachCategoryOther(categoryName: string, totalAmountE: number) {
+    this.categories.map((category: Category) => {
+      if(category.name === categoryName) {
+        category.monthlyAmount.essential = Math.round(totalAmountE);
+        category.monthlyAmount.once = category.monthlyAmount.total - category.monthlyAmount.essential;
+        this.totalAmountOnceByType += category.monthlyAmount.once;
+        this.totalAmountOnceByType = Math.round(this.totalAmountOnceByType);
       }
     });
   }
@@ -163,18 +162,10 @@ export class MonthlyTypeComponent implements OnInit {
     this.selectedMonth = month;
     //console.log("Child Called" + this.selectedMonth + " Cagetory: " + this.selectedCategory);
     this.categoryView.getDataWithMonth(month);
+    this.calculateTotalAmount(month);
   }
 
   onUpdatedData(data: MonthData) {
-    this.calculateTotalAmount();
-  }
-
-  onEditDetails(event) {
-    if(this.selectedRow) {
-      //First add all the details already present.
-      //this.addAllDetails(this.selectedRow.details);
-      //then add the column
-      //this.addSingleEmptyDetailColumn();
-    }
+    this.calculateTotalAmount(this.selectedMonth);
   }
 }

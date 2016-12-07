@@ -13,7 +13,7 @@ import {DetailsView} from "../components/expense-app/details-view/details-view.c
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/details-view',
+    redirectTo: '/richtext',
     pathMatch: 'full'
   },
   {

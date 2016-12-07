@@ -5,6 +5,7 @@ import {GraphDataSet, GraphData} from "../../utils/graph/graph-data.model";
 import {EnumUtils} from "../../../enums/EnumUtils";
 import {Month} from "../../../enums/months";
 import {MyAutoComplete} from "../../utils/auto-complete/autocomplete.component";
+import {DataTable} from "../../utils/data-table/data-table.component";
 
 @Component({
   selector: 'search-view',
@@ -22,10 +23,8 @@ import {MyAutoComplete} from "../../utils/auto-complete/autocomplete.component";
                   <my-autocomplete #detailsValue [placeholder]="'Value'"></my-autocomplete>
                   <button pButton type="text" (click)="searchTag2($event)" icon="fa-search"></button>
               </div>
-              <my-data-table [files]="data" 
+              <my-data-table #table [files]="data" 
                         [dataColumns] = "dataColumns"
-                        [isExpander] = "'true'"
-                        [expanderDetails] = "formattedDetails"
                         [totalCategoryAmount]="totalAmount"
                         (changeToggle)="onChangeToggle($event)" 
                         (updateRow)="onUpdateRow($event)"
@@ -34,6 +33,8 @@ import {MyAutoComplete} from "../../utils/auto-complete/autocomplete.component";
               </my-data-table>
               <button pButton type="text" (click)="onCreate($event)" icon="fa-plus"></button>
               <button pButton type="text" (click)="onCreateCopy($event)" icon="fa-copy"></button>
+              <button pButton type="text" (click)="onEdit($event)" icon="fa-edit"></button>
+              <button pButton type="text" (click)="onDelete($event)" icon="fa-minus-circle"></button>
               <h1>Graph-View</h1>
               <s-graph [data]="graphData"></s-graph>
             `
@@ -56,6 +57,8 @@ export class SearchViewComponent implements OnInit {
     autoComplete2: MyAutoComplete;
   @ViewChild('detailsValue')
     autoComplete3: MyAutoComplete;
+
+  @ViewChild('table') myTable: DataTable;
 
   constructor(
     private monthlyService: MonthlyService) {
@@ -141,6 +144,12 @@ export class SearchViewComponent implements OnInit {
   onCreateCopy(event) {
     if(this.selectedRow) {
       this.createData(this.selectedRow);
+    }
+  }
+
+  onEdit(event) {
+    if(this.selectedRow) {
+      this.myTable.onEditOutside();
     }
   }
 

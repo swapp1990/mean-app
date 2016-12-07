@@ -10,6 +10,7 @@ export enum ExpenseCategoryName {
     Fitness,
     Education,
     Clothes,
+    Furniture,
     Other
 }
 

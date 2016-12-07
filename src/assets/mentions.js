@@ -79,13 +79,13 @@ class Mentions {
     onAtKey(range, context) {
         if (this.open) return true;
         if (range.length > 0) {
-            this.quill.deleteText(range.index, range.length, Quill.sources.USER);
+            this.quill.deleteText(range.indexFrom, range.length, Quill.sources.USER);
         }
-        this.quill.insertText(range.index, "@", "mention", "0", Quill.sources.USER);
-        const atSignBounds = this.quill.getBounds(range.index);
-        this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
+        this.quill.insertText(range.indexFrom, "@", "mention", "0", Quill.sources.USER);
+        const atSignBounds = this.quill.getBounds(range.indexFrom);
+        this.quill.setSelection(range.indexFrom + 1, Quill.sources.SILENT);
         
-        this.atIndex = range.index;
+        this.atIndex = range.indexFrom;
         this.container.style.left = atSignBounds.left + "px";
         this.container.style.top = atSignBounds.top + atSignBounds.height + "px",
         this.open = true;

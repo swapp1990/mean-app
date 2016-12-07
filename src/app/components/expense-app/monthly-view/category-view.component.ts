@@ -110,7 +110,7 @@ export class CategoryView implements OnInit {
     this.monthlyService.updateMonthlyData(data._id, data)
       .subscribe(
         data => {
-          //console.log("Updated ", data);
+          console.log("Updated ", data);
           this.updatedData.emit(data);
         },
         err => {console.log(err);}
@@ -144,26 +144,6 @@ export class CategoryView implements OnInit {
     });
   }
 
-  addSingleEmptyDetailColumn(columnName: string) {
-    console.log("detail ", columnName);
-    if(!this.selectedRow.details) {
-      this.selectedRow.details = [];
-    }
-    var obj = this.addAllDetails(this.selectedRow.details);
-    obj[columnName] = "";
-    this.selectedRow.details = [];
-    this.selectedRow.details.push(obj);
-    this.updateMonthData(this.selectedRow);
-  }
-
-  addAllDetails(detailsGot: any): any {
-      var obj = {};
-      detailsGot.forEach(detail => {
-        obj = detail;
-      });
-      return obj;
-  }
-
   formatDetailsForExpander() {
     this.formattedDetails = [];
     this.categoryData.forEach((monthData: MonthData) => {
@@ -173,33 +153,7 @@ export class CategoryView implements OnInit {
           monthData: monthData
         }
       };
-      // if(monthData.details) {
-      //
-      //   let objToPush:any = {name: "", value: null};
-      //   monthData.details.forEach(detail => {
-      //     let detailS: any = [];
-      //     let detailPlusCustom: any = {};
-      //     let columns:string[] = Object.keys(detail);
-      //     columns.forEach(colDetail => {
-      //       let objToPush:any = {name: "", value: null};
-      //       objToPush.name = colDetail;
-      //       objToPush.value = detail[colDetail];
-      //       detailS.push(objToPush);
-      //     });
-      //     let customComponent = null
-      //     if(monthData.name === "India Education Loan") {
-      //       customComponent = {
-      //         component: MyProgressBar
-      //       }
-      //     }
-      //     detailPlusCustom = {details: detailS, custom: customComponent};
-      //     console.log(detailPlusCustom);
-      //     this.formattedDetails[monthData._id] = detailPlusCustom;
-      //   });
-      // }
     });
-
-    //Add custom component details
   }
 
   /**
@@ -215,13 +169,6 @@ export class CategoryView implements OnInit {
       this.updateMonthData(this.selectedRow);
       this.selectedRow = null;
     }
-  }
-
-  onCreateDetail(event: any) {
-    //First add all the details already present.
-    //this.addAllDetails(this.selectedRow.details);
-
-    this.addSingleEmptyDetailColumn(event);
   }
 
   /**

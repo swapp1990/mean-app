@@ -1,12 +1,15 @@
 import {Component, Input, ViewContainerRef, ViewChild, ReflectiveInjector, ComponentFactoryResolver} from '@angular/core';
 import {MyProgressBar} from "../progress-bar/progress-bar.component";
 import {EducationLoan} from "../../expense-app/details-view/education-loan.dyn.component";
+import {CarLoan} from "../../expense-app/details-view/car-loan.dyn.component";
+import {TextData} from "../../rich-text-view/TextData.component";
+import {QuantityData} from "../../rich-text-view/QuantityData.component";
 
 @Component({
   selector: 'dynamic-component',
-  entryComponents: [MyProgressBar, EducationLoan], // Reference to the components must be here in order to dynamically create them
+  entryComponents: [MyProgressBar, EducationLoan, CarLoan, TextData, QuantityData], // Reference to the components must be here in order to dynamically create them
   template: `
-    <div #dynamicComponentContainer></div>
+    <span #dynamicComponentContainer></span>
   `,
 })
 export default class DynamicComponent {

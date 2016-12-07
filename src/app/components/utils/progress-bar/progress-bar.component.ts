@@ -20,10 +20,10 @@ export class MyProgressBar implements AfterViewInit {
       this.value = this.value + Math.floor(Math.random() * 10) + 1;
       if(this.value >= this.showNum) {
         this.value = this.showNum;
-        console.log(this.showNum);
+        console.log("Number ", this.showNum);
         clearInterval(interval);
       }
-    }, 10);
+    }, 100);
   }
 
   selectData(event) {

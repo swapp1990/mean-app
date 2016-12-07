@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
 import { Router } from '@angular/router';
 import {Observable} from "rxjs/Rx";
 import {Response, Http} from "@angular/http";
@@ -17,7 +17,7 @@ import {EnumUtils} from "../../../enums/EnumUtils";
                     <h3>{{selectedMonth}} - Saved: {{totalSaved}} </h3>
              </span>
              <p-accordion>
-                 <p-accordionTab header="I.......Expense - {{totalExpense}}">
+                 <p-accordionTab header="I.......Expense - {{totalExpense}} [Once - {{totalExpenseOnce}}]">
                       <monthly-type-view #type1 [type]="'Expense'"
                                          [selectedMonth]="selectedMonth"
                                          (totalAmountOutput)="onTotalChange($event)"></monthly-type-view>
@@ -32,12 +32,13 @@ import {EnumUtils} from "../../../enums/EnumUtils";
               `
 })
 
-export class MonthlyComponent implements OnInit {
+export class MonthlyComponent implements OnInit, AfterViewInit {
   months: SelectItem[];
   selectedMonth: string;
   selectedMonthIndex: number = 11;
 
   totalExpense: number = 0;
+  totalExpenseOnce: number = 0;
   totalIncome: number = 0;
   totalSaved: number = 0;
 
@@ -66,11 +67,17 @@ export class MonthlyComponent implements OnInit {
     this.initializeMonths();
   }
 
+  ngAfterViewInit(): void {
+    //this.totalExpense = this.firstType.totalAmountByType;
+  }
+
   onTotalChange(event: any) {
     //console.log("E: " + event.totalAmountByType);
     if(event.type === "Expense") {
       this.totalExpense = event.totalAmount;
       this.totalExpense = Math.ceil(this.totalExpense/100)*100;
+      this.totalExpenseOnce = event.totalAmountOnce;
+      this.totalExpenseOnce = Math.ceil(this.totalExpenseOnce/100)*100;
     } else {
       this.totalIncome = event.totalAmount;
       this.totalIncome = Math.ceil(this.totalIncome/100)*100;

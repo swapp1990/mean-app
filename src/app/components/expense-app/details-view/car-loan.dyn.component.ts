@@ -5,16 +5,16 @@ import {MonthData} from "../../../models/month";
 import {Month} from "../../../enums/months";
 
 @Component({
-  selector: 'education-loan',
-  template: `<div> Total Loan: {{totalEducationLoan}}</div>
-             <div> Paid Till Now: {{educationLoanPaid}}</div>
+  selector: 'car-loan',
+  template: `<div> Total Loan: {{totalCarLoan}}</div>
+             <div> Paid Till Now: {{carLoanPaid}}</div>
              <my-progress-bar [showNum]="percentagePaid"></my-progress-bar>
             `
 })
-export class EducationLoan implements OnInit {
+export class CarLoan implements OnInit {
 
-  totalEducationLoan: number = 2000000; //Should come from database
-  educationLoanPaid: number = 1;
+  totalCarLoan: number = 15000; //Should come from database
+  carLoanPaid: number = 1;
   lastPaid: string = "";
   percentagePaid: number = 0;
 
@@ -28,7 +28,7 @@ export class EducationLoan implements OnInit {
   }
 
   getDataBySearchTag() {
-    this.monthlyService.getAllDataBasedOnQuery("India Education Loan")
+    this.monthlyService.getAllDataBasedOnQuery("Car Loan")
       .subscribe (
         monthlyData => {
           this.updatePaidAmount(monthlyData);
@@ -40,7 +40,7 @@ export class EducationLoan implements OnInit {
   }
 
   updatePaidAmount(monthlyData: MonthData[]) {
-    this.educationLoanPaid = 0;
+    this.carLoanPaid = 0;
     if(this.selectedMonth != "") {
       monthlyData = monthlyData.filter((monthData: MonthData) => {
         return Month[monthData.month] <= Month[this.selectedMonth];
@@ -56,7 +56,7 @@ export class EducationLoan implements OnInit {
             if(colDetail === "For Loan") {
               let paidAmount: number = +detail[colDetail];
               //console.log(paidAmount);
-              this.educationLoanPaid += paidAmount;
+              this.carLoanPaid += paidAmount;
               this.calculatePercent();
             }
           });
@@ -66,7 +66,7 @@ export class EducationLoan implements OnInit {
   }
 
   calculatePercent() {
-    this.percentagePaid = 100 - Math.round(((this.totalEducationLoan - this.educationLoanPaid)/this.totalEducationLoan)*100);
+    this.percentagePaid = 100 - Math.round(((this.totalCarLoan - this.carLoanPaid)/this.totalCarLoan)*100);
     //console.log("Percentage ", this.percentagePaid);
   }
 }

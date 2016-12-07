@@ -41,6 +41,7 @@ export class MyExpander implements OnInit, AfterViewInit {
           console.log("Update This ", data);
           this.editDone.emit(data);
       });
+      //detailsView.checkForUpdates();
     }
   }
 }
